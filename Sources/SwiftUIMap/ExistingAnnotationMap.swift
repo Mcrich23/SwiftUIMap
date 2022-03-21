@@ -128,7 +128,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                             self.entireMapViewController.selected(title, subtitle, location, false)
                         }
                     }else {
-                        self.entireMapViewController.selected(title, subtitle, address, false)
+                        self.entireMapViewController.selected(title, subtitle, location, false)
                     }
                     //            }else {
                     //                print("no annotation")
