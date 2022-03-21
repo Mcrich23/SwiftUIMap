@@ -103,8 +103,8 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
             return annotationView
         }
         func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-            let title: String =  view.annotation!.title
-            let subtitle: String =  view.annotation!.subtitle
+            let title: String =  view.annotation?.title!!
+            let subtitle: String =  view.annotation?.subtitle!!
             if mapView.selectedAnnotations.count > 0 {
                 //                mapView.deselectAnnotation(view as? MKAnnotation, animated: true)
             }
