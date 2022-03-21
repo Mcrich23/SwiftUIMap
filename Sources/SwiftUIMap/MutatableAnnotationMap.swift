@@ -193,7 +193,7 @@ public struct MutableAnnotationMap: View {
         }
     
     public var body: some View {
-        rawMutableAnnotationMap(zoom: zoom, address: address, points: points, pointOfInterestFilter: pointOfInterestFilter, selected: {Title, Subtitle, Address, Cluster in
+        rawMutableAnnotationMap(zoom: zoom, address: address, points: points, pointOfInterestFilter: pointOfInterestFilter, selected: {Address, Cluster in
             address = Address
             if zoom > 0.05 {
                 zoom = zoom/3
@@ -201,7 +201,7 @@ public struct MutableAnnotationMap: View {
                     zoom = 0.05
                 }
             }
-            selected(Title, Subtitle, Address, Cluster)
+            selected(Address, Cluster)
         }, deselected: deselected)
     }
 }
