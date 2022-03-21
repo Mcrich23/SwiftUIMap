@@ -137,14 +137,14 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
                 if arrayList.count > 1 {
                     entireMapViewController.zoom = entireMapViewController.zoom / 3
 //                    entireMapViewController.selected(annotation, true)
-                    entireMapViewController.address = annotation.location
+                    entireMapViewController.address = annotation.address
                 }else {
                     entireMapViewController.selected(annotation, false)
-                    entireMapViewController.address = annotation.location
+                    entireMapViewController.address = annotation.address
                 }
             }else {
                 entireMapViewController.selected(annotation, false)
-                entireMapViewController.address = annotation.location
+                entireMapViewController.address = annotation.address
             }
         }
         public func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
