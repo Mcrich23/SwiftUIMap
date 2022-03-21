@@ -123,8 +123,8 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                     location.coordinate.latitude == view.annotation?.coordinate.latitude && location.coordinate.longitude == view.annotation?.coordinate.longitude
                 }
             })
-            let annotation = annotations.first
-            print("tapped annotation, annotation = \(annotation)")
+//            let annotations.first = annotations.first
+            print("tapped annotation, annotation = \(annotations.first)")
             if let cluster = view.annotation as? MKClusterAnnotation {
                 //*** Need array list of annotation inside cluster here ***
                 let arrayList = cluster.memberAnnotations
@@ -132,16 +132,16 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                 // If you want the map to display the cluster members
                 if arrayList.count > 1 {
                     entireMapViewController.zoom = entireMapViewController.zoom/3
-                    entireMapViewController.address = annotation!.address
+                    entireMapViewController.address = annotations.first!.address
                     print("zoom = \(entireMapViewController.zoom)")
-                    entireMapViewController.selected(annotation!, true)
+                    entireMapViewController.selected(annotations.first!, true)
                 }else {
-                    entireMapViewController.selected(annotation!, false)
-                    entireMapViewController.address = annotation!.address
+                    entireMapViewController.selected(annotations.first!, false)
+                    entireMapViewController.address = annotations.first!.address
                 }
             }else {
-                entireMapViewController.selected(annotation!, false)
-                entireMapViewController.address = annotation!.address
+                entireMapViewController.selected(annotations.first!, false)
+                entireMapViewController.address = annotations.first!.address
             }
             //            }else {
             //                print("no annotation")
