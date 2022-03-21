@@ -127,13 +127,13 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                         self.entireMapViewController.zoom = self.entireMapViewController.zoom/3
                         self.entireMapViewController.address = String(describing: address)
                         print("zoom = \(self.entireMapViewController.zoom)")
-                        self.entireMapViewController.selected(view.annotation!.title, view.annotation!.subtitle, String(describing: address), true)
+                        self.entireMapViewController.selected(view!.annotation!.title, view!.annotation!.subtitle, String(describing: address), true)
                     }else {
-                        self.entireMapViewController.selected(view.annotation!.title, view.annotation!.subtitle, String(describing: address), false)
+                        self.entireMapViewController.selected(view!.annotation!.title, view!.annotation!.subtitle, String(describing: address), false)
                         self.entireMapViewController.address = String(describing: address)
                     }
                 }else {
-                    self.entireMapViewController.selected(view.annotation!.title, view.annotation!.subtitle, String(describing: address), false)
+                    self.entireMapViewController.selected(view!.annotation!.title, view!.annotation!.subtitle, String(describing: address), false)
                     self.entireMapViewController.address = String(describing: address)
                 }
                 //            }else {
