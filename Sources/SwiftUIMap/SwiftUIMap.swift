@@ -21,7 +21,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
         self.deselected = deselected
     }
 //    var annotationSelected: MKAnnotationView
-    public func updateUIView(_ mapView: MKMapView, context: Context) {
+    private func updateUIView(_ mapView: MKMapView, context: Context) {
             let span = MKCoordinateSpan(latitudeDelta: zoom, longitudeDelta: zoom)
             var chicagoCoordinate = CLLocationCoordinate2D()
             let geoCoder = CLGeocoder()
@@ -42,7 +42,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
             }
         }
     
-        public func makeUIView(context: Context) -> MKMapView {
+        private func makeUIView(context: Context) -> MKMapView {
 
             let myMap = MKMapView(frame: .zero)
             for point in points {
@@ -71,7 +71,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
             return myMap
         }
 
-    public func makeCoordinator() -> ExistingAnnotationMapCoordinator {
+    private func makeCoordinator() -> ExistingAnnotationMapCoordinator {
         return ExistingAnnotationMapCoordinator(self, points: points) { annotation, cluster, address  in
 //            print("tapped passed back, annotation = \(annotation)")
             selected(annotation, cluster)
@@ -91,7 +91,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
             self.selected = selected
             self.deselected = deselected
         }
-        public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        private func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
             let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: String(describing: annotation.title))
             if points != [] && points != nil {
                 let annotationDetails = points.first { annotate in
@@ -110,7 +110,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
             }
             return annotationView
         }
-        public func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        private func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
             if mapView.selectedAnnotations.count > 0 {
                 mapView.deselectAnnotation(view as? MKAnnotation, animated: true)
             }
@@ -140,7 +140,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
                 }
             }
         }
-        public func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
+        private func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
             deselected()
         }
     }
