@@ -127,8 +127,9 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
                     // If you want the map to display the cluster members
                     if arrayList.count > 1 {
                         entireMapViewController.zoom = entireMapViewController.zoom/3
-    //                    entireMapViewController.selected(annotation, true, entireMapViewController.zoom)
+    //                    entireMapViewController.selected(annotation, true)
                         entireMapViewController.address = annotation.address
+                        entireMapViewController.selected(annotation, false, entireMapViewController.zoom)
                     }else {
                         entireMapViewController.selected(annotation, false, entireMapViewController.zoom)
                         entireMapViewController.address = annotation.address
