@@ -9,10 +9,10 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
     var address: String
     var points: [Annotations]
     var pointOfInterestFilter: MKPointOfInterestFilter
-    var selected: (_ Annotations: Annotations, _ Cluster: Bool, _ Zoom: Double) -> Void
+    var selected: (_ Annotations: Annotations, _ Cluster: Bool) -> Void
     var deselected: () -> Void
     
-    public init(zoom: Double, address: String, points: [Annotations], pointsOfInterestFilter: MKPointOfInterestFilter, selected: @escaping (_ Annotations: Annotations, _ Cluster: Bool, _ Zoom: Double) -> Void, deselected: @escaping () -> Void) {
+    public init(zoom: Double, address: String, points: [Annotations], pointsOfInterestFilter: MKPointOfInterestFilter, selected: @escaping (_ Annotations: Annotations, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
         self.zoom = zoom
         self.address = address
         self.points = points
@@ -72,10 +72,9 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
         }
 
     public func makeCoordinator() -> ExistingAnnotationMapCoordinator {
-        return ExistingAnnotationMapCoordinator(self, points: points) { annotation, cluster  in
+        return ExistingAnnotationMapCoordinator(self, points: points) { annotation, cluster, address  in
 //            print("tapped passed back, annotation = \(annotation)")
-            selected(annotation, cluster, zoom)
-            print("zoom = \(zoom)")
+            selected(annotation, cluster)
         } deselected: {
             deselected()
         }
@@ -84,9 +83,9 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
     public class ExistingAnnotationMapCoordinator: NSObject, MKMapViewDelegate {
         var entireMapViewController: ExistingAnnotationMap
         var points: [Annotations]
-        var selected: (_ Annotations: Annotations, _ Cluster: Bool) -> Void
+        var selected: (_ Annotations: Annotations, _ Cluster: Bool, _ Address: String) -> Void
         var deselected: () -> Void
-        init(_ control: ExistingAnnotationMap, points: [Annotations], selected: @escaping (_ Annotations: Annotations, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
+        init(_ control: ExistingAnnotationMap, points: [Annotations], selected: @escaping (_ Annotations: Annotations, _ Cluster: Bool, _ Address: String) -> Void, deselected: @escaping () -> Void) {
             self.entireMapViewController = control
             self.points = points
             self.selected = selected
@@ -126,16 +125,17 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
                     print("cluster list = \(arrayList)")
                     // If you want the map to display the cluster members
                     if arrayList.count > 1 {
-                        entireMapViewController.zoom = entireMapViewController.zoom/3
+                        entireMapViewController.zoom = entireMapViewController.zoom / 3
     //                    entireMapViewController.selected(annotation, true)
                         entireMapViewController.address = annotation.address
-                        selected(annotation, true)
+                        print("zoom = \(entireMapViewController.zoom)")
+                        entireMapViewController.selected(annotation, true)
                     }else {
-                        selected(annotation, false)
+                        entireMapViewController.selected(annotation, false)
                         entireMapViewController.address = annotation.address
                     }
                 }else {
-                    selected(annotation, false)
+                    entireMapViewController.selected(annotation, false)
                     entireMapViewController.address = annotation.address
                 }
             }
