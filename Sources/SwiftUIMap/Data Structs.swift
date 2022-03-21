@@ -9,14 +9,14 @@ import Foundation
 import SwiftUI
 import MapKit
 
-struct Annotations: Identifiable, Equatable {
-    let id = UUID()
-    let title: String
-    let subtitle: String
-    let address: String
-    let tintColor: Color
-    let markerTintColor: Color
-    let glyphTintColor: Color
-    let glyphImage: String
-    let displayPriority: MKFeatureDisplayPriority
+public struct Annotations: Identifiable, Equatable {
+    public let id = UUID()
+    public let title: String
+    public let subtitle: String
+    public let address: String
+    public let tintColor: Color
+    public let markerTintColor: Color
+    public let glyphTintColor: Color
+    public let glyphImage: String
+    public let displayPriority: MKFeatureDisplayPriority
 }
