@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import MapKit
+#if os(iOS) || os(tvOS) || os(watchOS)// || os(macOS)
 
 public struct Annotations: Identifiable, Equatable {
     public let id = UUID()
@@ -20,7 +21,7 @@ public struct Annotations: Identifiable, Equatable {
     public let glyphTintColor: UIColor
     public let displayPriority: MKFeatureDisplayPriority
     
-    public init(title: String, subtitle: String, address: String, glyphImage: UIColor, tintColor: UIColor, markerTintColor: UIColor, glyphTintColor: UIColor, displayPriority: MKFeatureDisplayPriority) {
+    public init(title: String, subtitle: String, address: String, glyphImage: String, tintColor: UIColor, markerTintColor: UIColor, glyphTintColor: UIColor, displayPriority: MKFeatureDisplayPriority) {
         self.title = title
         self.subtitle = subtitle
         self.address = address
@@ -32,3 +33,4 @@ public struct Annotations: Identifiable, Equatable {
     }
     
 }
+#endif
