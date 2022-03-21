@@ -91,7 +91,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
             self.selected = selected
             self.deselected = deselected
         }
-        func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
             let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: String(describing: annotation.title))
             if points != [] && points != nil {
                 let annotationDetails = points.first { annotate in
@@ -121,7 +121,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
             }
             return annotationView
         }
-        func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        public func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
             if mapView.selectedAnnotations.count > 0 {
                 mapView.deselectAnnotation(view as? MKAnnotation, animated: true)
             }
@@ -147,7 +147,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
                 entireMapViewController.address = annotation.location
             }
         }
-        func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
+        public func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
             deselected()
         }
     }
