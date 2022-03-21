@@ -107,8 +107,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                 //                mapView.deselectAnnotation(view as? MKAnnotation, animated: true)
             }
             //            if points != [] {
-            var annotations = [Annotations]()
-            annotations = entireMapViewController.points.filter({ Annotation in
+            let annotation = entireMapViewController.points.first(where: { Annotation in
                 
                 let geoCoder = CLGeocoder()
                 geoCoder.geocodeAddressString(Annotation.address) { (placemarks, error) in
@@ -124,7 +123,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                     location.coordinate.latitude == view.annotation?.coordinate.latitude && location.coordinate.longitude == view.annotation?.coordinate.longitude
                 }
             })
-            let annotation = annotations.first!
+//            let annotation = annotations.first!
             print("tapped annotation, annotation = \(annotation)")
             if let cluster = view.annotation as? MKClusterAnnotation {
                 //*** Need array list of annotation inside cluster here ***
