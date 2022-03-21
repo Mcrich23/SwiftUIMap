@@ -107,22 +107,6 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                 //                mapView.deselectAnnotation(view as? MKAnnotation, animated: true)
             }
             //            if points != [] {
-            let annotationLong = entireMapViewController.points.first { Annotations in
-                
-                let geoCoder = CLGeocoder()
-                geoCoder.geocodeAddressString(Annotations.address) { (placemarks, error) in
-                    guard
-                        let placemarks = placemarks,
-                        let location = placemarks.first?.location
-                    else {
-                        // handle no location found
-                        return
-                    }
-                    
-                    // Use your location
-                    location.coordinate.longitude == view.annotation?.coordinate.longitude
-                }
-            }!
             let annotation = entireMapViewController.points.first(where: { Annotation in
                 
                 let geoCoder = CLGeocoder()
