@@ -63,7 +63,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
             return myMap
         }
 
-    func makeCoordinator() -> ExistingAnnotationMapCoordinator {
+    func makeCoordinator() -> rawExistingAnnotationMapCoordinator {
         return ExistingAnnotationMapCoordinator(self, points: points) { annotation, cluster, address  in
 //            print("tapped passed back, annotation = \(annotation)")
             selected(annotation, cluster)
@@ -72,8 +72,8 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
         }
     }
 
-    class ExistingAnnotationMapCoordinator: NSObject, MKMapViewDelegate {
-        var entireMapViewController: ExistingAnnotationMap
+    class rawExistingAnnotationMapCoordinator: NSObject, MKMapViewDelegate {
+        var entireMapViewController: rawExistingAnnotationMap
         var points: [Annotations]
         var selected: (_ Annotations: Annotations, _ Cluster: Bool, _ Address: String) -> Void
         var deselected: () -> Void
@@ -157,7 +157,7 @@ public struct ExistingAnnotationMap: View {
             self.deselected = deselected
         }
     
-    var body: some View {
+    public var body: some View {
         rawExistingAnnotationMap(zoom: zoom, address: address, points: points, pointOfInterestFilter: pointOfInterestFilter, selected: {Annotations, Cluster in
             if Cluster {
                 zoom = zoom/3
