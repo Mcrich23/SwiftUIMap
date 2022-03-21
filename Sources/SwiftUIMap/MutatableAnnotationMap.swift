@@ -40,8 +40,9 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
             let longPress = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(rawMutableAnnotationMapCoordinator.addAnnotation(gesture:)))
             longPress.minimumPressDuration = 0.5
             myMap.addGestureRecognizer(longPress)
-            let doublePress = UIGestureRecognizer(target: context.coordinator, action: #selector(rawMutableAnnotationMapCoordinator.addAnnotation(gesture:)))
-            myMap.addGestureRecognizer(doublePress)
+            let longPressRemove = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(rawMutableAnnotationMapCoordinator.removeAnnotation(gesture:)))
+            longPress.minimumPressDuration = 0.5
+            myMap.addGestureRecognizer(longPressRemove)
             for point in points {
 
                 let geoCoder = CLGeocoder()
