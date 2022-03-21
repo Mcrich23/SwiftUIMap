@@ -148,6 +148,15 @@ public struct ExistingAnnotationMap: View {
     @State public var selected: (_ Annotations: Annotations, _ Cluster: Bool) -> Void
     @State public var deselected: () -> Void
     
+    public init(zoom: Double, address: String, points: [Annotations], pointsOfInterestFilter: MKPointOfInterestFilter, selected: @escaping (_ Annotations: Annotations, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
+            self.zoom = zoom
+            self.address = address
+            self.points = points
+            self.pointOfInterestFilter = pointsOfInterestFilter
+            self.selected = selected
+            self.deselected = deselected
+        }
+    
     var body: some View {
         rawExistingAnnotationMap(zoom: zoom, address: address, points: points, pointOfInterestFilter: pointOfInterestFilter, selected: {Annotations, Cluster in
             if Cluster {
