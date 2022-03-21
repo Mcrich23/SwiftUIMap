@@ -123,8 +123,8 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                     location.coordinate.longitude == view.annotation?.coordinate.longitude
                 }
             }!
-            let removeElement = points.firstIndex(of: annotation!)
-            points.remove(at: removeElement!)
+            let removeElement = points.firstIndex(of: annotation)
+            points.remove(at: removeElement)
             print("tapped annotation, annotation = \(annotation)")
             if let cluster = view.annotation as? MKClusterAnnotation {
                 //*** Need array list of annotation inside cluster here ***
