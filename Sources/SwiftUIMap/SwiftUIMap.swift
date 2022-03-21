@@ -72,7 +72,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
         }
 
     public func makeCoordinator() -> ExistingAnnotationMapCoordinator {
-        return ExistingAnnotationMapCoordinator(self, points: points) { annotation, cluster, address  in
+        return ExistingAnnotationMapCoordinator(self, points: points) { annotation, cluster  in
 //            print("tapped passed back, annotation = \(annotation)")
             selected(annotation, cluster, zoom)
             print("zoom = \(zoom)")
