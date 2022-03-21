@@ -110,7 +110,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
                         location.coordinate.longitude == annotation.coordinate.longitude
                     }
                 }
-                if annotationDetails.glyphImage != "" {
+                if annotationDetails!.glyphImage != "" {
                     annotationView.glyphImage = UIImage(systemName: annotationDetails!.glyphImage)
                 }
                 annotationView.glyphTintColor = annotationDetails!.glyphTintColor
