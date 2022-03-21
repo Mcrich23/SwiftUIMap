@@ -129,13 +129,13 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
                         entireMapViewController.zoom = entireMapViewController.zoom/3
     //                    entireMapViewController.selected(annotation, true)
                         entireMapViewController.address = annotation.address
-                        entireMapViewController.selected(annotation, false, entireMapViewController.zoom)
+                        selected(annotation, true)
                     }else {
-                        entireMapViewController.selected(annotation, false, entireMapViewController.zoom)
+                        selected(annotation, false)
                         entireMapViewController.address = annotation.address
                     }
                 }else {
-                    entireMapViewController.selected(annotation, false, entireMapViewController.zoom)
+                    selected(annotation, false)
                     entireMapViewController.address = annotation.address
                 }
             }
