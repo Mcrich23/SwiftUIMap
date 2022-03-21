@@ -114,8 +114,8 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
             if mapView.selectedAnnotations.count > 0 {
                 mapView.deselectAnnotation(view as? MKAnnotation, animated: true)
             }
-            if points != [] && points != nil {
-                let annotation = points.first { Annotations in
+//            if points != [] && points != nil {
+            let annotation = entireMapViewController.points.first { Annotations in
                     Annotations.title == view.annotation?.title
                 }!
                 print("tapped annotation, annotation = \(annotation)")
@@ -138,7 +138,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
                     entireMapViewController.selected(annotation, false)
                     entireMapViewController.address = annotation.address
                 }
-            }
+//            }
         }
         public func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
             deselected()

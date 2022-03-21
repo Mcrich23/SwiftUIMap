@@ -14,7 +14,6 @@
 		22299EE027E7ECD100CF347E /* SwiftUIMap_ExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22299EDF27E7ECD100CF347E /* SwiftUIMap_ExampleTests.swift */; };
 		22299EEA27E7ECD100CF347E /* SwiftUIMap_ExampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22299EE927E7ECD100CF347E /* SwiftUIMap_ExampleUITests.swift */; };
 		22299EEC27E7ECD100CF347E /* SwiftUIMap_ExampleUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22299EEB27E7ECD100CF347E /* SwiftUIMap_ExampleUITestsLaunchTests.swift */; };
-		22299F0527E7FCC600CF347E /* SwiftUIMap in Frameworks */ = {isa = PBXBuildFile; productRef = 22299F0427E7FCC600CF347E /* SwiftUIMap */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,7 +51,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22299F0527E7FCC600CF347E /* SwiftUIMap in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -146,7 +144,6 @@
 			);
 			name = "SwiftUIMap Example";
 			packageProductDependencies = (
-				22299F0427E7FCC600CF347E /* SwiftUIMap */,
 			);
 			productName = "SwiftUIMap Example";
 			productReference = 22299ECB27E7ECCD00CF347E /* SwiftUIMap Example.app */;
@@ -221,7 +218,6 @@
 			);
 			mainGroup = 22299EC227E7ECCD00CF347E;
 			packageReferences = (
-				22299F0327E7FCC600CF347E /* XCRemoteSwiftPackageReference "SwiftUIMap" */,
 			);
 			productRefGroup = 22299ECC27E7ECCD00CF347E /* Products */;
 			projectDirPath = "";
@@ -593,25 +589,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		22299F0327E7FCC600CF347E /* XCRemoteSwiftPackageReference "SwiftUIMap" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Mcrich23/SwiftUIMap";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		22299F0427E7FCC600CF347E /* SwiftUIMap */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 22299F0327E7FCC600CF347E /* XCRemoteSwiftPackageReference "SwiftUIMap" */;
-			productName = SwiftUIMap;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 22299EC327E7ECCD00CF347E /* Project object */;
 }
