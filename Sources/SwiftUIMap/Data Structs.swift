@@ -20,7 +20,7 @@ public struct Annotations: Identifiable, Equatable {
     public let glyphTintColor: Color
     public let displayPriority: MKFeatureDisplayPriority
     
-    init(title: String, subtitle: String, address: String, glyphImage: String, tintColor: Color, markerTintColor: Color, glyphTintColor: Color, displayPriority: MKFeatureDisplayPriority) {
+    public init(title: String, subtitle: String, address: String, glyphImage: String, tintColor: Color, markerTintColor: Color, glyphTintColor: Color, displayPriority: MKFeatureDisplayPriority) {
         self.title = title
         self.subtitle = subtitle
         self.address = address
