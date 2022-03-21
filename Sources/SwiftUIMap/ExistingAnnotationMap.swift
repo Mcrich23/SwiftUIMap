@@ -103,6 +103,8 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
             return annotationView
         }
         func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+            let title: String =  view.annotation?.title
+            let subtitle: String =  view.annotation?.subtitle
             if mapView.selectedAnnotations.count > 0 {
                 //                mapView.deselectAnnotation(view as? MKAnnotation, animated: true)
             }
@@ -127,13 +129,13 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                         self.entireMapViewController.zoom = self.entireMapViewController.zoom/3
                         self.entireMapViewController.address = String(describing: address)
                         print("zoom = \(self.entireMapViewController.zoom)")
-                        self.entireMapViewController.selected((view.annotation!.title)!, (view.annotation!.subtitle)!, String(describing: address), true)
+                        self.entireMapViewController.selected(title, subtitle, String(describing: address), true)
                     }else {
-                        self.entireMapViewController.selected((view.annotation!.title)!, (view.annotation!.subtitle)!, String(describing: address), false)
+                        self.entireMapViewController.selected(title, subtitle, String(describing: address), false)
                         self.entireMapViewController.address = String(describing: address)
                     }
                 }else {
-                    self.entireMapViewController.selected((view.annotation!.title)!, (view.annotation!.subtitle)!, String(describing: address), false)
+                    self.entireMapViewController.selected(title, subtitle, String(describing: address), false)
                     self.entireMapViewController.address = String(describing: address)
                 }
                 //            }else {
