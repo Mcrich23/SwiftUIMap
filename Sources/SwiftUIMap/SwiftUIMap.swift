@@ -4,7 +4,7 @@ import SwiftUI
 import CoreLocation
 #if os(iOS) || os(tvOS) || os(watchOS)// || os(macOS)
 
-struct ExistingAnnotationMap: UIViewRepresentable {
+public struct ExistingAnnotationMap: UIViewRepresentable {
     var zoom: Double
     var address: String
     var points: [Annotations]
