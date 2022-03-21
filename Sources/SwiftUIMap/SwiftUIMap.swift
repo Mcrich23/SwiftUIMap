@@ -95,20 +95,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
             let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: String(describing: annotation.title))
             if points != [] && points != nil {
                 let annotationDetails = points.first { annotate in
-                    let geoCoder = CLGeocoder()
-                    geoCoder.geocodeAddressString(annotate.address) { (placemarks, error) in
-                        guard
-                            let placemarks = placemarks,
-                            let location = placemarks.first?.location
-                        else {
-                            // handle no location found
-                            return
-                        }
-
-                        // Use your location
-                        location.coordinate.latitude == annotation.coordinate.latitude
-                        location.coordinate.longitude == annotation.coordinate.longitude
-                    }
+                    annotate.title == annotationView.annotation?.title
                 }
                 if annotationDetails!.glyphImage != "" {
                     annotationView.glyphImage = UIImage(systemName: annotationDetails!.glyphImage)
@@ -118,6 +105,8 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
                 annotationView.tintColor = annotationDetails!.tintColor
                 annotationView.displayPriority = annotationDetails!.displayPriority
                 annotationView.clusteringIdentifier = "test"
+                let removeElement = points.firstIndex(of: annotationDetails)
+                points.remove(at: removeElement)
             }
             return annotationView
         }
