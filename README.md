@@ -17,6 +17,8 @@ dependencies: [
 
 ## Usage
 
+Note: To use SwiftUIMap, you need to import MapKit
+
 ### **ExistingAnnotationMap**
 
 ```
