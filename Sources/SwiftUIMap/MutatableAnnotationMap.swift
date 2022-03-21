@@ -168,8 +168,8 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
                 if let mapView = gesture.view as? MKMapView {
                     let point = gesture.location(in: mapView)
                     let coordinate = mapView.convert(point, toCoordinateFrom: mapView)
-                    MapView.shared.pinLatitude = coordinate.latitude
-                    MapView.shared.pinLongitude = coordinate.longitude
+                    mapView.shared.pinLatitude = coordinate.latitude
+                    mapView.shared.pinLongitude = coordinate.longitude
                     let annotation = MKPointAnnotation()
                     annotation.coordinate = coordinate
                     mapView.addAnnotation(annotation)
