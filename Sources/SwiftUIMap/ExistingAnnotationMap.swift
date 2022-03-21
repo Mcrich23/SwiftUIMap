@@ -109,7 +109,6 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                 //                mapView.deselectAnnotation(view as? MKAnnotation, animated: true)
             }
             //            if points != [] {
-            var annotation: Annotations
             let geoCoder = CLGeocoder()
             geoCoder.reverseGeocodeLocation(CLLocation(latitude: coordinates.latitude, longitude: coordinates.longitude)) { placemarks, error in
                 if error == nil {
@@ -117,7 +116,6 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                     let subtitle: String = (view.annotation?.subtitle!!)!
                     let placemark = placemarks!.first
                     let location = String(describing: placemark!.location)
-                    print("tapped annotation, annotation = \(annotation)")
                     if let cluster = annotationCluster {
                         //*** Need array list of annotation inside cluster here ***
                         let arrayList = cluster.memberAnnotations
