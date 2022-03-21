@@ -9,7 +9,7 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
     var address: String
     var points: [Annotations]
     var pointOfInterestFilter: MKPointOfInterestFilter
-    var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
+    var selected: (_ Address: String, _ Cluster: Bool) -> Void
     var deselected: () -> Void
     
 //    var annotationSelected: MKAnnotationView
@@ -70,9 +70,9 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
         }
 
     func makeCoordinator() -> rawMutableAnnotationMapCoordinator {
-        return rawMutableAnnotationMapCoordinator(self, points: points) { title, subtitle, address, cluster  in
+        return rawMutableAnnotationMapCoordinator(self, points: points) { address, cluster  in
 //            print("tapped passed back, annotation = \(annotation)")
-            selected(title, subtitle, address, cluster)
+            selected(address, cluster)
         } deselected: {
             deselected()
         }
@@ -81,9 +81,9 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
     class rawMutableAnnotationMapCoordinator: NSObject, MKMapViewDelegate {
         var entireMapViewController: rawMutableAnnotationMap
         var points: [Annotations]
-        var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
+        var selected: (_ Address: String, _ Cluster: Bool) -> Void
         var deselected: () -> Void
-        init(_ control: rawMutableAnnotationMap, points: [Annotations], selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
+        init(_ control: rawMutableAnnotationMap, points: [Annotations], selected: @escaping (_ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
             self.entireMapViewController = control
             self.points = points
             self.selected = selected
@@ -118,8 +118,6 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
             let geoCoder = CLGeocoder()
             geoCoder.reverseGeocodeLocation(CLLocation(latitude: coordinates.latitude, longitude: coordinates.longitude)) { placemarks, error in
                 if error == nil {
-                    let title: String = (view.annotation?.title!!)!
-                    let subtitle: String = (view.annotation?.subtitle!!)!
                     let placemark = placemarks!.first
                     let location = String(describing: placemark!.location)
                     if let cluster = annotationCluster {
@@ -128,12 +126,12 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
                         print("cluster list = \(arrayList)")
                         // If you want the map to display the cluster members
                         if arrayList.count > 1 {
-                            self.entireMapViewController.selected(title, subtitle, location, true)
+                            self.entireMapViewController.selected(location, true)
                         }else {
-                            self.entireMapViewController.selected(title, subtitle, location, false)
+                            self.entireMapViewController.selected(location, false)
                         }
                     }else {
-                        self.entireMapViewController.selected(title, subtitle, location, false)
+                        self.entireMapViewController.selected(location, false)
                     }
                     //            }else {
                     //                print("no annotation")
@@ -182,10 +180,10 @@ public struct MutableAnnotationMap: View {
     @State public var address: String
     @State public var points: [Annotations]
     @State public var pointOfInterestFilter: MKPointOfInterestFilter
-    @State public var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
+    @State public var selected: (_ Address: String, _ Cluster: Bool) -> Void
     @State public var deselected: () -> Void
     
-    public init(zoom: Double, address: String, points: [Annotations], pointsOfInterestFilter: MKPointOfInterestFilter, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
+    public init(zoom: Double, address: String, points: [Annotations], pointsOfInterestFilter: MKPointOfInterestFilter, selected: @escaping (_ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
             self.zoom = zoom
             self.address = address
             self.points = points
