@@ -120,7 +120,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                     }
                     
                     // Use your location
-                    return location.coordinate.latitude == view.annotation?.coordinate.latitude && location.coordinate.longitude == view.annotation?.coordinate.longitude
+                    location.coordinate.latitude == view.annotation?.coordinate.latitude && location.coordinate.longitude == view.annotation?.coordinate.longitude
                 }
             })
             let annotation = annotations.first
@@ -132,16 +132,16 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                 // If you want the map to display the cluster members
                 if arrayList.count > 1 {
                     entireMapViewController.zoom = entireMapViewController.zoom/3
-                    entireMapViewController.address = annotation!.address
+                    entireMapViewController.address = annotation.address
                     print("zoom = \(entireMapViewController.zoom)")
-                    entireMapViewController.selected(annotation!, true)
+                    entireMapViewController.selected(annotation, true)
                 }else {
-                    entireMapViewController.selected(annotation!, false)
-                    entireMapViewController.address = annotation!.address
+                    entireMapViewController.selected(annotation, false)
+                    entireMapViewController.address = annotation.address
                 }
             }else {
-                entireMapViewController.selected(annotation!, false)
-                entireMapViewController.address = annotation!.address
+                entireMapViewController.selected(annotation, false)
+                entireMapViewController.address = annotation.address
             }
             //            }else {
             //                print("no annotation")
