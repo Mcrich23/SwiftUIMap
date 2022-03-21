@@ -20,7 +20,7 @@ dependencies: [
 ### **ExistingAnnotationMap**
 
 ```
-ExistingAnnotationMap(zoom: 0.4, address: "Seattle, Wa", points: [Annotations(title: "Townhall", subtitle: "Newly Remodled", address: "1119 8th Ave, Seattle, WA, 98101, United States", glyphImage: "", tintColor: .red, markerTintColor: .red, glyphTintColor: .white, displayPriority: .required)], pointsOfInterestFilter: .excludingAll) { Title, Subtitle, Address, Cluster  in
+ExistingAnnotationMap(zoom: 0.4, address: "Seattle, Wa", points: [Annotations(title: "Townhall", subtitle: "Newly Remodeled", address: "1119 8th Ave, Seattle, WA, 98101, United States", glyphImage: "", tintColor: .red, markerTintColor: .red, glyphTintColor: .white, displayPriority: .required)], pointsOfInterestFilter: .excludingAll) { Title, Subtitle, Address, Cluster  in
         print("tapped \(Address)")
     } deselected: {
         print("deselected annotation")
