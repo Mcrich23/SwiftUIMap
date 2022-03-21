@@ -80,7 +80,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
         }
     }
 
-    class ExistingAnnotationMapCoordinator: NSObject, MKMapViewDelegate {
+    public class ExistingAnnotationMapCoordinator: NSObject, MKMapViewDelegate {
         var entireMapViewController: ExistingAnnotationMap
         var points: [Annotations]
         var selected: (_ Annotations: Annotations, _ Cluster: Bool, _ Address: String) -> Void
@@ -93,30 +93,32 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
         }
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
             let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: String(describing: annotation.title))
-            let annotationDetails = points.first { annotate in
-                let geoCoder = CLGeocoder()
-                geoCoder.geocodeAddressString(annotate.address) { (placemarks, error) in
-                    guard
-                        let placemarks = placemarks,
-                        let location = placemarks.first?.location
-                    else {
-                        // handle no location found
-                        return
-                    }
+            if points != [] && points != nil {
+                let annotationDetails = points.first { annotate in
+                    let geoCoder = CLGeocoder()
+                    geoCoder.geocodeAddressString(annotate.address) { (placemarks, error) in
+                        guard
+                            let placemarks = placemarks,
+                            let location = placemarks.first?.location
+                        else {
+                            // handle no location found
+                            return
+                        }
 
-                    // Use your location
-                    location.coordinate.latitude == annotation.coordinate.latitude
-                    location.coordinate.longitude == annotation.coordinate.longitude
+                        // Use your location
+                        location.coordinate.latitude == annotation.coordinate.latitude
+                        location.coordinate.longitude == annotation.coordinate.longitude
+                    }
+                }!
+                if annotationDetails.glyphImage != "" {
+                    annotationView.glyphImage = UIImage(systemName: annotationDetails.glyphImage)
                 }
+                annotationView.glyphTintColor = annotationDetails.glyphTintColor
+                annotationView.markerTintColor = annotationDetails.markerTintColor
+                annotationView.tintColor = annotationDetails.pointTint
+                annotationView.displayPriority = annotationDetails.displayPriority
+                annotationView.clusteringIdentifier = "test"
             }
-            if annotationDetails?.glyphImage != "" {
-                annotationView.glyphImage = UIImage(systemName: annotationDetails?.glyphImage)
-            }
-            annotationView.glyphTintColor = annotationDetails?.glyphTintColor
-            annotationView.markerTintColor = annotationDetails?.markerTintColor
-            annotationView.tintColor = annotationDetails?.pointTint
-            annotationView.displayPriority = annotationDetails?.displayPriority
-            annotationView.clusteringIdentifier = "test"
             return annotationView
         }
         func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
