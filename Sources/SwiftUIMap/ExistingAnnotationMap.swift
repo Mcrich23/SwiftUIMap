@@ -109,7 +109,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
             //            if points != [] {
             var annotation: Annotations
             let geoCoder = CLGeocoder()
-            geoCoder.reverseGeocodeLocation(CLLocation(latitude: view.annotation?.coordinate.latitude, longitude: view.annotation?.coordinate.longitude)) { placemarks, error in
+            geoCoder.reverseGeocodeLocation(CLLocation(latitude: view.annotation!.coordinate.latitude, longitude: view.annotation!.coordinate.longitude)) { placemarks, error in
                 guard
                     let address = placemarks.first?.location
                 else {
