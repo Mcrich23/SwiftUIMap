@@ -37,13 +37,10 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
         func makeUIView(context: Context) -> MKMapView {
 
             let myMap = MKMapView(frame: .zero)
-            let longPress = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(RawMapViewCoordinator.addAnnotation(gesture:)))
+            let longPress = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(rawMutableAnnotationMapCoordinator.addAnnotation(gesture:)))
             longPress.minimumPressDuration = 0.5
             myMap.addGestureRecognizer(longPress)
-            let longPress = UIgestureges
-            longPress.minimumPressDuration = 0.5
-            myMap.addGestureRecognizer(longPress)
-            let doublePress = UIGestureRecognizer(target: context.coordinator, action: #selector(RawMapViewCoordinator.addAnnotation(gesture:)))
+            let doublePress = UIGestureRecognizer(target: context.coordinator, action: #selector(rawMutableAnnotationMapCoordinator.addAnnotation(gesture:)))
             myMap.addGestureRecognizer(doublePress)
             for point in points {
 
