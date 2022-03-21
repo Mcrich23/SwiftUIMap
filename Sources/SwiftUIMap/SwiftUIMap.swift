@@ -2,10 +2,9 @@ import Foundation
 import MapKit
 import SwiftUI
 import CoreLocation
-import Cocoa
 #if os(iOS) || os(tvOS) || os(watchOS)// || os(macOS)
 
-struct SwiftUIMap: UIViewRepresentable {
+public struct SwiftUIMap: UIViewRepresentable {
     var zoom: Double
     var address: String
     var points: [Annotations]
