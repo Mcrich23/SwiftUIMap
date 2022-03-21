@@ -41,7 +41,7 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
             longPress.minimumPressDuration = 0.5
             myMap.addGestureRecognizer(longPress)
             let longPressRemove = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(rawMutableAnnotationMapCoordinator.removeAnnotation(gesture:)))
-            longPress.minimumPressDuration = 0.5
+            longPressRemove.minimumPressDuration = 0.7
             myMap.addGestureRecognizer(longPressRemove)
             for point in points {
 
