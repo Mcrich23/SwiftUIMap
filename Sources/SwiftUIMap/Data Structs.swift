@@ -32,8 +32,3 @@ public struct Annotations: Identifiable, Equatable {
     }
     
 }
-
-public enum PointOfInterestFilter: CaseIterable {
-    case excludingAll
-    case includingAll
-}
