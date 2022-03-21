@@ -106,8 +106,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
                         }
 
                         // Use your location
-                        location.coordinate.latitude == annotation.coordinate.latitude
-                        location.coordinate.longitude == annotation.coordinate.longitude
+                        location.coordinate.latitude == annotation.coordinate.latitude && location.coordinate.longitude == annotation.coordinate.longitude
                     }
                 }
                 if annotationDetails!.glyphImage != "" {
