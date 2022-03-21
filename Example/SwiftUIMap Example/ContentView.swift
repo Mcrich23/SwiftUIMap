@@ -7,10 +7,16 @@
 
 import SwiftUI
 import SwiftUIMap
+import MapKit
 
 struct ContentView: View {
     var body: some View {
-        ExistingAnnotationMap(zoom: 0.05, address: "Seattle, Wa", points: [Annotations(], pointsOfInterestFilter: <#T##MKPointOfInterestFilter#>, selected: <#T##(Annotations, Bool) -> Void##(Annotations, Bool) -> Void##(_ Annotations: Annotations, _ Cluster: Bool) -> Void#>, deselected: <#T##() -> Void#>)
+        ExistingAnnotationMap(zoom: 0.05, address: "Seattle, Wa", points: [Annotations(title: "Test", subtitle: "", address: "1119 8th Ave, Seattle, WA, 98101, United States", glyphImage: "", tintColor: .orange, markerTintColor: .orange, glyphTintColor: .white, displayPriority: .required)], pointsOfInterestFilter: .excludingAll) { Annotations, Cluster in
+            
+        } deselected: {
+            
+        }
+
     }
 }
 

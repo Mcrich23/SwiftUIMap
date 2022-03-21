@@ -21,7 +21,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
         self.deselected = deselected
     }
 //    var annotationSelected: MKAnnotationView
-        func updateUIView(_ mapView: MKMapView, context: Context) {
+    public func updateUIView(_ mapView: MKMapView, context: Context) {
             let span = MKCoordinateSpan(latitudeDelta: zoom, longitudeDelta: zoom)
             var chicagoCoordinate = CLLocationCoordinate2D()
             let geoCoder = CLGeocoder()
@@ -42,7 +42,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
             }
         }
     
-        func makeUIView(context: Context) -> MKMapView {
+        public func makeUIView(context: Context) -> MKMapView {
 
             let myMap = MKMapView(frame: .zero)
             for point in points {
@@ -61,7 +61,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
                     let annotation = MKPointAnnotation()
                     annotation.coordinate.latitude = location.coordinate.latitude
                     annotation.coordinate.longitude = location.coordinate.longitude
-                    annotation.title = point.name
+                    annotation.title = point.title
                     annotation.subtitle = point.subtitle
                     myMap.addAnnotation(annotation)
                 }
@@ -71,7 +71,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
             return myMap
         }
 
-    func makeCoordinator() -> ExistingAnnotationMapCoordinator {
+    public func makeCoordinator() -> ExistingAnnotationMapCoordinator {
         return ExistingAnnotationMapCoordinator(self, points: points) { annotation, cluster, address  in
 //            print("tapped passed back, annotation = \(annotation)")
             selected(annotation, cluster)
@@ -105,11 +105,13 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
                     }
 
                     // Use your location
-                    location.coordinate.latitude = annotation.coordinate.latitude
-                    location.coordinate.longitude = annotation.coordinate.longitude
+                    location.coordinate.latitude == annotation.coordinate.latitude
+                    location.coordinate.longitude == annotation.coordinate.longitude
                 }
             }
-            annotationView.glyphImage = UIImage(systemName: annotationDetails?.glyphImage)
+            if annotationDetails?.glyphImage != "" {
+                annotationView.glyphImage = UIImage(systemName: annotationDetails?.glyphImage)
+            }
             annotationView.glyphTintColor = annotationDetails?.glyphTintColor
             annotationView.markerTintColor = annotationDetails?.markerTintColor
             annotationView.tintColor = annotationDetails?.pointTint
