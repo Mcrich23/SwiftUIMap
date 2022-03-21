@@ -115,7 +115,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
                 }
                 annotationView.glyphTintColor = annotationDetails.glyphTintColor
                 annotationView.markerTintColor = annotationDetails.markerTintColor
-                annotationView.tintColor = annotationDetails.pointTint
+                annotationView.tintColor = annotationDetails.tintColor
                 annotationView.displayPriority = annotationDetails.displayPriority
                 annotationView.clusteringIdentifier = "test"
             }
