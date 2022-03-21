@@ -40,34 +40,34 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
             let longPress = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(rawMutableAnnotationMapCoordinator.addAnnotation(gesture:)))
             longPress.minimumPressDuration = 0.5
             myMap.addGestureRecognizer(longPress)
-            for point in points {
-
-                let geoCoder = CLGeocoder()
-                geoCoder.geocodeAddressString(point.address) { (placemarks, error) in
-                    guard
-                        let placemarks = placemarks,
-                        let location = placemarks.first?.location
-                    else {
-                        // handle no location found
-                        return
-                    }
-
-                    // Use your location
-                    let annotation = MKPointAnnotation()
-                    annotation.coordinate.latitude = location.coordinate.latitude
-                    annotation.coordinate.longitude = location.coordinate.longitude
-                    annotation.title = point.title
-                    annotation.subtitle = point.subtitle
+//            for point in points {
+//
+//                let geoCoder = CLGeocoder()
+//                geoCoder.geocodeAddressString(point.address) { (placemarks, error) in
+//                    guard
+//                        let placemarks = placemarks,
+//                        let location = placemarks.first?.location
+//                    else {
+//                        // handle no location found
+//                        return
+//                    }
+//
+//                    // Use your location
+//                    let annotation = MKPointAnnotation()
+//                    annotation.coordinate.latitude = location.coordinate.latitude
+//                    annotation.coordinate.longitude = location.coordinate.longitude
+//                    annotation.title = point.title
+//                    annotation.subtitle = point.subtitle
 //                    myMap.addAnnotation(annotation)
-                }
-            }
+//                }
+//            }
             myMap.pointOfInterestFilter = pointOfInterestFilter
             myMap.delegate = context.coordinator
             return myMap
         }
 
     func makeCoordinator() -> rawMutableAnnotationMapCoordinator {
-        return rawMutableAnnotationMapCoordinator(self, points: points) { address, cluster  in
+        return rawMutableAnnotationMapCoordinator(self) { address, cluster  in
 //            print("tapped passed back, annotation = \(annotation)")
             selected(address, cluster)
         } deselected: {
@@ -77,10 +77,10 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
 
     class rawMutableAnnotationMapCoordinator: NSObject, MKMapViewDelegate {
         var entireMapViewController: rawMutableAnnotationMap
-        var points: [Annotations]
+//        var points: [Annotations]
         var selected: (_ Address: String, _ Cluster: Bool) -> Void
         var deselected: () -> Void
-        init(_ control: rawMutableAnnotationMap, points: [Annotations], selected: @escaping (_ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
+        init(_ control: rawMutableAnnotationMap, selected: @escaping (_ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
             self.entireMapViewController = control
             self.points = points
             self.selected = selected
@@ -150,7 +150,7 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
                     let coordinate = mapView.convert(point, toCoordinateFrom: mapView)
                     let annotation = MKPointAnnotation()
                     annotation.coordinate = coordinate
-                    if mapView.annotations.contains(annotation) {
+                    if mapView.annotations.contains(where: annotation) {
                         mapView.removeAnnotation(annotation)
                     }else {
                         mapView.addAnnotation(annotation)
