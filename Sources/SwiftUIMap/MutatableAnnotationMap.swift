@@ -77,6 +77,7 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
 
     class rawMutableAnnotationMapCoordinator: NSObject, MKMapViewDelegate {
         var entireMapViewController: rawMutableAnnotationMap
+        var currentAnnotations = [MKPointAnnotation]()
 //        var points: [Annotations]
         var selected: (_ Address: String, _ Cluster: Bool) -> Void
         var deselected: () -> Void
@@ -131,11 +132,13 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
                     let coordinate = mapView.convert(point, toCoordinateFrom: mapView)
                     let annotation = MKPointAnnotation()
                     annotation.coordinate = coordinate
-                    let currentAnnotations: [MKPointAnnotation] = mapView.annotations as! [MKPointAnnotation]
                     if currentAnnotations.contains(annotation) {
                         mapView.removeAnnotation(annotation)
+                        let annotationRemove = currentAnnotations.firstIndex(of: annotation)
+                        currentAnnotations.remove(at: annotationRemove)
                     }else {
                         mapView.addAnnotation(annotation)
+                        currentAnnotations.append(annotation)
                     }
                     print("pinCoordinate = lat: \(coordinate.latitude), long: \(coordinate.longitude)")
                 }

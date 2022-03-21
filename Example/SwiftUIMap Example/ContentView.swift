@@ -11,11 +11,12 @@ import MapKit
 
 struct ContentView: View {
     var body: some View {
-        MutableAnnotationMap(zoom: 0.4, address: "Seattle, Wa", points: [Annotations(title: "Test", subtitle: "", address: "1119 8th Ave, Seattle, WA, 98101, United States", glyphImage: "", tintColor: .orange, markerTintColor: .orange, glyphTintColor: .white, displayPriority: .required), Annotations(title: "Test", subtitle: "", address: "Ballard, Seattle, Wa", glyphImage: "", tintColor: .orange, markerTintColor: .orange, glyphTintColor: .white, displayPriority: .required)], pointsOfInterestFilter: .excludingAll) { Address, Cluster  in
-            print("Address = \(Address)")
+        MutableAnnotationMap(zoom: 0.4, address: "Seattle, Wa", pointsOfInterestFilter: .excludingAll) { Address, Cluster in
+            print("tapped \(Address)")
         } deselected: {
             
         }
+
     }
 }
 
