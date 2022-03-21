@@ -103,8 +103,6 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
             return annotationView
         }
         func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-            let title: String = (view.annotation?.title!!)!
-            let subtitle: String = (view.annotation?.subtitle!!)!
             let coordinates = view.annotation!.coordinate
             if mapView.selectedAnnotations.count > 0 {
                 //                mapView.deselectAnnotation(view as? MKAnnotation, animated: true)
@@ -114,6 +112,8 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
             let geoCoder = CLGeocoder()
             geoCoder.reverseGeocodeLocation(CLLocation(latitude: coordinates.latitude, longitude: coordinates.longitude)) { placemarks, error in
                 if error == nil {
+                    let title: String = (view.annotation?.title!!)!
+                    let subtitle: String = (view.annotation?.subtitle!!)!
                     let placemark = placemarks!.first
                     let location = String(describing: placemark!.location)
                     print("tapped annotation, annotation = \(annotation)")
@@ -123,9 +123,9 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                         print("cluster list = \(arrayList)")
                         // If you want the map to display the cluster members
                         if arrayList.count > 1 {
-                            self.entireMapViewController.selected(title, subtitle, address, true)
+                            self.entireMapViewController.selected(title, subtitle, location, true)
                         }else {
-                            self.entireMapViewController.selected(title, subtitle, address, false)
+                            self.entireMapViewController.selected(title, subtitle, location, false)
                         }
                     }else {
                         self.entireMapViewController.selected(title, subtitle, address, false)
