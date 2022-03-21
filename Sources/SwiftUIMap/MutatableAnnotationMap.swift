@@ -131,7 +131,7 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
                     let coordinate = mapView.convert(point, toCoordinateFrom: mapView)
                     let annotation = MKPointAnnotation()
                     annotation.coordinate = coordinate
-                    let currentAnnotations: [MKPointAnnotation] = mapView.annotations
+                    let currentAnnotations: [MKAnnotation] = mapView.annotations
                     if currentAnnotations.contains(annotation) {
                         mapView.removeAnnotation(annotation)
                     }else {
