@@ -114,26 +114,28 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
             if mapView.selectedAnnotations.count > 0 {
                 mapView.deselectAnnotation(view as? MKAnnotation, animated: true)
             }
-            let annotation = points.first { Annotations in
-                Annotations.title == view.annotation?.title
-            }!
-            print("tapped annotation, annotation = \(annotation)")
-            if let cluster = view.annotation as? MKClusterAnnotation {
-                //*** Need array list of annotation inside cluster here ***
-                let arrayList = cluster.memberAnnotations
-//                print("cluster list = \(arrayList)")
-                // If you want the map to display the cluster members
-                if arrayList.count > 1 {
-                    entireMapViewController.zoom = entireMapViewController.zoom / 3
-//                    entireMapViewController.selected(annotation, true)
-                    entireMapViewController.address = annotation.address
+            if points != [] && points != nil {
+                let annotation = points.first { Annotations in
+                    Annotations.title == view.annotation?.title
+                }!
+                print("tapped annotation, annotation = \(annotation)")
+                if let cluster = view.annotation as? MKClusterAnnotation {
+                    //*** Need array list of annotation inside cluster here ***
+                    let arrayList = cluster.memberAnnotations
+    //                print("cluster list = \(arrayList)")
+                    // If you want the map to display the cluster members
+                    if arrayList.count > 1 {
+                        entireMapViewController.zoom = entireMapViewController.zoom / 3
+    //                    entireMapViewController.selected(annotation, true)
+                        entireMapViewController.address = annotation.address
+                    }else {
+                        entireMapViewController.selected(annotation, false)
+                        entireMapViewController.address = annotation.address
+                    }
                 }else {
                     entireMapViewController.selected(annotation, false)
                     entireMapViewController.address = annotation.address
                 }
-            }else {
-                entireMapViewController.selected(annotation, false)
-                entireMapViewController.address = annotation.address
             }
         }
         public func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
