@@ -15,9 +15,9 @@ public struct Annotations: Identifiable, Equatable {
     public let subtitle: String
     public let address: String
     public let glyphImage: String
-    public let tintColor: Color
-    public let markerTintColor: Color
-    public let glyphTintColor: Color
+    public let tintColor: UIColor
+    public let markerTintColor: UIColor
+    public let glyphTintColor: UIColor
     public let displayPriority: MKFeatureDisplayPriority
     
     public init(title: String, subtitle: String, address: String, glyphImage: String, tintColor: Color, markerTintColor: Color, glyphTintColor: Color, displayPriority: MKFeatureDisplayPriority) {

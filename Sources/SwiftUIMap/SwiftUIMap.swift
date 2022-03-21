@@ -126,7 +126,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
                 mapView.deselectAnnotation(view as? MKAnnotation, animated: true)
             }
             let annotation = points.first { Annotations in
-                Annotations.name == view.annotation?.title
+                Annotations.title == view.annotation?.title
             }!
             print("tapped annotation, annotation = \(annotation)")
             if let cluster = view.annotation as? MKClusterAnnotation {
