@@ -12,7 +12,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
     var selected: (_ Annotations: Annotations, _ Cluster: Bool) -> Void
     var deselected: () -> Void
     
-    public init(zoom: Double, address: String, points: [Annotations], pointsOfInterestFilter: MKPointOfInterestFilter, selected: (_ Annotations: Annotations, _ Cluster: Bool) -> Void, deselected: () -> Void) {
+    public init(zoom: Double, address: String, points: [Annotations], pointsOfInterestFilter: MKPointOfInterestFilter, selected: @escaping (_ Annotations: Annotations, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
         self.zoom = zoom
         self.address = address
         self.points = points
