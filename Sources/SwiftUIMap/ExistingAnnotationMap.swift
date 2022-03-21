@@ -111,7 +111,8 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
             let geoCoder = CLGeocoder()
             geoCoder.reverseGeocodeLocation(CLLocation(latitude: view.annotation!.coordinate.latitude, longitude: view.annotation!.coordinate.longitude)) { placemarks, error in
                 guard
-                    let address = placemarks.first?.location
+                    let placemark = placemarks?.first,
+                    let address = placemark.location
                 else {
                     // handle no location found
                     return
@@ -123,7 +124,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                     print("cluster list = \(arrayList)")
                     // If you want the map to display the cluster members
                     if arrayList.count > 1 {
-                        self.entireMapViewController.zoom = entireMapViewController.zoom/3
+                        self.entireMapViewController.zoom = self.entireMapViewController.zoom/3
                         self.entireMapViewController.address = address
                         print("zoom = \(entireMapViewController.zoom)")
                         self.entireMapViewController.selected(view.annotation?.title, view.annotation?.subtitle, address, true)
