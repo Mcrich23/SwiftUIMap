@@ -81,7 +81,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
     }
 
     class ResultsRawMapViewCoordinator: NSObject, MKMapViewDelegate {
-        var entireMapViewController: ResultsRawMapView
+        var entireMapViewController: ExistingAnnotationMap
         var points: [Annotations]
         var selected: (_ Annotations: Annotations, _ Cluster: Bool, _ Address: String) -> Void
         var deselected: () -> Void
