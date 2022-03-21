@@ -105,7 +105,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
                 annotationView.tintColor = annotationDetails!.tintColor
                 annotationView.displayPriority = annotationDetails!.displayPriority
                 annotationView.clusteringIdentifier = "test"
-                let removeElement = points.firstIndex(of: annotationDetails)
+                let removeElement = points.firstIndex(of: annotationDetails!)
                 points.remove(at: removeElement)
             }
             return annotationView
