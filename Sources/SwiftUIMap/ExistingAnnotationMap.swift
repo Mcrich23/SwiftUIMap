@@ -125,16 +125,16 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                     // If you want the map to display the cluster members
                     if arrayList.count > 1 {
                         self.entireMapViewController.zoom = self.entireMapViewController.zoom/3
-                        self.entireMapViewController.address = address
-                        print("zoom = \(entireMapViewController.zoom)")
-                        self.entireMapViewController.selected(view.annotation?.title, view.annotation?.subtitle, address, true)
+                        self.entireMapViewController.address = String(describing: address)
+                        print("zoom = \(self.entireMapViewController.zoom)")
+                        self.entireMapViewController.selected(view.annotation!.title, view.annotation!.subtitle, String(describing: address), true)
                     }else {
-                        self.entireMapViewController.selected(view.annotation?.title, view.annotation?.subtitle, address, false)
-                        self.entireMapViewController.address = address
+                        self.entireMapViewController.selected(view.annotation!.title, view.annotation!.subtitle, String(describing: address), false)
+                        self.entireMapViewController.address = String(describing: address)
                     }
                 }else {
-                    self.entireMapViewController.selected(view.annotation?.title, view.annotation?.subtitle, address, false)
-                    self.entireMapViewController.address = address
+                    self.entireMapViewController.selected(view.annotation!.title, view.annotation!.subtitle, String(describing: address), false)
+                    self.entireMapViewController.address = String(describing: address)
                 }
                 //            }else {
                 //                print("no annotation")
