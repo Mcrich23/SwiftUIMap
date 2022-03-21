@@ -105,42 +105,42 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
         func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
             let title: String = (view.annotation?.title!!)!
             let subtitle: String = (view.annotation?.subtitle!!)!
+            let coordinates = view.annotation!.coordinate
             if mapView.selectedAnnotations.count > 0 {
                 //                mapView.deselectAnnotation(view as? MKAnnotation, animated: true)
             }
             //            if points != [] {
             var annotation: Annotations
             let geoCoder = CLGeocoder()
-            geoCoder.reverseGeocodeLocation(CLLocation(latitude: view.annotation!.coordinate.latitude, longitude: view.annotation!.coordinate.longitude)) { placemarks, error in
-                guard
-                    let placemark = placemarks?.first,
-                    let address = placemark.location
-                else {
-                    // handle no location found
-                    return
-                }
-                print("tapped annotation, annotation = \(annotation)")
-                if let cluster = view.annotation as? MKClusterAnnotation {
-                    //*** Need array list of annotation inside cluster here ***
-                    let arrayList = cluster.memberAnnotations
-                    print("cluster list = \(arrayList)")
-                    // If you want the map to display the cluster members
-                    if arrayList.count > 1 {
-                        self.entireMapViewController.zoom = self.entireMapViewController.zoom/3
-                        self.entireMapViewController.address = String(describing: address)
-                        print("zoom = \(self.entireMapViewController.zoom)")
-                        self.entireMapViewController.selected(title, subtitle, String(describing: address), true)
+            geoCoder.reverseGeocodeLocation(CLLocation(latitude: coordinates.latitude, longitude: coordinates.longitude)) { placemarks, error in
+                if error == nil {
+                    let placemark = placemarks!.first
+                    let location = String(describing: placemark!.location)
+                    print("tapped annotation, annotation = \(annotation)")
+                    if let cluster = view.annotation as? MKClusterAnnotation {
+                        //*** Need array list of annotation inside cluster here ***
+                        let arrayList = cluster.memberAnnotations
+                        print("cluster list = \(arrayList)")
+                        // If you want the map to display the cluster members
+                        if arrayList.count > 1 {
+                            self.entireMapViewController.zoom = self.entireMapViewController.zoom/3
+                            self.entireMapViewController.address = String(describing: address)
+                            print("zoom = \(self.entireMapViewController.zoom)")
+                            self.entireMapViewController.selected(title, subtitle, String(describing: address), true)
+                        }else {
+                            self.entireMapViewController.selected(title, subtitle, String(describing: address), false)
+                            self.entireMapViewController.address = String(describing: address)
+                        }
                     }else {
                         self.entireMapViewController.selected(title, subtitle, String(describing: address), false)
                         self.entireMapViewController.address = String(describing: address)
                     }
+                    //            }else {
+                    //                print("no annotation")
+                    //            }
                 }else {
-                    self.entireMapViewController.selected(title, subtitle, String(describing: address), false)
-                    self.entireMapViewController.address = String(describing: address)
+                    print("error, \(error)")
                 }
-                //            }else {
-                //                print("no annotation")
-                //            }
             }
         }
         func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
