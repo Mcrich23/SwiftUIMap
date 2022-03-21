@@ -39,7 +39,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
             for point in points {
 
                 let geoCoder = CLGeocoder()
-                geoCoder.geocodeAddressString(point.location) { (placemarks, error) in
+                geoCoder.geocodeAddressString(point.address) { (placemarks, error) in
                     guard
                         let placemarks = placemarks,
                         let location = placemarks.first?.location
