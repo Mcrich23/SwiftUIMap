@@ -10,8 +10,16 @@ import SwiftUIMap
 import MapKit
 
 struct ContentView: View {
+    @State var zoom = 0.3 {
+        didSet {
+            print("zoom = \(zoom)")
+        }
+    }
     var body: some View {
-        ExistingAnnotationMap(zoom: 0.3, address: "Seattle, Wa", points: [Annotations(title: "Test", subtitle: "", address: "1119 8th Ave, Seattle, WA, 98101, United States", glyphImage: "", tintColor: .orange, markerTintColor: .orange, glyphTintColor: .white, displayPriority: .required), Annotations(title: "Test", subtitle: "", address: "Ballard, Seattle, Wa", glyphImage: "", tintColor: .orange, markerTintColor: .orange, glyphTintColor: .white, displayPriority: .required)], pointsOfInterestFilter: .excludingAll) { Annotations, Cluster  in
+        ExistingAnnotationMap(zoom: zoom, address: "Seattle, Wa", points: [Annotations(title: "Test", subtitle: "", address: "1119 8th Ave, Seattle, WA, 98101, United States", glyphImage: "", tintColor: .orange, markerTintColor: .orange, glyphTintColor: .white, displayPriority: .required), Annotations(title: "Test", subtitle: "", address: "Ballard, Seattle, Wa", glyphImage: "", tintColor: .orange, markerTintColor: .orange, glyphTintColor: .white, displayPriority: .required)], pointsOfInterestFilter: .excludingAll) { Annotations, Cluster  in
+            if Cluster {
+//                zoom = zoom/3
+            }
         } deselected: {
             
         }

@@ -4,7 +4,7 @@ import SwiftUI
 import CoreLocation
 #if os(iOS) || os(tvOS) || os(watchOS)// || os(macOS)
 
-public struct ExistingAnnotationMap: UIViewRepresentable {
+struct rawExistingAnnotationMap: UIViewRepresentable {
     var zoom: Double
     var address: String
     var points: [Annotations]
@@ -12,16 +12,8 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
     var selected: (_ Annotations: Annotations, _ Cluster: Bool) -> Void
     var deselected: () -> Void
     
-    public init(zoom: Double, address: String, points: [Annotations], pointsOfInterestFilter: MKPointOfInterestFilter, selected: @escaping (_ Annotations: Annotations, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
-        self.zoom = zoom
-        self.address = address
-        self.points = points
-        self.pointOfInterestFilter = pointsOfInterestFilter
-        self.selected = selected
-        self.deselected = deselected
-    }
 //    var annotationSelected: MKAnnotationView
-    public func updateUIView(_ mapView: MKMapView, context: Context) {
+    func updateUIView(_ mapView: MKMapView, context: Context) {
             let span = MKCoordinateSpan(latitudeDelta: zoom, longitudeDelta: zoom)
             var chicagoCoordinate = CLLocationCoordinate2D()
             let geoCoder = CLGeocoder()
@@ -42,7 +34,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
             }
         }
     
-        public func makeUIView(context: Context) -> MKMapView {
+        func makeUIView(context: Context) -> MKMapView {
 
             let myMap = MKMapView(frame: .zero)
             for point in points {
@@ -71,7 +63,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
             return myMap
         }
 
-    public func makeCoordinator() -> ExistingAnnotationMapCoordinator {
+    func makeCoordinator() -> ExistingAnnotationMapCoordinator {
         return ExistingAnnotationMapCoordinator(self, points: points) { annotation, cluster, address  in
 //            print("tapped passed back, annotation = \(annotation)")
             selected(annotation, cluster)
@@ -80,7 +72,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
         }
     }
 
-    public class ExistingAnnotationMapCoordinator: NSObject, MKMapViewDelegate {
+    class ExistingAnnotationMapCoordinator: NSObject, MKMapViewDelegate {
         var entireMapViewController: ExistingAnnotationMap
         var points: [Annotations]
         var selected: (_ Annotations: Annotations, _ Cluster: Bool, _ Address: String) -> Void
@@ -91,7 +83,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
             self.selected = selected
             self.deselected = deselected
         }
-        public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
             let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: String(describing: annotation.title))
             if points != [] && points != nil {
                 let annotationDetails = points.first { annotate in
@@ -110,7 +102,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
             }
             return annotationView
         }
-        public func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
             if mapView.selectedAnnotations.count > 0 {
                 mapView.deselectAnnotation(view as? MKAnnotation, animated: true)
             }
@@ -142,9 +134,27 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
 //                print("no annotation")
 //            }
         }
-        public func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
+        func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
             deselected()
         }
+    }
+}
+
+public struct ExistingAnnotationMap: View {
+    @State public var zoom: Double
+    @State public var address: String
+    @State public var points: [Annotations]
+    @State public var pointOfInterestFilter: MKPointOfInterestFilter
+    @State public var selected: (_ Annotations: Annotations, _ Cluster: Bool) -> Void
+    @State public var deselected: () -> Void
+    
+    var body: some View {
+        rawExistingAnnotationMap(zoom: zoom, address: address, points: points, pointOfInterestFilter: pointOfInterestFilter, selected: {Annotations, Cluster in
+            if Cluster {
+                zoom = zoom/3
+            }
+            selected(Annotations, Cluster)
+        }, deselected: deselected)
     }
 }
 #endif
