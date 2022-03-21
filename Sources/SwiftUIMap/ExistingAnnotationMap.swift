@@ -75,9 +75,9 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
     class rawExistingAnnotationMapCoordinator: NSObject, MKMapViewDelegate {
         var entireMapViewController: rawExistingAnnotationMap
         var points: [Annotations]
-        var selected: (_ Annotations: Annotations, _ Cluster: Bool, _ Address: String) -> Void
+        var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
         var deselected: () -> Void
-        init(_ control: rawExistingAnnotationMap, points: [Annotations], selected: @escaping (_ Annotations: Annotations, _ Cluster: Bool, _ Address: String) -> Void, deselected: @escaping () -> Void) {
+        init(_ control: rawExistingAnnotationMap, points: [Annotations], selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
             self.entireMapViewController = control
             self.points = points
             self.selected = selected
