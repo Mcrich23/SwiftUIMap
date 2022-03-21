@@ -11,6 +11,15 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
     var pointOfInterestFilter: MKPointOfInterestFilter
     var selected: (_ Annotations: Annotations, _ Cluster: Bool) -> Void
     var deselected: () -> Void
+    
+    init(zoom: Double, address: String, points: [Annotations], pointsOfInterestFilter: MKPointOfInterestFilter, selected: (_ Annotations: Annotations, _ Cluster: Bool) -> Void, deselected: () -> Void]) {
+        self.zoom = zoom
+        self.address = address
+        self.points = points
+        self.pointOfInterestFilter = pointsOfInterestFilter
+        self.selected = selected
+        self.deselected = deselected
+    }
 //    var annotationSelected: MKAnnotationView
         func updateUIView(_ mapView: MKMapView, context: Context) {
             let span = MKCoordinateSpan(latitudeDelta: zoom, longitudeDelta: zoom)
