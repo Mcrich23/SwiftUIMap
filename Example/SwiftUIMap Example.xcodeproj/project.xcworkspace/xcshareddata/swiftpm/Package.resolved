@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "SwiftUIMap",
+        "repositoryURL": "https://github.com/Mcrich23/SwiftUIMap",
+        "state": {
+          "branch": "main",
+          "revision": "3a1831f5631bd4694ebfb654e657bdd0f10b4de8",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
