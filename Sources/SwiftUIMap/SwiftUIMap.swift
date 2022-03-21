@@ -94,7 +94,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
         public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
             let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: String(describing: annotation.title))
             if points != [] && points != nil {
-                let annotationDetails = (points.first { annotate in
+                let annotationDetails = points.first { annotate in
                     let geoCoder = CLGeocoder()
                     geoCoder.geocodeAddressString(annotate.address) { (placemarks, error) in
                         guard
@@ -109,14 +109,14 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
                         location.coordinate.latitude == annotation.coordinate.latitude
                         location.coordinate.longitude == annotation.coordinate.longitude
                     }
-                })!
-                if annotationDetails.glyphImage != "" {
-                    annotationView.glyphImage = UIImage(systemName: annotationDetails.glyphImage)
                 }
-                annotationView.glyphTintColor = annotationDetails.glyphTintColor
-                annotationView.markerTintColor = annotationDetails.markerTintColor
-                annotationView.tintColor = annotationDetails.tintColor
-                annotationView.displayPriority = annotationDetails.displayPriority
+                if annotationDetails.glyphImage != "" {
+                    annotationView.glyphImage = UIImage(systemName: annotationDetails!.glyphImage)
+                }
+                annotationView.glyphTintColor = annotationDetails!.glyphTintColor
+                annotationView.markerTintColor = annotationDetails!.markerTintColor
+                annotationView.tintColor = annotationDetails!.tintColor
+                annotationView.displayPriority = annotationDetails!.displayPriority
                 annotationView.clusteringIdentifier = "test"
             }
             return annotationView
