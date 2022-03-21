@@ -8,7 +8,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
     var zoom: Double
     var address: String
     var points: [Annotations]
-    var pointOfInterestFilter: MKPointOfInterestFilter
+    var pointOfInterestFilter: PointOfInterestFilter
     var selected: (_ Annotations: Annotations, _ Cluster: Bool) -> Void
     var deselected: () -> Void
     
