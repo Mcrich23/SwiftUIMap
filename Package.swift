@@ -15,7 +15,7 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "SwiftUIMap",
-            targets: ["Existing Annotation Map", "Mutatable Annotation Map"]),
+            targets: ["SwiftUIMap"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
