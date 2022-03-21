@@ -74,7 +74,9 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
     public func makeCoordinator() -> ExistingAnnotationMapCoordinator {
         return ExistingAnnotationMapCoordinator(self, points: points) { annotation, cluster, address  in
 //            print("tapped passed back, annotation = \(annotation)")
+            zoom = entireMapViewController.zoom / 3
             selected(annotation, cluster)
+            print("zoom = \(zoom)")
         } deselected: {
             deselected()
         }
@@ -125,7 +127,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
                     print("cluster list = \(arrayList)")
                     // If you want the map to display the cluster members
                     if arrayList.count > 1 {
-                        entireMapViewController.zoom = entireMapViewController.zoom / 3
+//                        entireMapViewController.zoom = entireMapViewController.zoom / 3
     //                    entireMapViewController.selected(annotation, true)
                         entireMapViewController.address = annotation.address
                         print("zoom = \(entireMapViewController.zoom)")
