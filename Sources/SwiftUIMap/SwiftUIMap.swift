@@ -122,7 +122,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
                 if let cluster = view.annotation as? MKClusterAnnotation {
                     //*** Need array list of annotation inside cluster here ***
                     let arrayList = cluster.memberAnnotations
-    //                print("cluster list = \(arrayList)")
+                    print("cluster list = \(arrayList)")
                     // If you want the map to display the cluster members
                     if arrayList.count > 1 {
                         entireMapViewController.zoom = entireMapViewController.zoom / 3
