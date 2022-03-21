@@ -82,28 +82,9 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
         var deselected: () -> Void
         init(_ control: rawMutableAnnotationMap, selected: @escaping (_ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
             self.entireMapViewController = control
-            self.points = points
+//            self.points = points
             self.selected = selected
             self.deselected = deselected
-        }
-        func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-            let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: String(describing: annotation.title))
-            if points != [] && points != nil {
-                let annotationDetails = points.first { annotate in
-                    annotate.title == annotationView.annotation?.title
-                }
-                if annotationDetails!.glyphImage != "" {
-                    annotationView.glyphImage = UIImage(systemName: annotationDetails!.glyphImage)
-                }
-                annotationView.glyphTintColor = annotationDetails!.glyphTintColor
-                annotationView.markerTintColor = annotationDetails!.markerTintColor
-                annotationView.tintColor = annotationDetails!.tintColor
-                annotationView.displayPriority = annotationDetails!.displayPriority
-                annotationView.clusteringIdentifier = "test"
-                let removeElement = points.firstIndex(of: annotationDetails!)
-                points.remove(at: removeElement!)
-            }
-            return annotationView
         }
         func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
             let coordinates = view.annotation!.coordinate
