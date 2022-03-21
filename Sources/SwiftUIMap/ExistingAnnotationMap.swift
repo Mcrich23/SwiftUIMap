@@ -164,8 +164,8 @@ public struct ExistingAnnotationMap: View {
         }
     
     public var body: some View {
-        rawExistingAnnotationMap(zoom: zoom, address: address, points: points, pointOfInterestFilter: pointOfInterestFilter, selected: {Annotations, Cluster in
-            address = Annotations.address
+        rawExistingAnnotationMap(zoom: zoom, address: address, points: points, pointOfInterestFilter: pointOfInterestFilter, selected: {Title, Subtitle, Address, Cluster in
+            address = Address
             if zoom > 0.05 {
                 zoom = zoom/3
                 if zoom < 0.05 {
