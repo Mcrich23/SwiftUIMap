@@ -94,7 +94,7 @@ public struct ExistingAnnotationMap: UIViewRepresentable {
         public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
             let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: String(describing: annotation.title))
             if points != [] && points != nil {
-                let annotationDetails = points!.first { annotate in
+                let annotationDetails = points.first { annotate in
                     let geoCoder = CLGeocoder()
                     geoCoder.geocodeAddressString(annotate.address) { (placemarks, error) in
                         guard
