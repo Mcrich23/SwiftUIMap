@@ -120,7 +120,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                     }
                     
                     // Use your location
-                    location.coordinate.latitude == view.annotation?.coordinate.latitude && location.coordinate.longitude == view.annotation?.coordinate.longitude
+                    return location.coordinate.latitude == view.annotation?.coordinate.latitude && location.coordinate.longitude == view.annotation?.coordinate.longitude
                 }
             })
             let annotation = annotations.first
