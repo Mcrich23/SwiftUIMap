@@ -104,6 +104,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
         }
         func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
             let coordinates = view.annotation!.coordinate
+            let annotationCluster = view.annotation as? MKClusterAnnotation
             if mapView.selectedAnnotations.count > 0 {
                 //                mapView.deselectAnnotation(view as? MKAnnotation, animated: true)
             }
@@ -117,7 +118,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                     let placemark = placemarks!.first
                     let location = String(describing: placemark!.location)
                     print("tapped annotation, annotation = \(annotation)")
-                    if let cluster = view.annotation as? MKClusterAnnotation {
+                    if let cluster = annotationCluster {
                         //*** Need array list of annotation inside cluster here ***
                         let arrayList = cluster.memberAnnotations
                         print("cluster list = \(arrayList)")
