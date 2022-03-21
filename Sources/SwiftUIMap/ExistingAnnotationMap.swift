@@ -172,7 +172,7 @@ public struct ExistingAnnotationMap: View {
                     zoom = 0.05
                 }
             }
-            selected(Annotations, Cluster)
+            selected(Title, Subtitle, Address, Cluster)
         }, deselected: deselected)
     }
 }
