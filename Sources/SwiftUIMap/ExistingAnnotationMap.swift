@@ -126,7 +126,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
             let annotation = entireMapViewController.points.first(where: { Annotation in
                 
                 let geoCoder = CLGeocoder()
-                geoCoder.geocodeAddressString(Annotations.address) { (placemarks, error) in
+                geoCoder.geocodeAddressString(Annotation.address) { (placemarks, error) in
                     guard
                         let placemarks = placemarks,
                         let location = placemarks.first?.location
