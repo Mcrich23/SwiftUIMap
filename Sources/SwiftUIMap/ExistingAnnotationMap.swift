@@ -104,35 +104,50 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
         }
         func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
             if mapView.selectedAnnotations.count > 0 {
-                mapView.deselectAnnotation(view as? MKAnnotation, animated: true)
+                //                mapView.deselectAnnotation(view as? MKAnnotation, animated: true)
             }
-//            if points != [] {
-                let annotation = entireMapViewController.points.first { Annotations in
-                    Annotations.title == view.annotation?.title
-                }!
-                print("tapped annotation, annotation = \(annotation)")
-                if let cluster = view.annotation as? MKClusterAnnotation {
-                    //*** Need array list of annotation inside cluster here ***
-                    let arrayList = cluster.memberAnnotations
-                    print("cluster list = \(arrayList)")
-                    // If you want the map to display the cluster members
-                    if arrayList.count > 1 {
-                        entireMapViewController.zoom = entireMapViewController.zoom/3
-    //                    entireMapViewController.selected(annotation, true)
-                        entireMapViewController.address = annotation.address
-                        print("zoom = \(entireMapViewController.zoom)")
-                        entireMapViewController.selected(annotation, true)
-                    }else {
-                        entireMapViewController.selected(annotation, false)
-                        entireMapViewController.address = annotation.address
+            //            if points != [] {
+            let annotation = entireMapViewController.points.first { Annotations in
+                
+                let geoCoder = CLGeocoder()
+                geoCoder.geocodeAddressString(Annotations.address) { (placemarks, error) in
+                    guard
+                        let placemarks = placemarks,
+                        let location = placemarks.first?.location
+                    else {
+                        // handle no location found
+                        return
                     }
+                    
+                    // Use your location
+                    location.coordinate.longitude == view.annotation?.coordinate.longitude
+                }
+            }!
+            let removeElement = points.firstIndex(of: annotation!)
+            points.remove(at: removeElement!)
+            print("tapped annotation, annotation = \(annotation)")
+            if let cluster = view.annotation as? MKClusterAnnotation {
+                //*** Need array list of annotation inside cluster here ***
+                let arrayList = cluster.memberAnnotations
+                print("cluster list = \(arrayList)")
+                // If you want the map to display the cluster members
+                if arrayList.count > 1 {
+                    entireMapViewController.zoom = entireMapViewController.zoom/3
+                    //                    entireMapViewController.selected(annotation, true)
+                    entireMapViewController.address = annotation.address
+                    print("zoom = \(entireMapViewController.zoom)")
+                    entireMapViewController.selected(annotation, true)
                 }else {
                     entireMapViewController.selected(annotation, false)
                     entireMapViewController.address = annotation.address
                 }
-//            }else {
-//                print("no annotation")
-//            }
+            }else {
+                entireMapViewController.selected(annotation, false)
+                entireMapViewController.address = annotation.address
+            }
+            //            }else {
+            //                print("no annotation")
+            //            }
         }
         func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
             deselected()
