@@ -143,6 +143,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
     }
 }
 
+
 public struct ExistingAnnotationMap: View {
     @State public var zoom: Double
     @State public var address: String
@@ -151,14 +152,14 @@ public struct ExistingAnnotationMap: View {
     @State public var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
     @State public var deselected: () -> Void
     
-//    public init(zoom: Double, address: String, points: [Annotations], pointsOfInterestFilter: MKPointOfInterestFilter, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
-//            self.zoom = zoom
-//            self.address = address
-//            self.points = points
-//            self.pointOfInterestFilter = pointsOfInterestFilter
-//            self.selected = selected
-//            self.deselected = deselected
-//        }
+    public init(zoom: Double, address: String, points: [Annotations], pointsOfInterestFilter: MKPointOfInterestFilter, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
+            self.zoom = zoom
+            self.address = address
+            self.points = points
+            self.pointOfInterestFilter = pointsOfInterestFilter
+            self.selected = selected
+            self.deselected = deselected
+        }
     
     public var body: some View {
         rawExistingAnnotationMap(zoom: zoom, address: address, points: points, pointOfInterestFilter: pointOfInterestFilter, selected: {Title, Subtitle, Address, Cluster in
