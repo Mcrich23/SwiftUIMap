@@ -121,12 +121,12 @@ public struct MapSearchView: View {
                     }
                 }
             }
-            .onDisappear(perform: {
-                onSelect(address)
-            })
-            .onAppear {
-//                print("onSelect = \(String(describing: onSelect))")
-            }
+//            .onDisappear(perform: {
+//                onSelect(address)
+//            })
+//            .onAppear {
+////                print("onSelect = \(String(describing: onSelect))")
+//            }
     }
 }
 class MapSearch : NSObject, ObservableObject {
