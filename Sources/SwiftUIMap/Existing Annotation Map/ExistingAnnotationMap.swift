@@ -94,7 +94,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                 }
                 annotationView.glyphTintColor = annotationDetails!.glyphTintColor
                 annotationView.markerTintColor = annotationDetails!.markerTintColor
-                annotationView.tintColor = annotationDetails!.tintColor
+//                annotationView.tintColor = annotationDetails!.tintColor
                 annotationView.displayPriority = annotationDetails!.displayPriority
                 annotationView.clusteringIdentifier = "test"
                 let removeElement = points.firstIndex(of: annotationDetails!)
