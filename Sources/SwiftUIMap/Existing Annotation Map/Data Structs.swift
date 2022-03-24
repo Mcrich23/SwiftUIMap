@@ -15,7 +15,7 @@ public struct Annotations: Identifiable, Equatable {
     public let title: String
     public let subtitle: String
     public let address: String
-    public let glyphImage: UIImage?
+    public let glyphImage: UIImage
     public let tintColor: UIColor
     public let markerTintColor: UIColor
     public let glyphTintColor: UIColor
