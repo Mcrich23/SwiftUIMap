@@ -1,6 +1,6 @@
 # SwiftUIMap
 
-![](https://github.com/Mcrich23/SwiftUIMap/blob/92f1b2a4040ccdd7eead54acdbaaada4da0b697d/README%20Images/Map.png)
+<img src="https://github.com/Mcrich23/SwiftUIMap/blob/92f1b2a4040ccdd7eead54acdbaaada4da0b697d/README%20Images/Map.png" width="100" height="100">
 
 SwiftUIMap is the best UIKit wrapper for MapKit!
 
