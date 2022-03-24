@@ -57,26 +57,26 @@ public struct MapSearchView: View {
 //    @ObservedObject var locationSearchService: LocationSearchService
     @StateObject private var mapSearch = MapSearch()
     @Environment(\.presentationMode) var presentationMode
-    @State var onSelect: (_ address: String) -> Void
+    @State var onSelect: (_ address: String) -> Void = {address in }
     
     @State private var btnHover = false
     @State private var isBtnActive = false
 
     @State var address = "" {
         didSet {
-            onSelect()
+            onSelect(address)
             presentationMode.wrappedValue.dismiss()
         }
     }
     @State var completion = MKLocalSearchCompletion()
     
-    public init(onSelect: (_ address: String) -> Void) {
+    public init(onSelect: @escaping (_ address: String) -> Void) {
         self.onSelect = onSelect
     }
 
 // Main UI
 
-    var body: some View {
+    public var body: some View {
             VStack {
                 SearchBar(text: $mapSearch.searchTerm, onCommit: {text in })
                 List(mapSearch.locationResults, id: \.self) { completion in
