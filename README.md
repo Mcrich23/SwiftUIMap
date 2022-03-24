@@ -4,7 +4,7 @@
 
 SwiftUIMap is the best UIKit wrapper for MapKit!
 
-Currently, we only support set annotations, but are working on a mutatable map.
+Currently, we only support set annotations, but are working on a user addable marker map.
 
 ## Installation
 ### **Swift Package Manager**
