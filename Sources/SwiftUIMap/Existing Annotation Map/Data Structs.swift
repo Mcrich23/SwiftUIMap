@@ -27,9 +27,9 @@ public struct Annotations: Identifiable, Equatable {
         self.address = address
         switch glyphImage {
         case .systemImage(let string):
-            self.glyphImage = UIImage(systemName: string)
+            self.glyphImage = UIImage(systemName: string) ?? UIImage()
         case .named(let string):
-            self.glyphImage = UIImage(systemName: string)
+            self.glyphImage = UIImage(systemName: string) ?? UIImage()
         case .defaultIcon:
             self.glyphImage = UIImage()
         }
