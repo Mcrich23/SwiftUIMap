@@ -64,6 +64,7 @@ public struct MapSearchView: View {
 
     @State var address = "" {
         didSet {
+            print("didSet address = \(address)")
             onSelect(address)
             presentationMode.wrappedValue.dismiss()
         }
@@ -102,7 +103,7 @@ public struct MapSearchView: View {
                                     
                                     let reversedGeoLocation = ReversedGeoLocation(with: placemark)
                                     address = "\(reversedGeoLocation.streetNumber) \(reversedGeoLocation.streetName) \(reversedGeoLocation.city) \(reversedGeoLocation.state) \(reversedGeoLocation.zipCode) \(reversedGeoLocation.country)"
-                                    print("address = \(address)")
+                                    print("in button address = \(address)")
                                 }
                             }
                         }
@@ -118,7 +119,7 @@ public struct MapSearchView: View {
                 }
             }
             .onAppear {
-                print("onDismiss = \(onSelect)")
+                print("onSelect = \(String(describing: onSelect))")
             }
     }
 }
