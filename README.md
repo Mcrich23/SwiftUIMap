@@ -26,9 +26,20 @@ Note: To use SwiftUIMap, you need to import MapKit
 ### **ExistingAnnotationMap**
 
 ```
-ExistingAnnotationMap(zoom: 0.4, address: "Seattle, Wa", points: [Annotations(title: "Townhall", subtitle: "Newly Remodeled", address: "1119 8th Ave, Seattle, WA, 98101, United States", glyphImage: "", tintColor: .red, markerTintColor: .red, glyphTintColor: .white, displayPriority: .required)], pointsOfInterestFilter: .excludingAll) { Title, Subtitle, Address, Cluster  in
+ExistingAnnotationMap(
+    zoom: 0.4, //Starting Zoom of Map (Range: 0-1, Lower is closer in)
+    address: "Seattle, Wa", //Starting Address in the Center of the Map
+    points: [Annotations(title: "Townhall", //Top Line on Map
+        subtitle: "Newly Remodeled", //Underneath Top Line When Clicked
+        address: "1119 8th Ave, Seattle, WA, 98101, United States", //Address for Point
+        glyphImage: .defaultIcon, //Glyph Icon on Map Point
+        markerTintColor: .red, //Marker Background
+        glyphTintColor: .white, //Glyph Icon Color
+        displayPriority: .required)], //How Markers are Shown
+    pointsOfInterestFilter: .excludingAll, //Wether or Not Other Things Show on the Map
+    selected: { Title, Subtitle, Address, Cluster in //Action When Marker is Selected
         print("tapped \(Address)")
-    } deselected: {
+    }, deselected: { //Action When Marker is Deselceted
         print("deselected annotation")
-}
+})
 ```
