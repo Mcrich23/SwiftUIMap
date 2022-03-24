@@ -71,7 +71,7 @@ public struct MapSearchView: View {
     @State var completion = MKLocalSearchCompletion()
     
     public init(onSelect: @escaping (_ address: String) -> Void) {
-        self.onSelect = onSelect
+        self._onSelect = onSelect
     }
 
 // Main UI
