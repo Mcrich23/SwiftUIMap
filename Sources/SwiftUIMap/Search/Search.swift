@@ -71,7 +71,7 @@ public struct MapSearchView: View {
     @State var completion = MKLocalSearchCompletion()
     
     public init(onSelect: @escaping (_ address: String) -> Void) {
-        self._onSelect = onSelect
+        self.onSelect = onSelect
     }
 
 // Main UI
@@ -102,6 +102,7 @@ public struct MapSearchView: View {
                                     
                                     let reversedGeoLocation = ReversedGeoLocation(with: placemark)
                                     address = "\(reversedGeoLocation.streetNumber) \(reversedGeoLocation.streetName) \(reversedGeoLocation.city) \(reversedGeoLocation.state) \(reversedGeoLocation.zipCode) \(reversedGeoLocation.country)"
+                                    print("address = \(address)")
                                 }
                             }
                         }
@@ -115,6 +116,9 @@ public struct MapSearchView: View {
                         }
                     }
                 }
+            }
+            .onAppear {
+                print("onDismiss = \(onSelect)")
             }
     }
 }
