@@ -145,8 +145,16 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
 
 
 public struct ExistingAnnotationMap: View {
-    @State public var zoom: Double
-    @State public var address: String
+    @State public var zoom: Double {
+        didSet {
+            print("update zoom")
+        }
+    }
+    @State public var address: String {
+        didSet {
+            print("update address")
+        }
+    }
     @State public var points: [Annotations]
     @State public var pointOfInterestFilter: MKPointOfInterestFilter
     @State public var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
