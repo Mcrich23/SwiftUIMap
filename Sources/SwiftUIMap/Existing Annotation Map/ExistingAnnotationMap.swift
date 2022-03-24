@@ -90,7 +90,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                     annotate.title == annotationView.annotation?.title
                 }
                 if annotationDetails!.glyphImage != "" {
-                    annotationView.glyphImage = UIImage(systemName: annotationDetails!.glyphImage)
+                    annotationView.glyphImage = annotationDetails!.glyphImage
                 }
                 annotationView.glyphTintColor = annotationDetails!.glyphTintColor
                 annotationView.markerTintColor = annotationDetails!.markerTintColor
