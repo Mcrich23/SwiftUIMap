@@ -16,12 +16,12 @@ public struct Annotations: Identifiable, Equatable {
     public let subtitle: String
     public let address: String
     public let glyphImage: UIImage
-    public let tintColor: UIColor
+//    public let tintColor: UIColor
     public let markerTintColor: UIColor
     public let glyphTintColor: UIColor
     public let displayPriority: MKFeatureDisplayPriority
     
-    public init(title: String, subtitle: String, address: String, glyphImage: glyphImage, tintColor: UIColor, markerTintColor: UIColor, glyphTintColor: UIColor, displayPriority: MKFeatureDisplayPriority) {
+    public init(title: String, subtitle: String, address: String, glyphImage: glyphImage, markerTintColor: UIColor, glyphTintColor: UIColor, displayPriority: MKFeatureDisplayPriority) {
         self.title = title
         self.subtitle = subtitle
         self.address = address
@@ -33,7 +33,7 @@ public struct Annotations: Identifiable, Equatable {
         case .defaultIcon:
             self.glyphImage = UIImage()
         }
-        self.tintColor = tintColor
+//        self.tintColor = tintColor
         self.markerTintColor = markerTintColor
         self.glyphTintColor = glyphTintColor
         self.displayPriority = displayPriority
