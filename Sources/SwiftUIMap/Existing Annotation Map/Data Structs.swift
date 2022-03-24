@@ -21,16 +21,27 @@ public struct Annotations: Identifiable, Equatable {
     public let glyphTintColor: UIColor
     public let displayPriority: MKFeatureDisplayPriority
     
-    public init(title: String, subtitle: String, address: String, glyphImage: UIImage, tintColor: UIColor, markerTintColor: UIColor, glyphTintColor: UIColor, displayPriority: MKFeatureDisplayPriority) {
+    public init(title: String, subtitle: String, address: String, glyphImage: glyphImage, tintColor: UIColor, markerTintColor: UIColor, glyphTintColor: UIColor, displayPriority: MKFeatureDisplayPriority) {
         self.title = title
         self.subtitle = subtitle
         self.address = address
-        self.glyphImage = glyphImage
+        switch glyphImage {
+        case .systemImage(let string):
+            self.glyphImage = UIImage(systemName: string)
+        case .named(let string):
+            self.glyphImage = UIImage(systemName: string)
+        case .defaultIcon:
+            self.glyphImage = UIImage()
+        }
         self.tintColor = tintColor
         self.markerTintColor = markerTintColor
         self.glyphTintColor = glyphTintColor
         self.displayPriority = displayPriority
     }
-    
+}
+public enum glyphImage {
+    case systemImage(String)
+    case named(String)
+    case defaultIcon
 }
 #endif
