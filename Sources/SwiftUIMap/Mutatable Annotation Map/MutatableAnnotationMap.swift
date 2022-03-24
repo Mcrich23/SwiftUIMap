@@ -116,7 +116,7 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
                     //                print("no annotation")
                     //            }
                 }else {
-                    print("error, \(error)")
+                    print("error, \(String(describing: error))")
                 }
             }
         }

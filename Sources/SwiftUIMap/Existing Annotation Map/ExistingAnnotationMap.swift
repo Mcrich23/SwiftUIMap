@@ -85,7 +85,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
         }
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
             let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: String(describing: annotation.title))
-            if points != [] && points != nil {
+            if points != [] {
                 let annotationDetails = points.first { annotate in
                     annotate.title == annotationView.annotation?.title
                 }
@@ -133,7 +133,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                     //                print("no annotation")
                     //            }
                 }else {
-                    print("error, \(error)")
+                    print("error, \(String(describing: error))")
                 }
             }
         }
