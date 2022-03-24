@@ -5,9 +5,9 @@
         "package": "SwiftUIMap",
         "repositoryURL": "https://github.com/Mcrich23/SwiftUIMap",
         "state": {
-          "branch": null,
-          "revision": "f9e8a159ce7bae269e26e0b3a28656a912ddc234",
-          "version": "1.0.1"
+          "branch": "main",
+          "revision": "d118aff84cafe2e1cec4d035838cab0485828139",
+          "version": null
         }
       }
     ]
