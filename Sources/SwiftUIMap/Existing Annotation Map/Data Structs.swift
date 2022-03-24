@@ -28,7 +28,7 @@ public struct Annotations: Identifiable, Equatable {
         switch glyphImage {
         case .systemImage(let string):
             self.glyphImage = UIImage(systemName: string) ?? UIImage()
-        case .named(let string):
+        case .assetImage(let string):
             self.glyphImage = UIImage(systemName: string) ?? UIImage()
         case .defaultIcon:
             self.glyphImage = UIImage()
@@ -41,7 +41,7 @@ public struct Annotations: Identifiable, Equatable {
 }
 public enum glyphImage {
     case systemImage(String)
-    case named(String)
+    case assetImage(String)
     case defaultIcon
 }
 #endif

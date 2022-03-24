@@ -167,7 +167,7 @@ public struct ExistingAnnotationMap: View {
             self.pointOfInterestFilter = pointsOfInterestFilter
             self.selected = selected
             self.deselected = deselected
-        }
+    }
     
     public var body: some View {
         rawExistingAnnotationMap(zoom: zoom, address: address, points: points, pointOfInterestFilter: pointOfInterestFilter, selected: {Title, Subtitle, Address, Cluster in
