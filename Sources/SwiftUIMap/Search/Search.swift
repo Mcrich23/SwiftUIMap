@@ -57,7 +57,7 @@ public struct MapSearchView: View {
 //    @ObservedObject var locationSearchService: LocationSearchService
     @StateObject private var mapSearch = MapSearch()
     @Environment(\.presentationMode) var presentationMode
-    @State var onSelect: (_ address: String) -> Void// = {address in }
+    var onSelect: (_ address: String) -> Void// = {address in }
     
     @State private var btnHover = false
     @State private var isBtnActive = false
