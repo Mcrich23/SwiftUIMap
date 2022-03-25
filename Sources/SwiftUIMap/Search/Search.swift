@@ -57,26 +57,26 @@ public struct MapSearchView: View {
 //    @ObservedObject var locationSearchService: LocationSearchService
     @StateObject private var mapSearch = MapSearch()
     @Environment(\.presentationMode) var presentationMode
-//    @State var onSelect: (_ address: String) -> Void = {address in }
+    @State var onSelect: (_ address: String) -> Void = {address in }
     
     @State private var btnHover = false
     @State private var isBtnActive = false
 
-    @Binding var address: String {
+    @State var address: String {
         didSet {
 //            print("didSet address = \(address)")
-//            onSelect(address)
+            onSelect(address)
             presentationMode.wrappedValue.dismiss()
         }
     }
     @State var completion = MKLocalSearchCompletion()
     
-//    public init(onSelect: @escaping (_ address: String) -> Void) {
-//        self.onSelect = onSelect
-//    }
-    public init(address: Binding<String>) {
-        self._address = address
+    public init(onSelect: @escaping (_ address: String) -> Void) {
+        self.onSelect = onSelect
     }
+//    public init(address: Binding<String>) {
+//        self._address = address
+//    }
 
 // Main UI
 
