@@ -145,7 +145,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
 
 
 public struct ExistingAnnotationMap: View {
-    @State public var zoom: Double {
+    @Binding public var zoom: Double {
         didSet {
             print("update zoom")
         }
@@ -161,7 +161,7 @@ public struct ExistingAnnotationMap: View {
     @State public var deselected: () -> Void
     
     public init(zoom: Double, address: Binding<String>, points: [Annotations], pointsOfInterestFilter: MKPointOfInterestFilter, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
-            self.zoom = zoom
+            self._zoom = zoom
             self._address = address
             self.points = points
             self.pointOfInterestFilter = pointsOfInterestFilter
