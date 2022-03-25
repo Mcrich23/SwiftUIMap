@@ -62,7 +62,7 @@ public struct MapSearchView: View {
     @State private var btnHover = false
     @State private var isBtnActive = false
 
-    @State var address: String {
+    @State var address: String = ""{
         didSet {
 //            print("didSet address = \(address)")
             onSelect(address)
