@@ -14,7 +14,7 @@ struct ContentView: View {
     @State var zoom = 0.2
     @State var address = "Seattle, Wa"
     var body: some View {
-        ExistingAnnotationMap(zoom: zoom, address: address, points: [
+        ExistingAnnotationMap(zoom: $zoom, address: $address, points: [
             Annotations(title: "Seattle Town Hall", subtitle: "Newly Remodeled", address: "1119 8th Ave, Seattle, WA, 98101, United States", glyphImage: .systemImage("building.columns"), markerTintColor: .systemGray, glyphTintColor: .white, displayPriority: .required),
             Annotations(title: "Space Needle", subtitle: "", address: "400 Broad St Seattle, WA 98109, United States", glyphImage: .systemImage("star.fill"), markerTintColor: .systemPurple, glyphTintColor: .white, displayPriority: .required),
             Annotations(title: "Pike Place Market", subtitle: "", address: "85 Pike St Seattle, WA  98101, United States", glyphImage: .systemImage("cart"), markerTintColor: .systemOrange, glyphTintColor: .white, displayPriority: .required)
@@ -36,8 +36,10 @@ struct ContentView: View {
         })
         .sheet(isPresented: $search) {
             MapSearchView { address in
-                zoom = zoom*3
-                self.address = address
+                zoom = 0.2
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(650), execute: {
+                    self.address = address
+                })
             }
         }
     }
