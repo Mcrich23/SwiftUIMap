@@ -21,7 +21,7 @@ dependencies: [
 
 ## Usage
 
-Note: To use SwiftUIMap, you need to import MapKit
+Note: To use a map from SwiftUIMap, you need to import MapKit
 
 ### **ExistingAnnotationMap**
 
@@ -42,4 +42,17 @@ ExistingAnnotationMap(
     }, deselected: { //Action When Marker is Deselceted
         print("deselected annotation")
 })
+```
+
+### **MapSearchView**
+
+```
+.sheet(isPresented: $search) { //Sheet for Presenting MapSearchView
+    MapSearchView { address in //Callback When Search Result is Tapped
+        zoom = 0.2 //Change Zoom
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(650), execute: { //Wait for Zoom
+            self.address = address //Change Address
+        })
+    }
+}
 ```
