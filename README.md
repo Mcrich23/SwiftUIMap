@@ -6,18 +6,23 @@ SwiftUIMap is the best UIKit wrapper for MapKit!
 
 Currently, we only support set annotations, but are working on a user addable marker map.
 
-## Installation
-### **Swift Package Manager**
+# Requirements 
 
-The Swift Package Manager is a tool for automating the distribution of Swift code and is integrated into the swift compiler. It is in early development, but SwiftUIMap does support its use on supported platforms.
+- iOS 14, macOS 10.16, tvOS 14, or watchOS 67
+- Swift 5.5+
+- Xcode 13.0+
 
-Once you have your Swift package set up, adding SwiftUIMap as a dependency is as easy as adding it to the dependencies value of your Package.swift.
+# Installation
 
-```
-dependencies: [
-    .package(url: "https://github.com/Mcrich23/SwiftUIMap.git", .upToNextMajor(from: "1.0.0"))
-]
-```
+The preferred way of installing SwiftUIX is via the [Swift Package Manager](https://swift.org/package-manager/).
+
+
+1. In Xcode, open your project and navigate to **File** → **Add Packages...**
+2. Paste the repository URL (`https://github.com/Mcrich23/SwiftUIMap`) and click **Next**.
+3. For **Rules**, select **Up To Next Major Version** (With base version set to 1.1.0).
+4. Click **Finish**.
+5. Check **Mcrich23-Toolkit**
+6. Click **Add To Project**
 
 ## Usage
 
