@@ -7,10 +7,7 @@ import CoreLocation
 struct rawMutableAnnotationMap: UIViewRepresentable {
     var zoom: Double
     var address: String
-//    var points: [Annotations]
-    var pointOfInterestFilter: MKPointOfInterestFilter
-    var selected: (_ Address: String, _ Cluster: Bool) -> Void
-    var deselected: () -> Void
+    var modifierMap: MKMapView
     
 //    var annotationSelected: MKAnnotationView
     func updateUIView(_ mapView: MKMapView, context: Context) {
@@ -61,7 +58,7 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
 //                    myMap.addAnnotation(annotation)
 //                }
 //            }
-            myMap.pointOfInterestFilter = pointOfInterestFilter
+            myMap.pointOfInterestFilter = modifierMap.pointOfInterestFilter
             myMap.delegate = context.coordinator
             return myMap
         }
@@ -122,31 +119,28 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
 public struct MutableAnnotationMap: View {
     @State public var zoom: Double
     @State public var address: String
-//    @State public var points: [Annotations]
-    @State public var pointOfInterestFilter: MKPointOfInterestFilter
-    @State public var selected: (_ Address: String, _ Cluster: Bool) -> Void
-    @State public var deselected: () -> Void
+    @State public var modifierMap: MKMapView
     
-    public init(zoom: Double, address: String, pointsOfInterestFilter: MKPointOfInterestFilter, selected: @escaping (_ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
+    public init(zoom: Double, address: String) {
             self.zoom = zoom
             self.address = address
-//            self.points = points
-            self.pointOfInterestFilter = pointsOfInterestFilter
-            self.selected = selected
-            self.deselected = deselected
         }
     
     public var body: some View {
-        rawMutableAnnotationMap(zoom: zoom, address: address, pointOfInterestFilter: pointOfInterestFilter, selected: {Address, Cluster in
-            address = Address
-            if zoom > 0.05 {
-                zoom = zoom/3
-                if zoom < 0.05 {
-                    zoom = 0.05
-                }
-            }
-            selected(Address, Cluster)
-        }, deselected: deselected)
+        rawMutableAnnotationMap(zoom: zoom, address: address, modifierMap: modifierMap)
+    }
+    // MARK: Modifiers
+    public func pointOfInterestCategories(include points: [MKPointOfInterestCategory]) -> ExistingAnnotationMap {
+        modifierMap.pointOfInterestFilter = MKPointOfInterestFilter(including: points)
+        return self
+    }
+    public func pointOfInterestCategories(exclude points: [MKPointOfInterestCategory]) -> ExistingAnnotationMap {
+        modifierMap.pointOfInterestFilter = MKPointOfInterestFilter(excluding: points)
+        return self
+    }
+    public func pointsOfInterest(_ filter: MKPointOfInterestFilter?) -> AppleMap {
+        modifierMap.pointOfInterestFilter = filter ?? .excludingAll
+        return self
     }
 }
 #endif

@@ -59,13 +59,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                     myMap.addAnnotation(annotation)
                 }
             }
-            myMap.pointOfInterestFilter = modifierMap.pointOfInterestFilter
-            myMap.isPitchEnabled = modifierMap.isPitchEnabled
-            myMap.isZoomEnabled = modifierMap.isZoomEnabled
-            myMap.isRotateEnabled = modifierMap.isRotateEnabled
-            myMap.isUserLocationVisible = modifierMap.isUserLocationVisible
-            myMap.isOpaque = modifierMap.isOpaque
-            myMap.isMultipleTouchEnabled = modifierMap.isMultipleTouchEnabled
+            myMap.pointOfInterestFilter = modifierMap.pointOfInterestFiltered
             myMap.delegate = context.coordinator
             return myMap
         }
