@@ -64,30 +64,19 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
         }
 
     func makeCoordinator() -> rawMutableAnnotationMapCoordinator {
-        return rawMutableAnnotationMapCoordinator(self) { address, cluster  in
-//            print("tapped passed back, annotation = \(annotation)")
-            selected(address, cluster)
-        } deselected: {
-            deselected()
-        }
+        return rawMutableAnnotationMapCoordinator(self)
     }
 
     class rawMutableAnnotationMapCoordinator: NSObject, MKMapViewDelegate {
         var entireMapViewController: rawMutableAnnotationMap
         var currentAnnotations = [MKPointAnnotation]()
-//        var points: [Annotations]
-        var selected: (_ Address: String, _ Cluster: Bool) -> Void
-        var deselected: () -> Void
-        init(_ control: rawMutableAnnotationMap, selected: @escaping (_ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
+        init(_ control: rawMutableAnnotationMap) {
             self.entireMapViewController = control
-//            self.points = points
-            self.selected = selected
-            self.deselected = deselected
         }
         func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
             let coordinates = view.annotation!.coordinate
             let annotationCluster = view.annotation as? MKClusterAnnotation
-            mapView.removeAnnotation(view.annotation)
+            mapView.removeAnnotation(view.annotation!)
         }
         func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
             deselected()
