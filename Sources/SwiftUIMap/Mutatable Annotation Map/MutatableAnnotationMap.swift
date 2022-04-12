@@ -90,35 +90,7 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
         func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
             let coordinates = view.annotation!.coordinate
             let annotationCluster = view.annotation as? MKClusterAnnotation
-            if mapView.selectedAnnotations.count > 0 {
-                //                mapView.deselectAnnotation(view as? MKAnnotation, animated: true)
-            }
-            //            if points != [] {
-            let geoCoder = CLGeocoder()
-            geoCoder.reverseGeocodeLocation(CLLocation(latitude: coordinates.latitude, longitude: coordinates.longitude)) { placemarks, error in
-                if error == nil {
-                    let placemark = placemarks!.first
-                    let location = String(describing: placemark!.location)
-                    if let cluster = annotationCluster {
-                        //*** Need array list of annotation inside cluster here ***
-                        let arrayList = cluster.memberAnnotations
-                        print("cluster list = \(arrayList)")
-                        // If you want the map to display the cluster members
-                        if arrayList.count > 1 {
-                            self.entireMapViewController.selected(location, true)
-                        }else {
-                            self.entireMapViewController.selected(location, false)
-                        }
-                    }else {
-                        self.entireMapViewController.selected(location, false)
-                    }
-                    //            }else {
-                    //                print("no annotation")
-                    //            }
-                }else {
-                    print("error, \(String(describing: error))")
-                }
-            }
+            mapView.removeAnnotation(view.annotation)
         }
         func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
             deselected()
@@ -147,34 +119,34 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
     }
 }
 
-//public struct MutableAnnotationMap: View {
-//    @State public var zoom: Double
-//    @State public var address: String
-////    @State public var points: [Annotations]
-//    @State public var pointOfInterestFilter: MKPointOfInterestFilter
-//    @State public var selected: (_ Address: String, _ Cluster: Bool) -> Void
-//    @State public var deselected: () -> Void
-//    
-//    public init(zoom: Double, address: String, pointsOfInterestFilter: MKPointOfInterestFilter, selected: @escaping (_ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
-//            self.zoom = zoom
-//            self.address = address
-////            self.points = points
-//            self.pointOfInterestFilter = pointsOfInterestFilter
-//            self.selected = selected
-//            self.deselected = deselected
-//        }
-//    
-//    public var body: some View {
-//        rawMutableAnnotationMap(zoom: zoom, address: address, pointOfInterestFilter: pointOfInterestFilter, selected: {Address, Cluster in
-//            address = Address
-//            if zoom > 0.05 {
-//                zoom = zoom/3
-//                if zoom < 0.05 {
-//                    zoom = 0.05
-//                }
-//            }
-//            selected(Address, Cluster)
-//        }, deselected: deselected)
-//    }
-//}
+public struct MutableAnnotationMap: View {
+    @State public var zoom: Double
+    @State public var address: String
+//    @State public var points: [Annotations]
+    @State public var pointOfInterestFilter: MKPointOfInterestFilter
+    @State public var selected: (_ Address: String, _ Cluster: Bool) -> Void
+    @State public var deselected: () -> Void
+    
+    public init(zoom: Double, address: String, pointsOfInterestFilter: MKPointOfInterestFilter, selected: @escaping (_ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
+            self.zoom = zoom
+            self.address = address
+//            self.points = points
+            self.pointOfInterestFilter = pointsOfInterestFilter
+            self.selected = selected
+            self.deselected = deselected
+        }
+    
+    public var body: some View {
+        rawMutableAnnotationMap(zoom: zoom, address: address, pointOfInterestFilter: pointOfInterestFilter, selected: {Address, Cluster in
+            address = Address
+            if zoom > 0.05 {
+                zoom = zoom/3
+                if zoom < 0.05 {
+                    zoom = 0.05
+                }
+            }
+            selected(Address, Cluster)
+        }, deselected: deselected)
+    }
+}
 #endif

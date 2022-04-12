@@ -38,7 +38,6 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
         func makeUIView(context: Context) -> MKMapView {
 
             let myMap = MKMapView(frame: .zero)
-            myMap = modifierMap
             for point in points {
 
                 let geoCoder = CLGeocoder()
@@ -60,6 +59,13 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                     myMap.addAnnotation(annotation)
                 }
             }
+            myMap.pointOfInterestFilter = modifierMap.pointOfInterestFilter
+            myMap.isPitchEnabled = modifierMap.isPitchEnabled
+            myMap.isZoomEnabled = modifierMap.isZoomEnabled
+            myMap.isRotateEnabled = modifierMap.isRotateEnabled
+            myMap.isUserLocationVisible = modifierMap.isUserLocationVisible
+            myMap.isOpaque = modifierMap.isOpaque
+            myMap.isMultipleTouchEnabled = modifierMap.isMultipleTouchEnabled
             myMap.delegate = context.coordinator
             return myMap
         }
@@ -160,13 +166,11 @@ public struct ExistingAnnotationMap: View {
     @State public var modifierMap: MKMapView
     @State public var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
     @State public var deselected: () -> Void
-    @State var pointOfInterestCategories: [MKPointOfInterestCategory] = []
     
-    public init(zoom: Binding<Double>, address: Binding<String>, points: [Annotations], pointsOfInterestFilter: MKPointOfInterestFilter, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
+    public init(zoom: Binding<Double>, address: Binding<String>, points: [Annotations], selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
             self._zoom = zoom
             self._address = address
             self.points = points
-            self.pointOfInterestFilter = pointsOfInterestFilter
             self.selected = selected
             self.deselected = deselected
     }
@@ -190,6 +194,10 @@ public struct ExistingAnnotationMap: View {
     }
     public func pointOfInterestCategories(exclude points: [MKPointOfInterestCategory]) -> ExistingAnnotationMap {
         modifierMap.pointOfInterestFilter = MKPointOfInterestFilter(excluding: points)
+        return self
+    }
+    public func pointsOfInterest(_ filter: MKPointOfInterestFilter?) -> AppleMap {
+        modifierMap.pointOfInterestFilter = filter ?? .excludingAll
         return self
     }
 }
