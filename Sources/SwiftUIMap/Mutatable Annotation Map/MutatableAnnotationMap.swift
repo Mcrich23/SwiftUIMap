@@ -130,15 +130,15 @@ public struct MutableAnnotationMap: View {
         rawMutableAnnotationMap(zoom: zoom, address: address, modifierMap: modifierMap)
     }
     // MARK: Modifiers
-    public func pointOfInterestCategories(include points: [MKPointOfInterestCategory]) -> ExistingAnnotationMap {
+    public func pointOfInterestCategories(include points: [MKPointOfInterestCategory]) -> MutableAnnotationMap {
         modifierMap.pointOfInterestFilter = MKPointOfInterestFilter(including: points)
         return self
     }
-    public func pointOfInterestCategories(exclude points: [MKPointOfInterestCategory]) -> ExistingAnnotationMap {
+    public func pointOfInterestCategories(exclude points: [MKPointOfInterestCategory]) -> MutableAnnotationMap {
         modifierMap.pointOfInterestFilter = MKPointOfInterestFilter(excluding: points)
         return self
     }
-    public func pointsOfInterest(_ filter: MKPointOfInterestFilter?) -> AppleMap {
+    public func pointsOfInterest(_ filter: MKPointOfInterestFilter?) -> MutableAnnotationMap {
         modifierMap.pointOfInterestFilter = filter ?? .excludingAll
         return self
     }

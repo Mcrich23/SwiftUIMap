@@ -189,7 +189,7 @@ public struct ExistingAnnotationMap: View {
         modifierMap.pointOfInterestFilter = MKPointOfInterestFilter(excluding: points)
         return self
     }
-    public func pointsOfInterest(_ filter: MKPointOfInterestFilter) -> AppleMap {
+    public func pointsOfInterest(_ filter: MKPointOfInterestFilter) -> ExistingAnnotationMap {
         modifierMap.pointOfInterestFilter = filter
         return self
     }
