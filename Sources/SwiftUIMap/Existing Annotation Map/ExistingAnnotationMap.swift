@@ -9,7 +9,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
     var address: String
     var points: [Annotations]
     var pointOfInterestFilter: MKPointOfInterestFilter
-    var pointOfInterestCategories: [MKPointOfInterestCategory]
+    var modifierMap: MKMapView
     var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
     var deselected: () -> Void
     
@@ -38,6 +38,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
         func makeUIView(context: Context) -> MKMapView {
 
             let myMap = MKMapView(frame: .zero)
+            myMap = modifierMap
             for point in points {
 
                 let geoCoder = CLGeocoder()
@@ -59,8 +60,6 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                     myMap.addAnnotation(annotation)
                 }
             }
-            myMap.pointOfInterestFilter = pointOfInterestFilter
-            myMap.pointOfInterestCategories = MKPointOfInterestFilter(including: pointOfInterestCategories)
             myMap.delegate = context.coordinator
             return myMap
         }
@@ -158,7 +157,7 @@ public struct ExistingAnnotationMap: View {
         }
     }
     @State public var points: [Annotations]
-    @State public var pointOfInterestFilter: MKPointOfInterestFilter
+    @State public var modifierMap: MKMapView
     @State public var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
     @State public var deselected: () -> Void
     @State var pointOfInterestCategories: [MKPointOfInterestCategory] = []
@@ -173,7 +172,7 @@ public struct ExistingAnnotationMap: View {
     }
     
     public var body: some View {
-        rawExistingAnnotationMap(zoom: zoom, address: address, points: points, pointOfInterestFilter: pointOfInterestFilter, pointOfInterestCategories: pointOfInterestCategories, selected: {Title, Subtitle, Address, Cluster in
+        rawExistingAnnotationMap(zoom: zoom, address: address, points: points, pointOfInterestFilter: pointOfInterestFilter, modifierMap: modifierMap, selected: {Title, Subtitle, Address, Cluster in
             address = Address
             if zoom > 0.05 {
                 zoom = zoom/3
@@ -186,7 +185,11 @@ public struct ExistingAnnotationMap: View {
     }
     // MARK: Modifiers
     public func pointOfInterestCategories(include points: [MKPointOfInterestCategory]) -> ExistingAnnotationMap {
-        self.pointOfInterestCategories = points
+        modifierMap.pointOfInterestFilter = MKPointOfInterestFilter(including: points)
+        return self
+    }
+    public func pointOfInterestCategories(exclude points: [MKPointOfInterestCategory]) -> ExistingAnnotationMap {
+        modifierMap.pointOfInterestFilter = MKPointOfInterestFilter(excluding: points)
         return self
     }
 }
