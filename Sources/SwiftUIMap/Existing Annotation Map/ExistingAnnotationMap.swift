@@ -189,8 +189,8 @@ public struct ExistingAnnotationMap: View {
         modifierMap.pointOfInterestFilter = MKPointOfInterestFilter(excluding: points)
         return self
     }
-    public func pointsOfInterest(_ filter: MKPointOfInterestFilter?) -> AppleMap {
-        modifierMap.pointOfInterestFilter = filter ?? .excludingAll
+    public func pointsOfInterest(_ filter: MKPointOfInterestFilter) -> AppleMap {
+        modifierMap.pointOfInterestFilter = filter
         return self
     }
 }
