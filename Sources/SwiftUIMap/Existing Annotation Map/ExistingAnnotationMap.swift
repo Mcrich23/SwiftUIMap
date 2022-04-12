@@ -58,7 +58,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                     myMap.addAnnotation(annotation)
                 }
             }
-            myMap.pointOfInterestFilter = modifierMap.pointOfInterestFiltered
+            myMap.pointOfInterestFilter = modifierMap.pointOfInterestFilter
             myMap.delegate = context.coordinator
             return myMap
         }
