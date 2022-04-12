@@ -156,7 +156,7 @@ public struct ExistingAnnotationMap: View {
         }
     }
     @State public var points: [Annotations]
-    @State public var modifierMap: MKMapView
+    @State public var modifierMap = MKMapView()
     @State public var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
     @State public var deselected: () -> Void
     

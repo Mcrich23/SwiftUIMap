@@ -79,7 +79,6 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
             mapView.removeAnnotation(view.annotation!)
         }
         func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
-            deselected()
         }
         @objc func addAnnotation(gesture: UIGestureRecognizer) {
             
@@ -108,7 +107,7 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
 public struct MutableAnnotationMap: View {
     @State public var zoom: Double
     @State public var address: String
-    @State public var modifierMap: MKMapView
+    @State public var modifierMap = MKMapView()
     
     public init(zoom: Double, address: String) {
             self.zoom = zoom
