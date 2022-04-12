@@ -60,7 +60,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                 }
             }
             myMap.pointOfInterestFilter = pointOfInterestFilter
-            myMap.pointOfInterestCategories = pointOfInterestCategories
+            myMap.pointOfInterestCategories = MKPointOfInterestFilter(including: pointOfInterestCategories)
             myMap.delegate = context.coordinator
             return myMap
         }
@@ -184,7 +184,7 @@ public struct ExistingAnnotationMap: View {
             selected(Title, Subtitle, Address, Cluster)
         }, deselected: deselected)
     }
-    
+    // MARK: Modifiers
     public func pointOfInterestCategories(include points: [MKPointOfInterestCategory]) -> ExistingAnnotationMap {
         self.pointOfInterestCategories = points
         return self
