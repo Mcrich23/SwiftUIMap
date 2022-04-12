@@ -59,6 +59,10 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
 //                }
 //            }
             myMap.pointOfInterestFilter = modifierMap.pointOfInterestFilter
+            myMap.showsCompass = modifierMap.showsCompass
+            myMap.showsScale = modifierMap.showsScale
+            myMap.showsTraffic = modifierMap.showsTraffic
+            myMap.showsBuildings = modifierMap.showsBuildings
             myMap.delegate = context.coordinator
             return myMap
         }
@@ -128,6 +132,22 @@ public struct MutableAnnotationMap: View {
     }
     public func pointsOfInterest(_ filter: MKPointOfInterestFilter?) -> MutableAnnotationMap {
         modifierMap.pointOfInterestFilter = filter ?? .excludingAll
+        return self
+    }
+    public func showCompass(_ show: Bool) -> MutableAnnotationMap {
+        modifierMap.showsCompass = bool
+        return self
+    }
+    public func showScale(_ show: Bool) -> MutableAnnotationMap {
+        modifierMap.showsScale = bool
+        return self
+    }
+    public func showTraffic(_ show: Bool) -> MutableAnnotationMap {
+        modifierMap.showsTraffic = bool
+        return self
+    }
+    public func showBuildings(_ show: Bool) -> MutableAnnotationMap {
+        modifierMap.showsBuildings = bool
         return self
     }
 }

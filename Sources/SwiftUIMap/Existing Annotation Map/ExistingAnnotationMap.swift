@@ -59,6 +59,10 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                 }
             }
             myMap.pointOfInterestFilter = modifierMap.pointOfInterestFilter
+            myMap.showsCompass = modifierMap.showsCompass
+            myMap.showsScale = modifierMap.showsScale
+            myMap.showsTraffic = modifierMap.showsTraffic
+            myMap.showsBuildings = modifierMap.showsBuildings
             myMap.delegate = context.coordinator
             return myMap
         }
@@ -191,6 +195,22 @@ public struct ExistingAnnotationMap: View {
     }
     public func pointsOfInterest(_ filter: MKPointOfInterestFilter) -> ExistingAnnotationMap {
         modifierMap.pointOfInterestFilter = filter
+        return self
+    }
+    public func showCompass(_ show: Bool) -> ExistingAnnotationMap {
+        modifierMap.showsCompass = bool
+        return self
+    }
+    public func showScale(_ show: Bool) -> ExistingAnnotationMap {
+        modifierMap.showsScale = bool
+        return self
+    }
+    public func showTraffic(_ show: Bool) -> ExistingAnnotationMap {
+        modifierMap.showsTraffic = bool
+        return self
+    }
+    public func showBuildings(_ show: Bool) -> ExistingAnnotationMap {
+        modifierMap.showsBuildings = bool
         return self
     }
 }
