@@ -8,7 +8,6 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
     var zoom: Double
     var address: String
     var points: [Annotations]
-    var pointOfInterestFilter: MKPointOfInterestFilter
     var modifierMap: MKMapView
     var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
     var deselected: () -> Void
@@ -170,7 +169,7 @@ public struct ExistingAnnotationMap: View {
     }
     
     public var body: some View {
-        rawExistingAnnotationMap(zoom: zoom, address: address, points: points, pointOfInterestFilter: pointOfInterestFilter, modifierMap: modifierMap, selected: {Title, Subtitle, Address, Cluster in
+        rawExistingAnnotationMap(zoom: zoom, address: address, points: points, modifierMap: modifierMap, selected: {Title, Subtitle, Address, Cluster in
             address = Address
             if zoom > 0.05 {
                 zoom = zoom/3

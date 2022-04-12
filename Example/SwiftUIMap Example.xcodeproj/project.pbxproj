@@ -355,7 +355,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Mcrich23/SwiftUIMap";
 			requirement = {
-				branch = dev;
+				branch = main;
 				kind = branch;
 			};
 		};
