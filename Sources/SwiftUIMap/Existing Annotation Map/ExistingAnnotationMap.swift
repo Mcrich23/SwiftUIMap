@@ -198,19 +198,19 @@ public struct ExistingAnnotationMap: View {
         return self
     }
     public func showCompass(_ show: Bool) -> ExistingAnnotationMap {
-        modifierMap.showsCompass = bool
+        modifierMap.showsCompass = show
         return self
     }
     public func showScale(_ show: Bool) -> ExistingAnnotationMap {
-        modifierMap.showsScale = bool
+        modifierMap.showsScale = show
         return self
     }
     public func showTraffic(_ show: Bool) -> ExistingAnnotationMap {
-        modifierMap.showsTraffic = bool
+        modifierMap.showsTraffic = show
         return self
     }
     public func showBuildings(_ show: Bool) -> ExistingAnnotationMap {
-        modifierMap.showsBuildings = bool
+        modifierMap.showsBuildings = show
         return self
     }
 }

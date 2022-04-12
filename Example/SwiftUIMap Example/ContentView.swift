@@ -23,7 +23,8 @@ struct ContentView: View {
         } deselected: {
             print("deselected annotation")
         }
-        .pointOfInterestCategories(exclude: [.restaurant])
+        .pointOfInterestCategories(exclude: [.airport])
+        .showCompass(false)
         .overlay(alignment: .topTrailing, content: {
             Button(action: {search = true}) {
                 Image(systemName: "magnifyingglass")

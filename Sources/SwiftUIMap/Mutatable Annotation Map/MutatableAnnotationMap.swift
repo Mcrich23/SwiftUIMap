@@ -130,24 +130,24 @@ public struct MutableAnnotationMap: View {
         modifierMap.pointOfInterestFilter = MKPointOfInterestFilter(excluding: points)
         return self
     }
-    public func pointsOfInterest(_ filter: MKPointOfInterestFilter?) -> MutableAnnotationMap {
-        modifierMap.pointOfInterestFilter = filter ?? .excludingAll
+    public func pointsOfInterest(_ filter: MKPointOfInterestFilter!) -> MutableAnnotationMap {
+        modifierMap.pointOfInterestFilter = filter
         return self
     }
     public func showCompass(_ show: Bool) -> MutableAnnotationMap {
-        modifierMap.showsCompass = bool
+        modifierMap.showsCompass = show
         return self
     }
     public func showScale(_ show: Bool) -> MutableAnnotationMap {
-        modifierMap.showsScale = bool
+        modifierMap.showsScale = show
         return self
     }
     public func showTraffic(_ show: Bool) -> MutableAnnotationMap {
-        modifierMap.showsTraffic = bool
+        modifierMap.showsTraffic = show
         return self
     }
     public func showBuildings(_ show: Bool) -> MutableAnnotationMap {
-        modifierMap.showsBuildings = bool
+        modifierMap.showsBuildings = show
         return self
     }
 }
