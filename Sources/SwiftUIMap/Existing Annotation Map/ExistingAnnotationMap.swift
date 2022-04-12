@@ -9,6 +9,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
     var address: String
     var points: [Annotations]
     var pointOfInterestFilter: MKPointOfInterestFilter
+    var pointOfInterestCategories: [MKPointOfInterestCategory]
     var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
     var deselected: () -> Void
     
@@ -59,6 +60,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                 }
             }
             myMap.pointOfInterestFilter = pointOfInterestFilter
+            myMap.pointOfInterestCategories = pointOfInterestCategories
             myMap.delegate = context.coordinator
             return myMap
         }
@@ -159,6 +161,7 @@ public struct ExistingAnnotationMap: View {
     @State public var pointOfInterestFilter: MKPointOfInterestFilter
     @State public var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
     @State public var deselected: () -> Void
+    @State var pointOfInterestCategories: [MKPointOfInterestCategory] = []
     
     public init(zoom: Binding<Double>, address: Binding<String>, points: [Annotations], pointsOfInterestFilter: MKPointOfInterestFilter, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
             self._zoom = zoom
@@ -170,7 +173,7 @@ public struct ExistingAnnotationMap: View {
     }
     
     public var body: some View {
-        rawExistingAnnotationMap(zoom: zoom, address: address, points: points, pointOfInterestFilter: pointOfInterestFilter, selected: {Title, Subtitle, Address, Cluster in
+        rawExistingAnnotationMap(zoom: zoom, address: address, points: points, pointOfInterestFilter: pointOfInterestFilter, pointOfInterestCategories: pointOfInterestCategories, selected: {Title, Subtitle, Address, Cluster in
             address = Address
             if zoom > 0.05 {
                 zoom = zoom/3
@@ -180,6 +183,11 @@ public struct ExistingAnnotationMap: View {
             }
             selected(Title, Subtitle, Address, Cluster)
         }, deselected: deselected)
+    }
+    
+    public func pointOfInterestCategories(include points: [MKPointOfInterestCategory]) -> ExistingAnnotationMap {
+        self.pointOfInterestCategories = points
+        return self
     }
 }
 #endif
