@@ -46,6 +46,7 @@ struct Existing: View {
         .showScale(false)
         .showTraffic(false)
         .showBuildings(true)
+        .mapType(.standard)
         .overlay(alignment: .topTrailing, content: {
             Button(action: {search = true}) {
                 Image(systemName: "magnifyingglass")
