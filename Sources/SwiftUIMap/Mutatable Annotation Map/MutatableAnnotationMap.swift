@@ -148,5 +148,9 @@ public struct MutableMapView: View {
         modifierMap.showsBuildings = show
         return self
     }
+    public func mapType(_ type: MKMapType) -> MutableMapView {
+        modifierMap.mapType = type
+        return self
+    }
 }
 #endif

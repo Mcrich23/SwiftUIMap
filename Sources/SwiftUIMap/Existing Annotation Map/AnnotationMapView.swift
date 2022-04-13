@@ -63,6 +63,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
             myMap.showsScale = modifierMap.showsScale
             myMap.showsTraffic = modifierMap.showsTraffic
             myMap.showsBuildings = modifierMap.showsBuildings
+            myMap.mapType = modifierMap.mapType
             myMap.delegate = context.coordinator
             return myMap
         }
@@ -211,6 +212,10 @@ public struct AnnotationMapView: View {
     }
     public func showBuildings(_ show: Bool) -> AnnotationMapView {
         modifierMap.showsBuildings = show
+        return self
+    }
+    public func mapType(_ type: MKMapType) -> AnnotationMapView {
+        modifierMap.mapType = type
         return self
     }
 }
