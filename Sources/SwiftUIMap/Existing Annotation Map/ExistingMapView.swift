@@ -148,7 +148,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
 }
 
 
-public struct ExistingAnnotationMap: View {
+public struct ExistingMapView: View {
     @Binding public var zoom: Double {
         didSet {
             print("update zoom")
@@ -185,31 +185,31 @@ public struct ExistingAnnotationMap: View {
         }, deselected: deselected)
     }
     // MARK: Modifiers
-    public func pointOfInterestCategories(include points: [MKPointOfInterestCategory]) -> ExistingAnnotationMap {
+    public func pointOfInterestCategories(include points: [MKPointOfInterestCategory]) -> ExistingMapView {
         modifierMap.pointOfInterestFilter = MKPointOfInterestFilter(including: points)
         return self
     }
-    public func pointOfInterestCategories(exclude points: [MKPointOfInterestCategory]) -> ExistingAnnotationMap {
+    public func pointOfInterestCategories(exclude points: [MKPointOfInterestCategory]) -> ExistingMapView {
         modifierMap.pointOfInterestFilter = MKPointOfInterestFilter(excluding: points)
         return self
     }
-    public func pointsOfInterest(_ filter: MKPointOfInterestFilter) -> ExistingAnnotationMap {
+    public func pointsOfInterest(_ filter: MKPointOfInterestFilter) -> ExistingMapView {
         modifierMap.pointOfInterestFilter = filter
         return self
     }
-    public func showCompass(_ show: Bool) -> ExistingAnnotationMap {
+    public func showCompass(_ show: Bool) -> ExistingMapView {
         modifierMap.showsCompass = show
         return self
     }
-    public func showScale(_ show: Bool) -> ExistingAnnotationMap {
+    public func showScale(_ show: Bool) -> ExistingMapView {
         modifierMap.showsScale = show
         return self
     }
-    public func showTraffic(_ show: Bool) -> ExistingAnnotationMap {
+    public func showTraffic(_ show: Bool) -> ExistingMapView {
         modifierMap.showsTraffic = show
         return self
     }
-    public func showBuildings(_ show: Bool) -> ExistingAnnotationMap {
+    public func showBuildings(_ show: Bool) -> ExistingMapView {
         modifierMap.showsBuildings = show
         return self
     }

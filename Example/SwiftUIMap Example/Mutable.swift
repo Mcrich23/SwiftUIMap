@@ -14,7 +14,7 @@ struct Mutable: View {
     @State var zoom = 0.2
     @State var address = "Seattle, Wa"
     var body: some View {
-        MutableAnnotationMap(zoom: $zoom, address: $address)
+        MutableMapView(zoom: $zoom, address: $address)
             .pointOfInterestCategories(exclude: [.airport])
             .showCompass(false)
             .showScale(false)

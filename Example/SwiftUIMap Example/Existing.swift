@@ -14,7 +14,7 @@ struct Existing: View {
     @State var zoom = 0.2
     @State var address = "Seattle, Wa"
     var body: some View {
-        ExistingAnnotationMap(zoom: $zoom, address: $address, points: [
+        ExistingMapView(zoom: $zoom, address: $address, points: [
             Annotations(title: "Seattle Town Hall",
                         subtitle: "Newly Remodeled",
                         address: "1119 8th Ave, Seattle, WA, 98101, United States",

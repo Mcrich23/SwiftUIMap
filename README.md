@@ -4,8 +4,6 @@
 
 SwiftUIMap is the best UIKit wrapper for MapKit!
 
-Currently, we only support set annotations, but are working on a user addable marker map.
-
 ## Installation
 ### **Swift Package Manager**
 
@@ -23,10 +21,10 @@ dependencies: [
 
 Note: To use SwiftUIMap, you need to import MapKit
 
-### **ExistingAnnotationMap**
+### **ExistingMapView**
 
 ```
-ExistingAnnotationMap(
+ExistingMapView(
     zoom: 0.4, //Starting Zoom of Map (Range: 0-1, Lower is closer in)
     address: "Seattle, Wa", //Starting Address in the Center of the Map
     points: [Annotations(title: "Townhall", //Top Line on Map
@@ -41,6 +39,20 @@ ExistingAnnotationMap(
     }, deselected: { //Action When Marker is Deselceted
         print("deselected annotation")
 })
+```
+
+### **MutableMapView**
+
+```
+MutableMapView(
+    zoom: 0.4, //Starting Zoom of Map (Range: 0-1, Lower is closer in)
+    address: "Seattle, Wa") //Starting Address in the Center of the Map
+```
+
+### **Modifier**
+
+```
+...
     .pointsOfInterest(.excludingAll) //Filter Points of Interest (exclude or include all)
     .pointOfInterestCategories(include: [.atm]) //Filter Points of Interest to only include things in an array
     .pointOfInterestCategories(exclude: [.airport]) //Filter Points of Interest to include everything except things in an array

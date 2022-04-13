@@ -16,13 +16,13 @@ struct ContentView: View {
                 NavigationLink {
                     Existing()
                 } label: {
-                    Text("ExistingAnnotationMap")
+                    Text("ExistingMapView")
                 }
                 .padding()
                 NavigationLink {
                     Mutable()
                 } label: {
-                    Text("MutableAnnotationMap")
+                    Text("MutableMapView")
                 }
                 .padding()
             }

@@ -106,7 +106,7 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
     }
 }
 
-public struct MutableAnnotationMap: View {
+public struct MutableMapView: View {
     @Binding public var zoom: Double
     @Binding public var address: String
     @State public var modifierMap = MKMapView()
@@ -120,31 +120,31 @@ public struct MutableAnnotationMap: View {
         rawMutableAnnotationMap(zoom: zoom, address: address, modifierMap: modifierMap)
     }
     // MARK: Modifiers
-    public func pointOfInterestCategories(include points: [MKPointOfInterestCategory]) -> MutableAnnotationMap {
+    public func pointOfInterestCategories(include points: [MKPointOfInterestCategory]) -> MutableMapView {
         modifierMap.pointOfInterestFilter = MKPointOfInterestFilter(including: points)
         return self
     }
-    public func pointOfInterestCategories(exclude points: [MKPointOfInterestCategory]) -> MutableAnnotationMap {
+    public func pointOfInterestCategories(exclude points: [MKPointOfInterestCategory]) -> MutableMapView {
         modifierMap.pointOfInterestFilter = MKPointOfInterestFilter(excluding: points)
         return self
     }
-    public func pointsOfInterest(_ filter: MKPointOfInterestFilter!) -> MutableAnnotationMap {
+    public func pointsOfInterest(_ filter: MKPointOfInterestFilter!) -> MutableMapView {
         modifierMap.pointOfInterestFilter = filter
         return self
     }
-    public func showCompass(_ show: Bool) -> MutableAnnotationMap {
+    public func showCompass(_ show: Bool) -> MutableMapView {
         modifierMap.showsCompass = show
         return self
     }
-    public func showScale(_ show: Bool) -> MutableAnnotationMap {
+    public func showScale(_ show: Bool) -> MutableMapView {
         modifierMap.showsScale = show
         return self
     }
-    public func showTraffic(_ show: Bool) -> MutableAnnotationMap {
+    public func showTraffic(_ show: Bool) -> MutableMapView {
         modifierMap.showsTraffic = show
         return self
     }
-    public func showBuildings(_ show: Bool) -> MutableAnnotationMap {
+    public func showBuildings(_ show: Bool) -> MutableMapView {
         modifierMap.showsBuildings = show
         return self
     }
