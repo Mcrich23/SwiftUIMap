@@ -8,7 +8,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
     var zoom: Double
     var address: String
     var points: [Annotations]
-    var pointOfInterestFilter: MKPointOfInterestFilter
+    var modifierMap: MKMapView
     var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
     var deselected: () -> Void
     
@@ -58,7 +58,11 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                     myMap.addAnnotation(annotation)
                 }
             }
-            myMap.pointOfInterestFilter = pointOfInterestFilter
+            myMap.pointOfInterestFilter = modifierMap.pointOfInterestFilter
+            myMap.showsCompass = modifierMap.showsCompass
+            myMap.showsScale = modifierMap.showsScale
+            myMap.showsTraffic = modifierMap.showsTraffic
+            myMap.showsBuildings = modifierMap.showsBuildings
             myMap.delegate = context.coordinator
             return myMap
         }
@@ -144,7 +148,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
 }
 
 
-public struct ExistingAnnotationMap: View {
+public struct AnnotationMapView: View {
     @Binding public var zoom: Double {
         didSet {
             print("update zoom")
@@ -156,21 +160,20 @@ public struct ExistingAnnotationMap: View {
         }
     }
     @State public var points: [Annotations]
-    @State public var pointOfInterestFilter: MKPointOfInterestFilter
+    @State public var modifierMap = MKMapView()
     @State public var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
     @State public var deselected: () -> Void
     
-    public init(zoom: Binding<Double>, address: Binding<String>, points: [Annotations], pointsOfInterestFilter: MKPointOfInterestFilter, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
+    public init(zoom: Binding<Double>, address: Binding<String>, points: [Annotations], selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
             self._zoom = zoom
             self._address = address
             self.points = points
-            self.pointOfInterestFilter = pointsOfInterestFilter
             self.selected = selected
             self.deselected = deselected
     }
     
     public var body: some View {
-        rawExistingAnnotationMap(zoom: zoom, address: address, points: points, pointOfInterestFilter: pointOfInterestFilter, selected: {Title, Subtitle, Address, Cluster in
+        rawExistingAnnotationMap(zoom: zoom, address: address, points: points, modifierMap: modifierMap, selected: { Title, Subtitle, Address, Cluster in
             address = Address
             if zoom > 0.05 {
                 zoom = zoom/3
@@ -180,6 +183,35 @@ public struct ExistingAnnotationMap: View {
             }
             selected(Title, Subtitle, Address, Cluster)
         }, deselected: deselected)
+    }
+    // MARK: Modifiers
+    public func pointOfInterestCategories(include points: [MKPointOfInterestCategory]) -> AnnotationMapView {
+        modifierMap.pointOfInterestFilter = MKPointOfInterestFilter(including: points)
+        return self
+    }
+    public func pointOfInterestCategories(exclude points: [MKPointOfInterestCategory]) -> AnnotationMapView {
+        modifierMap.pointOfInterestFilter = MKPointOfInterestFilter(excluding: points)
+        return self
+    }
+    public func pointsOfInterest(_ filter: MKPointOfInterestFilter) -> AnnotationMapView {
+        modifierMap.pointOfInterestFilter = filter
+        return self
+    }
+    public func showCompass(_ show: Bool) -> AnnotationMapView {
+        modifierMap.showsCompass = show
+        return self
+    }
+    public func showScale(_ show: Bool) -> AnnotationMapView {
+        modifierMap.showsScale = show
+        return self
+    }
+    public func showTraffic(_ show: Bool) -> AnnotationMapView {
+        modifierMap.showsTraffic = show
+        return self
+    }
+    public func showBuildings(_ show: Bool) -> AnnotationMapView {
+        modifierMap.showsBuildings = show
+        return self
     }
 }
 #endif

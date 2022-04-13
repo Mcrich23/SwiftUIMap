@@ -7,10 +7,7 @@ import CoreLocation
 struct rawMutableAnnotationMap: UIViewRepresentable {
     var zoom: Double
     var address: String
-//    var points: [Annotations]
-    var pointOfInterestFilter: MKPointOfInterestFilter
-    var selected: (_ Address: String, _ Cluster: Bool) -> Void
-    var deselected: () -> Void
+    var modifierMap: MKMapView
     
 //    var annotationSelected: MKAnnotationView
     func updateUIView(_ mapView: MKMapView, context: Context) {
@@ -61,67 +58,29 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
 //                    myMap.addAnnotation(annotation)
 //                }
 //            }
-            myMap.pointOfInterestFilter = pointOfInterestFilter
+            myMap.pointOfInterestFilter = modifierMap.pointOfInterestFilter
+            myMap.showsCompass = modifierMap.showsCompass
+            myMap.showsScale = modifierMap.showsScale
+            myMap.showsTraffic = modifierMap.showsTraffic
+            myMap.showsBuildings = modifierMap.showsBuildings
             myMap.delegate = context.coordinator
             return myMap
         }
 
     func makeCoordinator() -> rawMutableAnnotationMapCoordinator {
-        return rawMutableAnnotationMapCoordinator(self) { address, cluster  in
-//            print("tapped passed back, annotation = \(annotation)")
-            selected(address, cluster)
-        } deselected: {
-            deselected()
-        }
+        return rawMutableAnnotationMapCoordinator(self)
     }
 
     class rawMutableAnnotationMapCoordinator: NSObject, MKMapViewDelegate {
         var entireMapViewController: rawMutableAnnotationMap
         var currentAnnotations = [MKPointAnnotation]()
-//        var points: [Annotations]
-        var selected: (_ Address: String, _ Cluster: Bool) -> Void
-        var deselected: () -> Void
-        init(_ control: rawMutableAnnotationMap, selected: @escaping (_ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
+        init(_ control: rawMutableAnnotationMap) {
             self.entireMapViewController = control
-//            self.points = points
-            self.selected = selected
-            self.deselected = deselected
         }
         func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-            let coordinates = view.annotation!.coordinate
-            let annotationCluster = view.annotation as? MKClusterAnnotation
-            if mapView.selectedAnnotations.count > 0 {
-                //                mapView.deselectAnnotation(view as? MKAnnotation, animated: true)
-            }
-            //            if points != [] {
-            let geoCoder = CLGeocoder()
-            geoCoder.reverseGeocodeLocation(CLLocation(latitude: coordinates.latitude, longitude: coordinates.longitude)) { placemarks, error in
-                if error == nil {
-                    let placemark = placemarks!.first
-                    let location = String(describing: placemark!.location)
-                    if let cluster = annotationCluster {
-                        //*** Need array list of annotation inside cluster here ***
-                        let arrayList = cluster.memberAnnotations
-                        print("cluster list = \(arrayList)")
-                        // If you want the map to display the cluster members
-                        if arrayList.count > 1 {
-                            self.entireMapViewController.selected(location, true)
-                        }else {
-                            self.entireMapViewController.selected(location, false)
-                        }
-                    }else {
-                        self.entireMapViewController.selected(location, false)
-                    }
-                    //            }else {
-                    //                print("no annotation")
-                    //            }
-                }else {
-                    print("error, \(String(describing: error))")
-                }
-            }
+            mapView.removeAnnotation(view.annotation!)
         }
         func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
-            deselected()
         }
         @objc func addAnnotation(gesture: UIGestureRecognizer) {
             
@@ -147,34 +106,47 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
     }
 }
 
-//public struct MutableAnnotationMap: View {
-//    @State public var zoom: Double
-//    @State public var address: String
-////    @State public var points: [Annotations]
-//    @State public var pointOfInterestFilter: MKPointOfInterestFilter
-//    @State public var selected: (_ Address: String, _ Cluster: Bool) -> Void
-//    @State public var deselected: () -> Void
-//    
-//    public init(zoom: Double, address: String, pointsOfInterestFilter: MKPointOfInterestFilter, selected: @escaping (_ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
-//            self.zoom = zoom
-//            self.address = address
-////            self.points = points
-//            self.pointOfInterestFilter = pointsOfInterestFilter
-//            self.selected = selected
-//            self.deselected = deselected
-//        }
-//    
-//    public var body: some View {
-//        rawMutableAnnotationMap(zoom: zoom, address: address, pointOfInterestFilter: pointOfInterestFilter, selected: {Address, Cluster in
-//            address = Address
-//            if zoom > 0.05 {
-//                zoom = zoom/3
-//                if zoom < 0.05 {
-//                    zoom = 0.05
-//                }
-//            }
-//            selected(Address, Cluster)
-//        }, deselected: deselected)
-//    }
-//}
+public struct MutableMapView: View {
+    @Binding public var zoom: Double
+    @Binding public var address: String
+    @State public var modifierMap = MKMapView()
+    
+    public init(zoom: Binding<Double>, address: Binding<String>) {
+            self._zoom = zoom
+            self._address = address
+        }
+    
+    public var body: some View {
+        rawMutableAnnotationMap(zoom: zoom, address: address, modifierMap: modifierMap)
+    }
+    // MARK: Modifiers
+    public func pointOfInterestCategories(include points: [MKPointOfInterestCategory]) -> MutableMapView {
+        modifierMap.pointOfInterestFilter = MKPointOfInterestFilter(including: points)
+        return self
+    }
+    public func pointOfInterestCategories(exclude points: [MKPointOfInterestCategory]) -> MutableMapView {
+        modifierMap.pointOfInterestFilter = MKPointOfInterestFilter(excluding: points)
+        return self
+    }
+    public func pointsOfInterest(_ filter: MKPointOfInterestFilter!) -> MutableMapView {
+        modifierMap.pointOfInterestFilter = filter
+        return self
+    }
+    public func showCompass(_ show: Bool) -> MutableMapView {
+        modifierMap.showsCompass = show
+        return self
+    }
+    public func showScale(_ show: Bool) -> MutableMapView {
+        modifierMap.showsScale = show
+        return self
+    }
+    public func showTraffic(_ show: Bool) -> MutableMapView {
+        modifierMap.showsTraffic = show
+        return self
+    }
+    public func showBuildings(_ show: Bool) -> MutableMapView {
+        modifierMap.showsBuildings = show
+        return self
+    }
+}
 #endif

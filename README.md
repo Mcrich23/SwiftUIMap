@@ -4,6 +4,9 @@
 
 SwiftUIMap is the best UIKit wrapper for MapKit!
 
+## Installation
+### **Swift Package Manager**
+
 Currently, we only support set annotations, but are working on a user addable marker map.
 
 # Requirements 
@@ -28,10 +31,10 @@ The preferred way of installing SwiftUIX is via the [Swift Package Manager](http
 
 Note: To use a map from SwiftUIMap, you need to import MapKit
 
-### **ExistingAnnotationMap**
+### **AnnotationMapView**
 
 ```
-ExistingAnnotationMap(
+ExistingMapView(
     zoom: 0.4, //Starting Zoom of Map (Range: 0-1, Lower is closer in)
     address: "Seattle, Wa", //Starting Address in the Center of the Map
     points: [Annotations(title: "Townhall", //Top Line on Map
@@ -41,23 +44,29 @@ ExistingAnnotationMap(
         markerTintColor: .red, //Marker Background
         glyphTintColor: .white, //Glyph Icon Color
         displayPriority: .required)], //How Markers are Shown
-    pointsOfInterestFilter: .excludingAll, //Wether or Not Other Things Show on the Map
     selected: { Title, Subtitle, Address, Cluster in //Action When Marker is Selected
         print("tapped \(Address)")
     }, deselected: { //Action When Marker is Deselceted
         print("deselected annotation")
 })
 ```
-
-### **MapSearchView**
+### **MutableMapView**
 
 ```
-.sheet(isPresented: $search) { //Sheet for Presenting MapSearchView
-    MapSearchView { address in //Callback When Search Result is Tapped
-        zoom = 0.2 //Change Zoom
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(650), execute: { //Wait for Zoom
-            self.address = address //Change Address
-        })
-    }
-}
+MutableMapView(
+    zoom: 0.4, //Starting Zoom of Map (Range: 0-1, Lower is closer in)
+    address: "Seattle, Wa") //Starting Address in the Center of the Map
+```
+
+### **Modifier**
+
+```
+...
+    .pointsOfInterest(.excludingAll) //Filter Points of Interest (exclude or include all)
+    .pointOfInterestCategories(include: [.atm]) //Filter Points of Interest to only include things in an array
+    .pointOfInterestCategories(exclude: [.airport]) //Filter Points of Interest to include everything except things in an array
+    .showCompass(false) //Show Compass (true or false)
+    .showScale(false) //Show Scale (true or false)
+    .showTraffic(false) //Show Traffic (true or false)
+    .showBuildings(false) //Show Buildings (true or false)
 ```
