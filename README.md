@@ -21,7 +21,7 @@ dependencies: [
 
 Note: To use SwiftUIMap, you need to import MapKit
 
-### **ExistingMapView**
+### **AnnotationMapView**
 
 ```
 ExistingMapView(

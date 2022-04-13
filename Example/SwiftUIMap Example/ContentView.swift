@@ -16,7 +16,7 @@ struct ContentView: View {
                 NavigationLink {
                     Existing()
                 } label: {
-                    Text("ExistingMapView")
+                    Text("AnnotationMapView")
                 }
                 .padding()
                 NavigationLink {

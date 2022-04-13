@@ -148,7 +148,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
 }
 
 
-public struct ExistingMapView: View {
+public struct AnnotationMapView: View {
     @Binding public var zoom: Double {
         didSet {
             print("update zoom")
@@ -185,31 +185,31 @@ public struct ExistingMapView: View {
         }, deselected: deselected)
     }
     // MARK: Modifiers
-    public func pointOfInterestCategories(include points: [MKPointOfInterestCategory]) -> ExistingMapView {
+    public func pointOfInterestCategories(include points: [MKPointOfInterestCategory]) -> AnnotationMapView {
         modifierMap.pointOfInterestFilter = MKPointOfInterestFilter(including: points)
         return self
     }
-    public func pointOfInterestCategories(exclude points: [MKPointOfInterestCategory]) -> ExistingMapView {
+    public func pointOfInterestCategories(exclude points: [MKPointOfInterestCategory]) -> AnnotationMapView {
         modifierMap.pointOfInterestFilter = MKPointOfInterestFilter(excluding: points)
         return self
     }
-    public func pointsOfInterest(_ filter: MKPointOfInterestFilter) -> ExistingMapView {
+    public func pointsOfInterest(_ filter: MKPointOfInterestFilter) -> AnnotationMapView {
         modifierMap.pointOfInterestFilter = filter
         return self
     }
-    public func showCompass(_ show: Bool) -> ExistingMapView {
+    public func showCompass(_ show: Bool) -> AnnotationMapView {
         modifierMap.showsCompass = show
         return self
     }
-    public func showScale(_ show: Bool) -> ExistingMapView {
+    public func showScale(_ show: Bool) -> AnnotationMapView {
         modifierMap.showsScale = show
         return self
     }
-    public func showTraffic(_ show: Bool) -> ExistingMapView {
+    public func showTraffic(_ show: Bool) -> AnnotationMapView {
         modifierMap.showsTraffic = show
         return self
     }
-    public func showBuildings(_ show: Bool) -> ExistingMapView {
+    public func showBuildings(_ show: Bool) -> AnnotationMapView {
         modifierMap.showsBuildings = show
         return self
     }
