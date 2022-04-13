@@ -35,18 +35,18 @@ Note: To use a map from SwiftUIMap, you need to import MapKit
 
 ```
 ExistingMapView(
-    zoom: 0.4, //Starting Zoom of Map (Range: 0-1, Lower is closer in)
-    address: "Seattle, Wa", //Starting Address in the Center of the Map
-    points: [Annotations(title: "Townhall", //Top Line on Map
-        subtitle: "Newly Remodeled", //Underneath Top Line When Clicked
-        address: "1119 8th Ave, Seattle, WA, 98101, United States", //Address for Point
-        glyphImage: .defaultIcon, //Glyph Icon on Map Point
-        markerTintColor: .red, //Marker Background
-        glyphTintColor: .white, //Glyph Icon Color
-        displayPriority: .required)], //How Markers are Shown
-    selected: { Title, Subtitle, Address, Cluster in //Action When Marker is Selected
+    zoom: 0.4, // Starting Zoom of Map (Range: 0-1, Lower is closer in)
+    address: "Seattle, Wa", // Starting Address in the Center of the Map
+    points: [Annotations(title: "Townhall", // Top Line on Map
+        subtitle: "Newly Remodeled", // Underneath Top Line When Clicked
+        address: "1119 8th Ave, Seattle, WA, 98101, United States", // Address for Point
+        glyphImage: .defaultIcon, // Glyph Icon on Map Point
+        markerTintColor: .red, // Marker Background
+        glyphTintColor: .white, // Glyph Icon Color
+        displayPriority: .required)], // How Markers are Shown
+    selected: { Title, Subtitle, Address, Cluster in // Action When Marker is Selected
         print("tapped \(Address)")
-    }, deselected: { //Action When Marker is Deselceted
+    }, deselected: { // Action When Marker is Deselceted
         print("deselected annotation")
 })
 ```
@@ -54,20 +54,20 @@ ExistingMapView(
 
 ```
 MutableMapView(
-    zoom: 0.4, //Starting Zoom of Map (Range: 0-1, Lower is closer in)
-    address: "Seattle, Wa") //Starting Address in the Center of the Map
+    zoom: 0.4, // Starting Zoom of Map (Range: 0-1, Lower is closer in)
+    address: "Seattle, Wa") // Starting Address in the Center of the Map
 ```
 
 ### **Modifier**
 
 ```
 ...
-    .pointsOfInterest(.excludingAll) //Filter Points of Interest (exclude or include all)
-    .pointOfInterestCategories(include: [.atm]) //Filter Points of Interest to only include things in an array
-    .pointOfInterestCategories(exclude: [.airport]) //Filter Points of Interest to include everything except things in an array
-    .showCompass(false) //Show Compass (true or false)
-    .showScale(false) //Show Scale (true or false)
-    .showTraffic(false) //Show Traffic (true or false)
-    .showBuildings(false) //Show Buildings (true or false)
-    .mapType(.satellite) //Different types of map (Standard, MutedStandard, Hybrid, HybridFlyover, Satellite, SatelliteFlyover)
+    .pointsOfInterest(.excludingAll) // Filter Points of Interest (exclude or include all)
+    .pointOfInterestCategories(include: [.atm]) // Filter Points of Interest to only include things in an array
+    .pointOfInterestCategories(exclude: [.airport]) // Filter Points of Interest to include everything except things in an array
+    .showCompass(false) // Show Compass (true or false)
+    .showScale(false) // Show Scale (true or false)
+    .showTraffic(false) // Show Traffic (true or false)
+    .showBuildings(false) // Show Buildings (true or false)
+    .mapType(.satellite) // Different types of map (Standard, MutedStandard, Hybrid, HybridFlyover, Satellite, SatelliteFlyover)
 ```
