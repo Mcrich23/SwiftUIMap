@@ -36,10 +36,16 @@ ExistingAnnotationMap(
         markerTintColor: .red, //Marker Background
         glyphTintColor: .white, //Glyph Icon Color
         displayPriority: .required)], //How Markers are Shown
-    pointsOfInterestFilter: .excludingAll, //Wether or Not Other Things Show on the Map
     selected: { Title, Subtitle, Address, Cluster in //Action When Marker is Selected
         print("tapped \(Address)")
     }, deselected: { //Action When Marker is Deselceted
         print("deselected annotation")
 })
+    .pointsOfInterest(.excludingAll) //Filter Points of Interest (exclude or include all)
+    .pointOfInterestCategories(include: [.atm]) //Filter Points of Interest to only include things in an array
+    .pointOfInterestCategories(exclude: [.airport]) //Filter Points of Interest to include everything except things in an array
+    .showCompass(false) //Show Compass (true or false)
+    .showScale(false) //Show Scale (true or false)
+    .showTraffic(false) //Show Traffic (true or false)
+    .showBuildings(false) //Show Buildings (true or false)
 ```

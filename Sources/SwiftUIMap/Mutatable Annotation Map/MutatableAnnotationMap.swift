@@ -78,8 +78,6 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
             self.entireMapViewController = control
         }
         func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-            let coordinates = view.annotation!.coordinate
-            let annotationCluster = view.annotation as? MKClusterAnnotation
             mapView.removeAnnotation(view.annotation!)
         }
         func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
@@ -109,13 +107,13 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
 }
 
 public struct MutableAnnotationMap: View {
-    @State public var zoom: Double
-    @State public var address: String
+    @Binding public var zoom: Double
+    @Binding public var address: String
     @State public var modifierMap = MKMapView()
     
-    public init(zoom: Double, address: String) {
-            self.zoom = zoom
-            self.address = address
+    public init(zoom: Binding<Double>, address: Binding<String>) {
+            self._zoom = zoom
+            self._address = address
         }
     
     public var body: some View {
