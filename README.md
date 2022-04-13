@@ -69,4 +69,5 @@ MutableMapView(
     .showScale(false) //Show Scale (true or false)
     .showTraffic(false) //Show Traffic (true or false)
     .showBuildings(false) //Show Buildings (true or false)
+    .mapType(.satellite) //Different types of map (Standard, MutedStandard, Hybrid, HybridFlyover, Satellite, SatelliteFlyover)
 ```
