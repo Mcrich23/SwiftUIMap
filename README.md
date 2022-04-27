@@ -37,14 +37,18 @@ Note: To use a map from SwiftUIMap, you need to import MapKit
 ExistingMapView(
     zoom: 0.4, // Starting Zoom of Map (Range: 0-1, Lower is closer in)
     address: "Seattle, Wa", // Starting Address in the Center of the Map
-    points: [Annotations(title: "Townhall", // Top Line on Map
-        subtitle: "Newly Remodeled", // Underneath Top Line When Clicked
-        address: "1119 8th Ave, Seattle, WA, 98101, United States", // Address for Point
-        glyphImage: .defaultIcon, // Glyph Icon on Map Point
-        markerTintColor: .red, // Marker Background
-        glyphTintColor: .white, // Glyph Icon Color
-        displayPriority: .required)], // How Markers are Shown
-    selected: { Title, Subtitle, Address, Cluster in // Action When Marker is Selected
+    points: [
+        Annotations(
+            title: "Townhall", // Top line on map
+            subtitle: "Newly Remodeled", // Underneath top line when clicked
+            address: "1119 8th Ave, Seattle, WA, 98101, United States", // Address for point
+            glyphImage: .defaultIcon, // Glyph icon on map point
+            markerTintColor: .red, // Marker background
+            glyphTintColor: .white, // Glyph icon color
+            displayPriority: .required // How markers are shown
+        )
+    ],
+    selected: { Title, Subtitle, Address, isCluster in // Action When Marker is Selected (Returns title, subtitle, and address in annotation along with if it's in a cluster)
         print("tapped \(Address)")
     }, deselected: { // Action When Marker is Deselceted
         print("deselected annotation")
@@ -58,7 +62,7 @@ MutableMapView(
     address: "Seattle, Wa") // Starting Address in the Center of the Map
 ```
 
-### **Modifier**
+### **Modifiers**
 
 ```
 ...
@@ -70,4 +74,15 @@ MutableMapView(
     .showTraffic(false) // Show Traffic (true or false)
     .showBuildings(false) // Show Buildings (true or false)
     .mapType(.satellite) // Different types of map (Standard, MutedStandard, Hybrid, HybridFlyover, Satellite, SatelliteFlyover)
+```
+
+### **MapSearchView**
+
+```
+MapSearchView { address in //Address passed back
+    zoom = 0.2 // Zooms out
+    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(650), execute: { // Wait to go to the new place
+        self.address = address // Change central address
+    })
+}
 ```
