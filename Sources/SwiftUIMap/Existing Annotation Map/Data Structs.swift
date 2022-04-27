@@ -10,6 +10,32 @@ import SwiftUI
 import MapKit
 #if os(iOS) || os(tvOS) || os(watchOS)// || os(macOS)
 
+/**
+ An annotation point structure, used in map views
+ 
+ - parameter title: Top line on map
+ - parameter subtitle: Underneath top line when clicked
+ - parameter addess: Address for point
+ - parameter glyphImage: Glyph icon on map point
+ - parameter markerTintColor: Marker background
+ - parameter glyphTintColor: Glyph icon color
+ - parameter displayPriority: How markers are shown
+ - warning: Requires MapKit to be imported 
+
+ # Example #
+ ```
+ Annotations(
+    title: "Townhall",
+    subtitle: "Newly Remodeled",
+    address: "1119 8th Ave, Seattle, WA, 98101, United States",
+    glyphImage: .defaultIcon,
+    markerTintColor: .red,
+    glyphTintColor: .white,
+    displayPriority: .required
+ )
+ ```
+ 
+ */
 public struct Annotations: Identifiable, Equatable {
     public let id = UUID()
     public let title: String
@@ -39,6 +65,9 @@ public struct Annotations: Identifiable, Equatable {
         self.displayPriority = displayPriority
     }
 }
+/**
+ Different types of glyphs, whether it be icons, or images. one variable for all the types.
+ */
 public enum glyphImage {
     case systemImage(String)
     case assetImage(String)

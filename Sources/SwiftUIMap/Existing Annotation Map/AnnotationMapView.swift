@@ -148,6 +148,40 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
     }
 }
 
+/**
+ A map that has annotations and is usable by the user, but cannot add annotations.
+ 
+ - parameter zoom: Starting zoom of map (range: 0-1, lower is closer in)
+ - parameter address: Starting address in the center of the map
+ - parameter points: How markers are shown
+ - parameter selected: Action when marker is selected
+ - parameter deselected: Action when marker is deselected
+ - warning: Requires MapKit to be imported 
+ 
+ # Example #
+ ```
+ ExistingMapView(
+     zoom: 0.4,
+     address: "Seattle, Wa",
+     points: [
+         Annotations(
+            title: "Townhall",
+            subtitle: "Newly Remodeled",
+            address: "1119 8th Ave, Seattle, WA, 98101, United States",
+            glyphImage: .defaultIcon,
+            markerTintColor: .red,
+            glyphTintColor: .white,
+            displayPriority: .required
+         )
+     ],
+     selected: { Title, Subtitle, Address, isCluster in // Returns title, subtitle, and address in annotation along with if it's in a cluster
+         print("tapped \(Address)")
+     }, deselected: {
+         print("deselected annotation")
+ })
+ ```
+ 
+ */
 
 public struct AnnotationMapView: View {
     @Binding public var zoom: Double {
@@ -164,7 +198,6 @@ public struct AnnotationMapView: View {
     @State public var modifierMap = MKMapView()
     @State public var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
     @State public var deselected: () -> Void
-    
     public init(zoom: Binding<Double>, address: Binding<String>, points: [Annotations], selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
             self._zoom = zoom
             self._address = address

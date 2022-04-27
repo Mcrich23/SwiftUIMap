@@ -52,9 +52,24 @@ struct SearchBar: UIViewRepresentable {
         uiView.text = text
     }
 }
-
+/**
+ "Search for a location and then pass that back with a dismissal of the search view"
+ 
+ - parameter onSelect: On address selected.
+ - returns: An address
+ 
+ # Example #
+ ```
+ MapSearchView { address in //Address passed back
+     zoom = 0.2 // Zooms out
+     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(650), execute: { // Wait to go to the new place
+         self.address = address // Change central address
+     })
+ }
+ ```
+ 
+ */
 public struct MapSearchView: View {
-//    @ObservedObject var locationSearchService: LocationSearchService
     @StateObject private var mapSearch = MapSearch()
     @Environment(\.presentationMode) var presentationMode
     var onSelect: (_ address: String) -> Void// = {address in }
