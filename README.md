@@ -48,6 +48,8 @@ ExistingMapView (
             displayPriority: .required // How markers are shown
         )
     ],
+    isUserLocationVisible: $isUserLocationVisible, // Binding for if isUserLocationVisible
+    isFirstResponder: $isFirstResponder, // Binding for if isFirstResponder
     selected: { Title, Subtitle, Address, isCluster in // Action When Marker is Selected (Returns title, subtitle, and address in annotation along with if it's in a cluster)
         print("tapped \(Address)")
     }, deselected: { // Action When Marker is Deselceted
@@ -62,9 +64,11 @@ ExistingMapView (
 ### **MutableMapView**
 
 ```
-MutableMapView(
+MutableMapView (
     zoom: 0.4, // Starting Zoom of Map (Range: 0-1, Lower is closer in)
-    address: "Seattle, Wa") // Starting Address in the Center of the Map
+    address: "Seattle, Wa", // Starting Address in the Center of the Map
+    isFirstResponder: $isFirstResponder // Binding for if isFirstResponder
+)
 ```
 
 ### **Modifiers**
