@@ -36,7 +36,7 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
     
         func makeUIView(context: Context) -> MKMapView {
 
-            let myMap = MKMapView(frame: .zero)
+            let myMap = modifierMap
             for point in points {
 
                 let geoCoder = CLGeocoder()
@@ -58,13 +58,9 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                     myMap.addAnnotation(annotation)
                 }
             }
-            myMap.pointOfInterestFilter = modifierMap.pointOfInterestFilter
-            myMap.showsCompass = modifierMap.showsCompass
-            myMap.showsScale = modifierMap.showsScale
-            myMap.showsTraffic = modifierMap.showsTraffic
-            myMap.showsBuildings = modifierMap.showsBuildings
-            myMap.mapType = modifierMap.mapType
-            myMap.delegate = context.coordinator
+            if myMap.delegate == nil {
+                myMap.delegate = context.coordinator
+            }
             return myMap
         }
 
@@ -148,6 +144,8 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
     }
 }
 
+
+
 /**
  A map that has annotations and is usable by the user, but cannot add annotations.
  
@@ -156,11 +154,14 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
  - parameter points: How markers are shown
  - parameter selected: Action when marker is selected
  - parameter deselected: Action when marker is deselected
+ - parameter isFirstResponder: An `@Binding` variable that tells you if the map is the first reponder
+ - parameter isUserLocationVisible: An `@Binding` variable that tells you if the user location is visible on the map
+ - parameter advancedModifiers: Advanced modifiers for the map, gives you full access to `MKMapView`
  - warning: Requires MapKit to be imported 
  
  # Example #
  ```
- ExistingMapView(
+ ExistingMapView (
      zoom: 0.4,
      address: "Seattle, Wa",
      points: [
@@ -178,7 +179,12 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
          print("tapped \(Address)")
      }, deselected: {
          print("deselected annotation")
- })
+    }, advancedModifiers: {
+        let modifiers = MKMapView(frame: .zero)
+        modifiers.isPitchEnabled = true
+        return modifiers
+    }
+)
  ```
  
  */
@@ -194,16 +200,62 @@ public struct AnnotationMapView: View {
             print("update address")
         }
     }
+    @Binding var isUserLocationVisible: Bool
+    @Binding var isFirstResponder: Bool
+    
     @State public var points: [Annotations]
-    @State public var modifierMap = MKMapView()
+    @State public var modifierMap: MKMapView
     @State public var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
     @State public var deselected: () -> Void
     public init(zoom: Binding<Double>, address: Binding<String>, points: [Annotations], selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
-            self._zoom = zoom
-            self._address = address
-            self.points = points
-            self.selected = selected
-            self.deselected = deselected
+        self._zoom = zoom
+        self._address = address
+        self.points = points
+        self.selected = selected
+        self.deselected = deselected
+        self._isFirstResponder = .constant(false)
+        self._isUserLocationVisible = .constant(false)
+        self.modifierMap = MKMapView(frame: .zero)
+    }
+    public init(zoom: Binding<Double>, address: Binding<String>, points: [Annotations], selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: () -> MKMapView) {
+        self._zoom = zoom
+        self._address = address
+        self.points = points
+        self.selected = selected
+        self.deselected = deselected
+        self._isFirstResponder = .constant(false)
+        self._isUserLocationVisible = .constant(false)
+        self.modifierMap = advancedModifiers()
+    }
+    public init(zoom: Binding<Double>, address: Binding<String>, points: [Annotations], isUserLocationVisible: Binding<Bool>, isFirstResponder: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
+        self._zoom = zoom
+        self._address = address
+        self.points = points
+        self.selected = selected
+        self.deselected = deselected
+        self._isFirstResponder = isFirstResponder
+        self._isUserLocationVisible = isUserLocationVisible
+        self.modifierMap = MKMapView(frame: .zero)
+        self.checkInfo()
+    }
+    public init(zoom: Binding<Double>, address: Binding<String>, points: [Annotations], isUserLocationVisible: Binding<Bool>, isFirstResponder: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: () -> MKMapView) {
+        self._zoom = zoom
+        self._address = address
+        self.points = points
+        self.selected = selected
+        self.deselected = deselected
+        self._isFirstResponder = isFirstResponder
+        self._isUserLocationVisible = isUserLocationVisible
+        self.modifierMap = advancedModifiers()
+        self.checkInfo()
+    }
+    
+    func checkInfo() {
+        DispatchQueue.main.async {
+            self.isUserLocationVisible = self.modifierMap.isUserLocationVisible
+            self.isFirstResponder = self.modifierMap.isFirstResponder
+            checkInfo()
+        }
     }
     
     public var body: some View {
@@ -249,6 +301,46 @@ public struct AnnotationMapView: View {
     }
     public func mapType(_ type: MKMapType) -> AnnotationMapView {
         modifierMap.mapType = type
+        return self
+    }
+    public func camera(_ camera: MKMapCamera) -> AnnotationMapView {
+        modifierMap.camera = camera
+        return self
+    }
+    public func isZoomEnabled(_ enabled: Bool) -> AnnotationMapView {
+        modifierMap.isZoomEnabled = enabled
+        return self
+    }
+    public func cameraBoundary(_ boundary: MKMapView.CameraBoundary?) -> AnnotationMapView {
+        modifierMap.cameraBoundary = boundary
+        return self
+    }
+    public func cameraZoomRange(_ range: MKMapView.CameraZoomRange!) -> AnnotationMapView {
+        modifierMap.cameraZoomRange = range
+        return self
+    }
+    public func isPitchEnabled(_ enabled: Bool) -> AnnotationMapView {
+        modifierMap.isPitchEnabled = enabled
+        return self
+    }
+    public func isRotateEnabled(_ enabled: Bool) -> AnnotationMapView {
+        modifierMap.isRotateEnabled = enabled
+        return self
+    }
+    public func isScrollEnabled(_ enabled: Bool) -> AnnotationMapView {
+        modifierMap.isScrollEnabled = enabled
+        return self
+    }
+    public func isMultipleTouchEnabled(_ enabled: Bool) -> AnnotationMapView {
+        modifierMap.isMultipleTouchEnabled = enabled
+        return self
+    }
+    public func isUserInteractionEnabled(_ enabled: Bool) -> AnnotationMapView {
+        modifierMap.isUserInteractionEnabled = enabled
+        return self
+    }
+    public func userTrackingMode(_ mode: MKUserTrackingMode) -> AnnotationMapView {
+        modifierMap.userTrackingMode = mode
         return self
     }
 }

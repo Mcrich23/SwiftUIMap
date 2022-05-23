@@ -95,7 +95,7 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
                         mapView.removeAnnotation(annotation)
                         let annotationRemove = currentAnnotations.firstIndex(of: annotation)!
                         currentAnnotations.remove(at: annotationRemove)
-                    }else {
+                    } else {
                         mapView.addAnnotation(annotation)
                         currentAnnotations.append(annotation)
                     }
@@ -123,12 +123,42 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
 public struct MutableMapView: View {
     @Binding public var zoom: Double
     @Binding public var address: String
-    @State public var modifierMap = MKMapView()
+    @Binding var isFirstResponder: Bool
+    @State public var modifierMap: MKMapView
     
     public init(zoom: Binding<Double>, address: Binding<String>) {
-            self._zoom = zoom
-            self._address = address
+        self._zoom = zoom
+        self._address = address
+        self.modifierMap = MKMapView()
+        self._isFirstResponder = .constant(false)
+    }
+    public init(zoom: Binding<Double>, address: Binding<String>, advancedModifiers: () -> MKMapView) {
+        self._zoom = zoom
+        self._address = address
+        self._isFirstResponder = .constant(false)
+        self.modifierMap = advancedModifiers()
+    }
+    public init(zoom: Binding<Double>, address: Binding<String>, isFirstResponder: Binding<Bool>) {
+        self._zoom = zoom
+        self._address = address
+        self.modifierMap = MKMapView()
+        self._isFirstResponder = isFirstResponder
+        self.checkInfo()
+    }
+    public init(zoom: Binding<Double>, address: Binding<String>, isFirstResponder: Binding<Bool>, advancedModifiers: () -> MKMapView) {
+        self._zoom = zoom
+        self._address = address
+        self._isFirstResponder = isFirstResponder
+        self.modifierMap = advancedModifiers()
+        self.checkInfo()
+    }
+    
+    func checkInfo() {
+        DispatchQueue.main.async {
+            self.isFirstResponder = self.modifierMap.isFirstResponder
+            checkInfo()
         }
+    }
     
     public var body: some View {
         rawMutableAnnotationMap(zoom: zoom, address: address, modifierMap: modifierMap)
@@ -164,6 +194,46 @@ public struct MutableMapView: View {
     }
     public func mapType(_ type: MKMapType) -> MutableMapView {
         modifierMap.mapType = type
+        return self
+    }
+    public func camera(_ camera: MKMapCamera) -> MutableMapView {
+        modifierMap.camera = camera
+        return self
+    }
+    public func isZoomEnabled(_ enabled: Bool) -> MutableMapView {
+        modifierMap.isZoomEnabled = enabled
+        return self
+    }
+    public func cameraBoundary(_ boundary: MKMapView.CameraBoundary?) -> MutableMapView {
+        modifierMap.cameraBoundary = boundary
+        return self
+    }
+    public func cameraZoomRange(_ range: MKMapView.CameraZoomRange!) -> MutableMapView {
+        modifierMap.cameraZoomRange = range
+        return self
+    }
+    public func isPitchEnabled(_ enabled: Bool) -> MutableMapView {
+        modifierMap.isPitchEnabled = enabled
+        return self
+    }
+    public func isRotateEnabled(_ enabled: Bool) -> MutableMapView {
+        modifierMap.isRotateEnabled = enabled
+        return self
+    }
+    public func isScrollEnabled(_ enabled: Bool) -> MutableMapView {
+        modifierMap.isScrollEnabled = enabled
+        return self
+    }
+    public func isMultipleTouchEnabled(_ enabled: Bool) -> MutableMapView {
+        modifierMap.isMultipleTouchEnabled = enabled
+        return self
+    }
+    public func isUserInteractionEnabled(_ enabled: Bool) -> MutableMapView {
+        modifierMap.isUserInteractionEnabled = enabled
+        return self
+    }
+    public func userTrackingMode(_ mode: MKUserTrackingMode) -> MutableMapView {
+        modifierMap.userTrackingMode = mode
         return self
     }
 }

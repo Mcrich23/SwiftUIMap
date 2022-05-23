@@ -13,6 +13,7 @@ struct Mutable: View {
     @State var search = false
     @State var zoom = 0.2
     @State var address = "Seattle, Wa"
+    @State var loc = CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321)
     var body: some View {
         MutableMapView(zoom: $zoom, address: $address)
             .pointOfInterestCategories(exclude: [.airport])
@@ -21,6 +22,16 @@ struct Mutable: View {
             .showTraffic(false)
             .showBuildings(true)
             .mapType(.standard)
+            .camera(MKMapCamera(lookingAtCenter: loc, fromDistance: .pi, pitch: 4, heading: .pi))
+            .cameraBoundary(MKMapView.CameraBoundary(coordinateRegion: MKCoordinateRegion(center: loc, span: MKCoordinateSpan(latitudeDelta: 4, longitudeDelta: 4))))
+            .cameraZoomRange(MKMapView.CameraZoomRange(minCenterCoordinateDistance: CLLocationDistance(600)))
+            .isPitchEnabled(true)
+            .isUserInteractionEnabled(true)
+            .isZoomEnabled(true)
+            .isRotateEnabled(true)
+            .isScrollEnabled(true)
+            .isMultipleTouchEnabled(true)
+            .userTrackingMode(.none)
             .overlay(alignment: .topTrailing, content: {
                 Button(action: {search = true}) {
                     Image(systemName: "magnifyingglass")

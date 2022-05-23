@@ -42,7 +42,6 @@ public struct Annotations: Identifiable, Equatable {
     public let subtitle: String
     public let address: String
     public let glyphImage: UIImage
-//    public let tintColor: UIColor
     public let markerTintColor: UIColor
     public let glyphTintColor: UIColor
     public let displayPriority: MKFeatureDisplayPriority
@@ -59,10 +58,26 @@ public struct Annotations: Identifiable, Equatable {
         case .defaultIcon:
             self.glyphImage = UIImage()
         }
-//        self.tintColor = tintColor
         self.markerTintColor = markerTintColor
         self.glyphTintColor = glyphTintColor
         self.displayPriority = displayPriority
+    }
+    
+    public init(title: String, subtitle: String, address: String, glyphImage: glyphImage) {
+        self.title = title
+        self.subtitle = subtitle
+        self.address = address
+        switch glyphImage {
+        case .systemImage(let string):
+            self.glyphImage = UIImage(systemName: string) ?? UIImage()
+        case .assetImage(let string):
+            self.glyphImage = UIImage(systemName: string) ?? UIImage()
+        case .defaultIcon:
+            self.glyphImage = UIImage()
+        }
+        self.markerTintColor = .systemRed
+        self.glyphTintColor = .white
+        self.displayPriority = .defaultLow
     }
 }
 /**
