@@ -81,6 +81,14 @@ MutableMapView(
     .mapType(.satellite) // Different types of map (Standard, MutedStandard, Hybrid, HybridFlyover, Satellite, SatelliteFlyover)
     .camera(MKMapCamera(lookingAtCenter: loc, fromDistance: .pi, pitch: 4, heading: .pi)) // Customize the camera angle
     .cameraBoundary(MKMapView.CameraBoundary(coordinateRegion: MKCoordinateRegion(center: loc, span: MKCoordinateSpan(latitudeDelta: 4, longitudeDelta: 4)))) // Customize the camera boundary
+    .cameraZoomRange(MKMapView.CameraZoomRange(minCenterCoordinateDistance: CLLocationDistance(600))) // Customize the zoom range (minCenterCoordinateDistance and maxCenterCoordinateDistance)
+    .isPitchEnabled(true) // Enable or disable the use of pitch
+    .isUserInteractionEnabled(true) // Enable or disable interaction
+    .isZoomEnabled(true) // Enable or disable the use of zoom
+    .isRotateEnabled(true) // Enable or disable the use of rotation
+    .isScrollEnabled(true) // Enable or disable the use of scroll
+    .isMultipleTouchEnabled(true) // Enable or disable the use of multi-touch
+    .userTrackingMode(.none) // Sets the mode for user tracking (must have permission to track user)
 ```
 
 ### **MapSearchView**
