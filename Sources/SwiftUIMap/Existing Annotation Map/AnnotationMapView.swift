@@ -58,7 +58,9 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                     myMap.addAnnotation(annotation)
                 }
             }
-            myMap.delegate = context.coordinator
+            if myMap.delegate == nil {
+                myMap.delegate = context.coordinator
+            }
             return myMap
         }
 
@@ -303,6 +305,7 @@ public struct AnnotationMapView: View {
     }
     public func mapDelegate(_ delegate: MKMapViewDelegate?) -> AnnotationMapView {
         modifierMap.delegate = delegate
+        print("modifierMap.delegate = \(modifierMap.delegate)")
         return self
     }
     public func camera(_ camera: MKMapCamera) -> AnnotationMapView {

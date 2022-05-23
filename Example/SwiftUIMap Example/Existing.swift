@@ -13,6 +13,7 @@ struct Existing: View {
     @State var search = false
     @State var zoom = 0.2
     @State var address = "Seattle, Wa"
+    @State var loc = CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321)
     @State var points = [
         Annotations(title: "Seattle Town Hall",
                     subtitle: "Newly Remodeled",
@@ -37,7 +38,7 @@ struct Existing: View {
                     displayPriority: .required)
     ]
     var body: some View {
-        AnnotationMapView(zoom: $zoom, address: $address, points: $points) { Title, Subtitle, Address, Cluster  in
+        AnnotationMapView(zoom: $zoom, address: $address, points: points) { Title, Subtitle, Address, Cluster  in
             print("tapped \(Title), with subtitle: \(Subtitle), address: \(Address), and cluster: \(Cluster)")
         } deselected: {
             print("deselected annotation")
@@ -52,6 +53,9 @@ struct Existing: View {
         .showTraffic(false)
         .showBuildings(true)
         .mapType(.standard)
+        .camera(MKMapCamera(lookingAtCenter: loc, fromDistance: .pi, pitch: 4, heading: .pi))
+        .cameraBoundary(MKMapView.CameraBoundary(coordinateRegion: MKCoordinateRegion(center: loc, span: MKCoordinateSpan(latitudeDelta: 4, longitudeDelta: 4))))
+        .cameraZoomRange(MKMapView.CameraZoomRange()
         .overlay(alignment: .topTrailing, content: {
             HStack {
                 Button(action: {search = true}) {

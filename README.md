@@ -79,6 +79,8 @@ MutableMapView(
     .showTraffic(false) // Show Traffic (true or false)
     .showBuildings(false) // Show Buildings (true or false)
     .mapType(.satellite) // Different types of map (Standard, MutedStandard, Hybrid, HybridFlyover, Satellite, SatelliteFlyover)
+    .camera(MKMapCamera(lookingAtCenter: loc, fromDistance: .pi, pitch: 4, heading: .pi)) // Customize the camera angle
+    .cameraBoundary(MKMapView.CameraBoundary(coordinateRegion: MKCoordinateRegion(center: loc, span: MKCoordinateSpan(latitudeDelta: 4, longitudeDelta: 4)))) // Customize the camera boundary
 ```
 
 ### **MapSearchView**

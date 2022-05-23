@@ -123,12 +123,42 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
 public struct MutableMapView: View {
     @Binding public var zoom: Double
     @Binding public var address: String
-    @State public var modifierMap = MKMapView()
+    @Binding var isFirstResponder: Bool
+    @State public var modifierMap: MKMapView
     
     public init(zoom: Binding<Double>, address: Binding<String>) {
-            self._zoom = zoom
-            self._address = address
+        self._zoom = zoom
+        self._address = address
+        self.modifierMap = MKMapView()
+        self._isFirstResponder = .constant(false)
+    }
+    public init(zoom: Binding<Double>, address: Binding<String>, advancedModifiers: () -> MKMapView) {
+        self._zoom = zoom
+        self._address = address
+        self._isFirstResponder = .constant(false)
+        self.modifierMap = advancedModifiers()
+    }
+    public init(zoom: Binding<Double>, address: Binding<String>, isFirstResponder: Binding<Bool>) {
+        self._zoom = zoom
+        self._address = address
+        self.modifierMap = MKMapView()
+        self._isFirstResponder = isFirstResponder
+        self.checkInfo()
+    }
+    public init(zoom: Binding<Double>, address: Binding<String>, isFirstResponder: Binding<Bool>, advancedModifiers: () -> MKMapView) {
+        self._zoom = zoom
+        self._address = address
+        self._isFirstResponder = isFirstResponder
+        self.modifierMap = advancedModifiers()
+        self.checkInfo()
+    }
+    
+    func checkInfo() {
+        DispatchQueue.main.async {
+            self.isFirstResponder = self.modifierMap.isFirstResponder
+            checkInfo()
         }
+    }
     
     public var body: some View {
         rawMutableAnnotationMap(zoom: zoom, address: address, modifierMap: modifierMap)
