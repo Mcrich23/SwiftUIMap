@@ -196,10 +196,6 @@ public struct MutableMapView: View {
         modifierMap.mapType = type
         return self
     }
-    public func mapDelegate(_ delegate: MKMapViewDelegate?) -> MutableMapView {
-        modifierMap.delegate = delegate
-        return self
-    }
     public func camera(_ camera: MKMapCamera) -> MutableMapView {
         modifierMap.camera = camera
         return self
