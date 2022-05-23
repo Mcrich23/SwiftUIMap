@@ -13,46 +13,60 @@ struct Existing: View {
     @State var search = false
     @State var zoom = 0.2
     @State var address = "Seattle, Wa"
+    @State var points = [
+        Annotations(title: "Seattle Town Hall",
+                    subtitle: "Newly Remodeled",
+                    address: "1119 8th Ave, Seattle, WA, 98101, United States",
+                    glyphImage: .systemImage("building.columns"),
+                    markerTintColor: .systemGray,
+                    glyphTintColor: .white,
+                    displayPriority: .required),
+        Annotations(title: "Space Needle",
+                    subtitle: "",
+                    address: "400 Broad St Seattle, WA 98109, United States",
+                    glyphImage: .systemImage("star.fill"),
+                    markerTintColor: .systemPurple,
+                    glyphTintColor: .white,
+                    displayPriority: .required),
+        Annotations(title: "Pike Place Market",
+                    subtitle: "",
+                    address: "85 Pike St Seattle, WA  98101, United States",
+                    glyphImage: .systemImage("cart"),
+                    markerTintColor: .systemOrange,
+                    glyphTintColor: .white,
+                    displayPriority: .required)
+    ]
     var body: some View {
-        AnnotationMapView(zoom: $zoom, address: $address, points: [
-            Annotations(title: "Seattle Town Hall",
-                        subtitle: "Newly Remodeled",
-                        address: "1119 8th Ave, Seattle, WA, 98101, United States",
-                        glyphImage: .systemImage("building.columns"),
-                        markerTintColor: .systemGray,
-                        glyphTintColor: .white,
-                        displayPriority: .required),
-            Annotations(title: "Space Needle",
-                        subtitle: "",
-                        address: "400 Broad St Seattle, WA 98109, United States",
-                        glyphImage: .systemImage("star.fill"),
-                        markerTintColor: .systemPurple,
-                        glyphTintColor: .white,
-                        displayPriority: .required),
-            Annotations(title: "Pike Place Market",
-                        subtitle: "",
-                        address: "85 Pike St Seattle, WA  98101, United States",
-                        glyphImage: .systemImage("cart"),
-                        markerTintColor: .systemOrange,
-                        glyphTintColor: .white,
-                        displayPriority: .required)
-        ]) { Title, Subtitle, Address, Cluster  in
+        AnnotationMapView(zoom: $zoom, address: $address, points: $points) { Title, Subtitle, Address, Cluster  in
             print("tapped \(Title), with subtitle: \(Subtitle), address: \(Address), and cluster: \(Cluster)")
         } deselected: {
             print("deselected annotation")
+        } advancedModifiers: {
+            let modifiers = MKMapView(frame: .zero)
+            modifiers.isPitchEnabled = true
+            return modifiers
         }
-        .pointOfInterestCategories(exclude: [.airport])
+        .pointsOfInterest(.excludingAll)
         .showCompass(false)
         .showScale(false)
         .showTraffic(false)
         .showBuildings(true)
         .mapType(.standard)
         .overlay(alignment: .topTrailing, content: {
-            Button(action: {search = true}) {
-                Image(systemName: "magnifyingglass")
-                    .foregroundColor(.primary)
+            HStack {
+                Button(action: {search = true}) {
+                    Image(systemName: "magnifyingglass")
+                        .foregroundColor(.primary)
+                }
+                .padding(2)
+                Button(action: {
+                    points.append(Annotations(title: "The Northwest School", subtitle: "An Arts School", address: "1415 Summit Ave Seattle, WA, 98122, United States", glyphImage: .systemImage("studentdesk")))
+                }) {
+                    Image(systemName: "plus")
+                        .foregroundColor(.primary)
+                }
+                .padding(2)
             }
-            .padding(2)
             .background(.white)
             .cornerRadius(10)
             .opacity(0.8)

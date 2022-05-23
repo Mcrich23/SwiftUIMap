@@ -95,7 +95,7 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
                         mapView.removeAnnotation(annotation)
                         let annotationRemove = currentAnnotations.firstIndex(of: annotation)!
                         currentAnnotations.remove(at: annotationRemove)
-                    }else {
+                    } else {
                         mapView.addAnnotation(annotation)
                         currentAnnotations.append(annotation)
                     }

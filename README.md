@@ -34,7 +34,7 @@ Note: To use a map from SwiftUIMap, you need to import MapKit
 ### **AnnotationMapView**
 
 ```
-ExistingMapView(
+ExistingMapView (
     zoom: 0.4, // Starting Zoom of Map (Range: 0-1, Lower is closer in)
     address: "Seattle, Wa", // Starting Address in the Center of the Map
     points: [
@@ -52,7 +52,12 @@ ExistingMapView(
         print("tapped \(Address)")
     }, deselected: { // Action When Marker is Deselceted
         print("deselected annotation")
-})
+    }, advancedModifiers: { // Full access to MKMapView modifiers
+        let modifiers = MKMapView(frame: .zero)
+        modifiers.isPitchEnabled = true
+        return modifiers
+    }
+)
 ```
 ### **MutableMapView**
 
