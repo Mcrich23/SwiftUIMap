@@ -166,5 +166,49 @@ public struct MutableMapView: View {
         modifierMap.mapType = type
         return self
     }
+    public func mapDelegate(_ delegate: MKMapViewDelegate?) -> MutableMapView {
+        modifierMap.delegate = delegate
+        return self
+    }
+    public func camera(_ camera: MKMapCamera) -> MutableMapView {
+        modifierMap.camera = camera
+        return self
+    }
+    public func isZoomEnabled(_ enabled: Bool) -> MutableMapView {
+        modifierMap.isZoomEnabled = enabled
+        return self
+    }
+    public func cameraBoundary(_ boundary: MKMapView.CameraBoundary?) -> MutableMapView {
+        modifierMap.cameraBoundary = boundary
+        return self
+    }
+    public func cameraZoomRange(_ range: MKMapView.CameraZoomRange!) -> MutableMapView {
+        modifierMap.cameraZoomRange = range
+        return self
+    }
+    public func isPitchEnabled(_ enabled: Bool) -> MutableMapView {
+        modifierMap.isPitchEnabled = enabled
+        return self
+    }
+    public func isRotateEnabled(_ enabled: Bool) -> MutableMapView {
+        modifierMap.isRotateEnabled = enabled
+        return self
+    }
+    public func isScrollEnabled(_ enabled: Bool) -> MutableMapView {
+        modifierMap.isScrollEnabled = enabled
+        return self
+    }
+    public func isMultipleTouchEnabled(_ enabled: Bool) -> MutableMapView {
+        modifierMap.isMultipleTouchEnabled = enabled
+        return self
+    }
+    public func isUserInteractionEnabled(_ enabled: Bool) -> MutableMapView {
+        modifierMap.isUserInteractionEnabled = enabled
+        return self
+    }
+    public func userTrackingMode(_ mode: MKUserTrackingMode) -> MutableMapView {
+        modifierMap.userTrackingMode = mode
+        return self
+    }
 }
 #endif
