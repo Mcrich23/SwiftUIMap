@@ -55,7 +55,14 @@ struct Existing: View {
         .mapType(.standard)
         .camera(MKMapCamera(lookingAtCenter: loc, fromDistance: .pi, pitch: 4, heading: .pi))
         .cameraBoundary(MKMapView.CameraBoundary(coordinateRegion: MKCoordinateRegion(center: loc, span: MKCoordinateSpan(latitudeDelta: 4, longitudeDelta: 4))))
-        .cameraZoomRange(MKMapView.CameraZoomRange()
+        .cameraZoomRange(MKMapView.CameraZoomRange(minCenterCoordinateDistance: CLLocationDistance(600)))
+        .isPitchEnabled(true)
+        .isUserInteractionEnabled(true)
+        .isZoomEnabled(true)
+        .isRotateEnabled(true)
+        .isScrollEnabled(true)
+        .isMultipleTouchEnabled(true)
+        .userTrackingMode(.none)
         .overlay(alignment: .topTrailing, content: {
             HStack {
                 Button(action: {search = true}) {
