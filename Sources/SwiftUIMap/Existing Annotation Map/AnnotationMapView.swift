@@ -303,11 +303,6 @@ public struct AnnotationMapView: View {
         modifierMap.mapType = type
         return self
     }
-    public func mapDelegate(_ delegate: MKMapViewDelegate?) -> AnnotationMapView {
-        modifierMap.delegate = delegate
-        print("modifierMap.delegate = \(modifierMap.delegate)")
-        return self
-    }
     public func camera(_ camera: MKMapCamera) -> AnnotationMapView {
         modifierMap.camera = camera
         return self
@@ -316,11 +311,11 @@ public struct AnnotationMapView: View {
         modifierMap.isZoomEnabled = enabled
         return self
     }
-    public func cameraBoundary(_ boundary: MKMapView.CameraBoundary?) -> AnnotationMapView {
+    public func cameraBoundary(_ boundary: MKMapView.CameraBoundary) -> AnnotationMapView {
         modifierMap.cameraBoundary = boundary
         return self
     }
-    public func cameraZoomRange(_ range: MKMapView.CameraZoomRange!) -> AnnotationMapView {
+    public func cameraZoomRange(_ range: MKMapView.CameraZoomRange) -> AnnotationMapView {
         modifierMap.cameraZoomRange = range
         return self
     }
