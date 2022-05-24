@@ -35,7 +35,8 @@ struct Existing: View {
                     glyphImage: .systemImage("cart"),
                     markerTintColor: .systemOrange,
                     glyphTintColor: .white,
-                    displayPriority: .required)
+                    displayPriority: .required),
+        Annotations(title: "The Northwest School", subtitle: "An Arts School", address: "1415 Summit Ave Seattle, WA, 98122, United States", glyphImage: .systemImage("studentdesk"))
     ]
     var body: some View {
         AnnotationMapView(zoom: $zoom, address: $address, points: points) { Title, Subtitle, Address, Cluster  in
@@ -47,13 +48,13 @@ struct Existing: View {
             modifiers.isPitchEnabled = true
             return modifiers
         }
-        .pointsOfInterest(.excludingAll)
+        .pointOfInterestCategories(include: [.airport])
         .showCompass(false)
         .showScale(false)
         .showTraffic(false)
         .showBuildings(true)
         .mapType(.standard)
-        .camera(MKMapCamera(lookingAtCenter: loc, fromDistance: .pi, pitch: 4, heading: .pi))
+        .camera(MKMapCamera(lookingAtCenter: loc, fromDistance: 4, pitch: 4, heading: 4))
         .cameraBoundary(MKMapView.CameraBoundary(coordinateRegion: MKCoordinateRegion(center: loc, span: MKCoordinateSpan(latitudeDelta: 4, longitudeDelta: 4))))
         .cameraZoomRange(MKMapView.CameraZoomRange(minCenterCoordinateDistance: CLLocationDistance(600)))
         .isPitchEnabled(true)
@@ -67,13 +68,6 @@ struct Existing: View {
             HStack {
                 Button(action: {search = true}) {
                     Image(systemName: "magnifyingglass")
-                        .foregroundColor(.primary)
-                }
-                .padding(2)
-                Button(action: {
-                    points.append(Annotations(title: "The Northwest School", subtitle: "An Arts School", address: "1415 Summit Ave Seattle, WA, 98122, United States", glyphImage: .systemImage("studentdesk")))
-                }) {
-                    Image(systemName: "plus")
                         .foregroundColor(.primary)
                 }
                 .padding(2)
