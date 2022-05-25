@@ -7,20 +7,54 @@ import CoreLocation
 struct rawExistingAnnotationMap: UIViewRepresentable {
     var zoom: Double
     var address: String
-    var points: [Annotations]
+    @Binding var points: [Annotations]
     var modifierMap: MKMapView
     var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
     var deselected: () -> Void
+    var addedPoints = [MKAnnotation]()
+    var pointDict: [Annotations : CLLocationCoordinate2D] = [:]
     // isUserLocationVisible variables
     var userLocationBecomesVisible: () -> Void
     var userLocationBecomesInvisible: () -> Void
     
 //    var annotationSelected: MKAnnotationView
     func updateUIView(_ mapView: MKMapView, context: Context) {
-            let span = MKCoordinateSpan(latitudeDelta: zoom, longitudeDelta: zoom)
-            var chicagoCoordinate = CLLocationCoordinate2D()
+        let span = MKCoordinateSpan(latitudeDelta: zoom, longitudeDelta: zoom)
+        var chicagoCoordinate = CLLocationCoordinate2D()
+        let geoCoder = CLGeocoder()
+        geoCoder.geocodeAddressString(address) { (placemarks, error) in
+            guard
+                let placemarks = placemarks,
+                let location = placemarks.first?.location
+            else {
+                // handle no location found
+                return
+            }
+            
+            // Use your location
+            chicagoCoordinate.latitude = location.coordinate.latitude
+            chicagoCoordinate.longitude = location.coordinate.longitude
+            let region = MKCoordinateRegion(center: chicagoCoordinate, span: span)
+            mapView.setRegion(region, animated: true)
+        }
+    }
+    
+    func makeUIView(context: Context) -> MKMapView {
+        
+        let myMap = modifierMap
+        self.addPoints(myMap: myMap)
+        if myMap.delegate == nil {
+            myMap.delegate = context.coordinator
+        }
+        return myMap
+    }
+    
+    func addPoints(myMap: MKMapView) {
+        myMap.removeAnnotations(addedPoints)
+        for point in points {
+
             let geoCoder = CLGeocoder()
-            geoCoder.geocodeAddressString(address) { (placemarks, error) in
+            geoCoder.geocodeAddressString(point.address) { (placemarks, error) in
                 guard
                     let placemarks = placemarks,
                     let location = placemarks.first?.location
@@ -30,43 +64,16 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
                 }
 
                 // Use your location
-                chicagoCoordinate.latitude = location.coordinate.latitude
-                chicagoCoordinate.longitude = location.coordinate.longitude
-                let region = MKCoordinateRegion(center: chicagoCoordinate, span: span)
-                mapView.setRegion(region, animated: true)
+                let annotation = MKPointAnnotation()
+                annotation.coordinate.latitude = location.coordinate.latitude
+                annotation.coordinate.longitude = location.coordinate.longitude
+                annotation.title = point.title
+                annotation.subtitle = point.subtitle
+                myMap.addAnnotation(annotation)
             }
         }
+    }
     
-        func makeUIView(context: Context) -> MKMapView {
-
-            let myMap = modifierMap
-            for point in points {
-
-                let geoCoder = CLGeocoder()
-                geoCoder.geocodeAddressString(point.address) { (placemarks, error) in
-                    guard
-                        let placemarks = placemarks,
-                        let location = placemarks.first?.location
-                    else {
-                        // handle no location found
-                        return
-                    }
-
-                    // Use your location
-                    let annotation = MKPointAnnotation()
-                    annotation.coordinate.latitude = location.coordinate.latitude
-                    annotation.coordinate.longitude = location.coordinate.longitude
-                    annotation.title = point.title
-                    annotation.subtitle = point.subtitle
-                    myMap.addAnnotation(annotation)
-                }
-            }
-            if myMap.delegate == nil {
-                myMap.delegate = context.coordinator
-            }
-            return myMap
-        }
-
     func makeCoordinator() -> rawExistingAnnotationMapCoordinator {
         return rawExistingAnnotationMapCoordinator(self, points: points) { title, subtitle, address, cluster  in
 //            print("tapped passed back, annotation = \(annotation)")
@@ -78,33 +85,92 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
 
     class rawExistingAnnotationMapCoordinator: NSObject, MKMapViewDelegate {
         var entireMapViewController: rawExistingAnnotationMap
-        var points: [Annotations]
         var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
         var deselected: () -> Void
         init(_ control: rawExistingAnnotationMap, points: [Annotations], selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
             self.entireMapViewController = control
-            self.points = points
             self.selected = selected
             self.deselected = deselected
         }
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
             let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: String(describing: annotation.title))
-            if points != [] {
-                let annotationDetails = points.first { annotate in
+            if self.entireMapViewController.points != [] && self.entireMapViewController.points.contains(where: {
+                point in point.title == annotationView.annotation?.title
+            }) {
+                let annotationDetails = self.entireMapViewController.points.first { annotate in
                     annotate.title == annotationView.annotation?.title
+                }!
+                if annotationDetails.glyphImage != UIImage() {
+                    annotationView.glyphImage = annotationDetails.glyphImage
                 }
-                if annotationDetails!.glyphImage != UIImage() {
-                    annotationView.glyphImage = annotationDetails!.glyphImage
-                }
-                annotationView.glyphTintColor = annotationDetails!.glyphTintColor
-                annotationView.markerTintColor = annotationDetails!.markerTintColor
+                annotationView.glyphTintColor = annotationDetails.glyphTintColor
+                annotationView.markerTintColor = annotationDetails.markerTintColor
 //                annotationView.tintColor = annotationDetails!.tintColor
-                annotationView.displayPriority = annotationDetails!.displayPriority
+                annotationView.displayPriority = annotationDetails.displayPriority
                 annotationView.clusteringIdentifier = "test"
-                let removeElement = points.firstIndex(of: annotationDetails!)
-                points.remove(at: removeElement!)
+                self.entireMapViewController.pointDict[annotationDetails] = annotationView.annotation?.coordinate
+                self.entireMapViewController.addedPoints.append(annotation)
             }
             return annotationView
+        }
+        
+        func addressToLatLong(address: String, completion: @escaping (_ coordinate: CLLocationCoordinate2D) -> Void) {
+            let geoCoder = CLGeocoder()
+            geoCoder.geocodeAddressString(address) { placemarks, error in
+                if error == nil {
+                    if let placemarks = placemarks,
+                       let location = placemarks.first?.location {
+                        completion(location.coordinate)
+                    } else {
+                        completion(CLLocationCoordinate2D())
+                    }
+                } else {
+                    completion(CLLocationCoordinate2D())
+                }
+            }
+        }
+        func mapViewWillStartLoadingMap(_ mapView: MKMapView) {
+            func updateAnnotations() {
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+                    print("check, points.count = \(self.entireMapViewController.points.count)")
+                    for annotation in mapView.annotations {
+                        if !self.entireMapViewController.points.contains(where: { point in
+                            self.entireMapViewController.pointDict[point]?.longitude == annotation.coordinate.longitude && self.entireMapViewController.pointDict[point]?.latitude == annotation.coordinate.latitude
+                        }) {
+                            mapView.removeAnnotation(annotation)
+                        }
+                    }
+                    for point in self.entireMapViewController.points {
+                        print("check point \(point)")
+                        let geoCoder = CLGeocoder()
+                        geoCoder.geocodeAddressString(point.address) { (placemarks, error) in
+                            guard
+                                let placemarks = placemarks,
+                                let location = placemarks.first?.location
+                            else {
+                                // handle no location found
+                                return
+                            }
+
+                            // Use your location
+                            let annotation = MKPointAnnotation()
+                            annotation.coordinate.latitude = location.coordinate.latitude
+                            annotation.coordinate.longitude = location.coordinate.longitude
+                            annotation.title = point.title
+                            annotation.subtitle = point.subtitle
+                            if !mapView.annotations.contains(where: { an in
+                                an.coordinate.latitude == annotation.coordinate.latitude && an.coordinate.longitude == annotation.coordinate.longitude
+                            }) {
+                                print("add annotation \(annotation)")
+                                self.entireMapViewController.pointDict[point] = annotation.coordinate
+                                mapView.addAnnotation(annotation)
+                            }
+                        }
+                    }
+                    updateAnnotations()
+                }
+            }
+            updateAnnotations()
         }
         func mapViewWillStartLocatingUser(_ mapView: MKMapView) {
             entireMapViewController.userLocationBecomesVisible()
@@ -182,7 +248,7 @@ struct ExistingAnnotationMapProxy: View {
     @State var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
     @State var deselected: () -> Void
     var body: some View {
-        rawExistingAnnotationMap(zoom: zoom, address: address, points: points, modifierMap: modifierMap, selected: { Title, Subtitle, Address, Cluster in
+        rawExistingAnnotationMap(zoom: zoom, address: address, points: $points, modifierMap: modifierMap, selected: { Title, Subtitle, Address, Cluster in
             address = Address
             if zoom > 0.05 {
                 zoom = zoom/3

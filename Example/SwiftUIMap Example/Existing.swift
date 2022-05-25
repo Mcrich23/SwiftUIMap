@@ -54,13 +54,13 @@ struct Existing: View {
                     displayPriority: .required)
     ] {
         didSet {
-            refresh = true
+//            refresh = true
         }
     }
     var body: some View {
         VStack {
             if !refresh {
-                AnnotationMapView(zoom: $zoom, address: $address, points: points) { Title, Subtitle, Address, Cluster  in
+                AnnotationMapView(zoom: $zoom, address: $address, points: $points) { Title, Subtitle, Address, Cluster  in
                     print("tapped \(Title), with subtitle: \(Subtitle), address: \(Address), and cluster: \(Cluster)")
                 } deselected: {
                     print("deselected annotation")
@@ -75,7 +75,7 @@ struct Existing: View {
                 .showTraffic(false)
                 .showBuildings(true)
                 .mapType(.standard)
-                .camera(MKMapCamera(lookingAtCenter: loc, fromDistance: 4, pitch: 4, heading: 4))
+                .camera(MKMapCamera(lookingAtCenter: loc, fromDistance: zoom*252555, pitch: 0, heading: 0))
                 .cameraBoundary(MKMapView.CameraBoundary(coordinateRegion: MKCoordinateRegion(center: loc, span: MKCoordinateSpan(latitudeDelta: 4, longitudeDelta: 4))))
                 .cameraZoomRange(MKMapView.CameraZoomRange(minCenterCoordinateDistance: CLLocationDistance(600)))
                 .isPitchEnabled(true)

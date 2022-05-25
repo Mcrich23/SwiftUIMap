@@ -73,7 +73,7 @@ public struct AnnotationMapView: View {
             }
         }
     }
-    @State public var points: [Annotations]
+    @Binding public var points: [Annotations]
     @State public var modifierMap: MKMapView {
         didSet {
             
@@ -81,40 +81,40 @@ public struct AnnotationMapView: View {
     }
     @State public var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
     @State public var deselected: () -> Void
-    public init(zoom: Binding<Double>, address: Binding<String>, points: [Annotations], selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
+    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
         self._zoom = zoom
         self._address = address
-        self.points = points
+        self._points = points
         self.selected = selected
         self.deselected = deselected
         self._isUserLocationVisible = .constant(false)
         self.modifierMap = MKMapView(frame: .zero)
         setDefaultCamera()
     }
-    public init(zoom: Binding<Double>, address: Binding<String>, points: [Annotations], selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: () -> MKMapView) {
+    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: () -> MKMapView) {
         self._zoom = zoom
         self._address = address
-        self.points = points
+        self._points = points
         self.selected = selected
         self.deselected = deselected
         self._isUserLocationVisible = .constant(false)
         self.modifierMap = advancedModifiers()
         setDefaultCamera()
     }
-    public init(zoom: Binding<Double>, address: Binding<String>, points: [Annotations], isUserLocationVisible: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
+    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
         self._zoom = zoom
         self._address = address
-        self.points = points
+        self._points = points
         self.selected = selected
         self.deselected = deselected
         self._isUserLocationVisible = isUserLocationVisible
         self.modifierMap = MKMapView(frame: .zero)
         self.setDefaultCamera()
     }
-    public init(zoom: Binding<Double>, address: Binding<String>, points: [Annotations], isUserLocationVisible: Binding<Bool>, isFirstResponder: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: () -> MKMapView) {
+    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, isFirstResponder: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: () -> MKMapView) {
         self._zoom = zoom
         self._address = address
-        self.points = points
+        self._points = points
         self.selected = selected
         self.deselected = deselected
         self._isUserLocationVisible = isUserLocationVisible
@@ -142,7 +142,7 @@ public struct AnnotationMapView: View {
     public var body: some View {
         VStack {
             if !refresh {
-                ExistingAnnotationMapProxy(zoom: $zoom, address: $address, points: points, isUserLocationVisible: $isUserLocationVisible, modifierMap: $modifierMap, selected: { Title, Subtitle, Address, Cluster in
+                rawExistingAnnotationMap(zoom: zoom, address: address, points: $points, modifierMap: modifierMap, selected: { Title, Subtitle, Address, Cluster in
                     address = Address
                     if zoom > 0.05 {
                         zoom = zoom/3
@@ -151,12 +151,20 @@ public struct AnnotationMapView: View {
                         }
                     }
                     selected(Title, Subtitle, Address, Cluster)
-                }, deselected: deselected)
+                }, deselected: deselected) {
+                    self.isUserLocationVisible = true
+                } userLocationBecomesInvisible: {
+                    self.isUserLocationVisible = false
+                }
             }
         }
+        .onChange(of: points, perform: { _ in
+            print("points changed. points = \(points)")
+//            refresh = true
+        })
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) {
-                refresh = true
+//                refresh = true
             }
         }
     }
