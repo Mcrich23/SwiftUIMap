@@ -11,6 +11,9 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
     var modifierMap: MKMapView
     var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
     var deselected: () -> Void
+    // isUserLocationVisible variables
+    var userLocationBecomesVisible: () -> Void
+    var userLocationBecomesInvisible: () -> Void
     
 //    var annotationSelected: MKAnnotationView
     func updateUIView(_ mapView: MKMapView, context: Context) {
@@ -103,6 +106,15 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
             }
             return annotationView
         }
+        func mapViewWillStartLocatingUser(_ mapView: MKMapView) {
+            entireMapViewController.userLocationBecomesVisible()
+        }
+        func mapViewDidStopLocatingUser(_ mapView: MKMapView) {
+            entireMapViewController.userLocationBecomesInvisible()
+        }
+        func mapView(_ mapView: MKMapView, didFailToLocateUserWithError error: Error) {
+            entireMapViewController.userLocationBecomesInvisible()
+        }
         func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
             let coordinates = view.annotation!.coordinate
             let annotationCluster = view.annotation as? MKClusterAnnotation
@@ -144,9 +156,46 @@ struct rawExistingAnnotationMap: UIViewRepresentable {
     }
 }
 
-//struct existingAnnotationMapProxy: View {
-//    var body: some View {
-//        
-//    }
-//}
+struct ExistingAnnotationMapProxy: View {
+    @Binding var zoom: Double {
+        didSet {
+            print("update zoom")
+        }
+    }
+    @Binding public var address: String {
+        didSet {
+            print("update address")
+        }
+    }
+    @State var refresh = false {
+        didSet {
+            if refresh {
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(50)) {
+                    refresh = false
+                }
+            }
+        }
+    }
+    @State var points: [Annotations]
+    @Binding var isUserLocationVisible: Bool
+    @Binding var modifierMap: MKMapView
+    @State var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
+    @State var deselected: () -> Void
+    var body: some View {
+        rawExistingAnnotationMap(zoom: zoom, address: address, points: points, modifierMap: modifierMap, selected: { Title, Subtitle, Address, Cluster in
+            address = Address
+            if zoom > 0.05 {
+                zoom = zoom/3
+                if zoom < 0.05 {
+                    zoom = 0.05
+                }
+            }
+            selected(Title, Subtitle, Address, Cluster)
+        }, deselected: deselected) {
+            self.isUserLocationVisible = true
+        } userLocationBecomesInvisible: {
+            self.isUserLocationVisible = false
+        }
+    }
+}
 #endif
