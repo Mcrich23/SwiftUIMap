@@ -85,7 +85,7 @@ public struct AnnotationMapView: View {
         self.deselected = deselected
         self._isUserLocationVisible = .constant(false)
         self.modifierMap = MKMapView(frame: .zero)
-        setDefaultCamera()
+        setDefaultCamera(self.modifierMap)
     }
     public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
         self._zoom = zoom
@@ -100,7 +100,7 @@ public struct AnnotationMapView: View {
             return map
         }
         self.modifierMap = finalMap()
-        setDefaultCamera()
+        self.setDefaultCamera(self.modifierMap)
     }
     public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
         self._zoom = zoom
@@ -110,7 +110,7 @@ public struct AnnotationMapView: View {
         self.deselected = deselected
         self._isUserLocationVisible = isUserLocationVisible
         self.modifierMap = MKMapView(frame: .zero)
-        self.setDefaultCamera()
+        self.setDefaultCamera(self.modifierMap)
     }
     public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, isFirstResponder: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
         self._zoom = zoom
@@ -125,10 +125,10 @@ public struct AnnotationMapView: View {
             return map
         }
         self.modifierMap = finalMap()
-        self.setDefaultCamera()
+        self.setDefaultCamera(self.modifierMap)
     }
     
-    func setDefaultCamera() {
+    func setDefaultCamera(_ map: MKMapView) {
         let geoCoder = CLGeocoder()
         geoCoder.geocodeAddressString(address) { (placemarks, error) in
             guard
@@ -141,7 +141,7 @@ public struct AnnotationMapView: View {
 
             // Use your location
             let loc = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-            self.modifierMap.camera = MKMapCamera(lookingAtCenter: loc, fromDistance: zoom*252555, pitch: 0, heading: 0)
+            map.camera = MKMapCamera(lookingAtCenter: loc, fromDistance: zoom*252555, pitch: 0, heading: 0)
         }
     }
     
