@@ -85,6 +85,7 @@ public struct AnnotationMapView: View {
         self.deselected = deselected
         self._isUserLocationVisible = .constant(false)
         self.modifierMap = MKMapView(frame: .zero)
+        modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
         setDefaultCamera(self.modifierMap)
     }
     public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
@@ -96,6 +97,7 @@ public struct AnnotationMapView: View {
         self._isUserLocationVisible = .constant(false)
         let finalMap: () -> MKMapView = {
             let map = MKMapView()
+            map.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
             advancedModifiers(map)
             return map
         }
@@ -110,6 +112,7 @@ public struct AnnotationMapView: View {
         self.deselected = deselected
         self._isUserLocationVisible = isUserLocationVisible
         self.modifierMap = MKMapView(frame: .zero)
+        modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
         self.setDefaultCamera(self.modifierMap)
     }
     public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, isFirstResponder: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
@@ -121,6 +124,7 @@ public struct AnnotationMapView: View {
         self._isUserLocationVisible = isUserLocationVisible
         let finalMap: () -> MKMapView = {
             let map = MKMapView()
+            map.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
             advancedModifiers(map)
             return map
         }
@@ -129,19 +133,21 @@ public struct AnnotationMapView: View {
     }
     
     func setDefaultCamera(_ map: MKMapView) {
-        let geoCoder = CLGeocoder()
-        geoCoder.geocodeAddressString(address) { (placemarks, error) in
-            guard
-                let placemarks = placemarks,
-                let location = placemarks.first?.location
-            else {
-                // handle no location found
-                return
-            }
+        if map == MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0) {
+            let geoCoder = CLGeocoder()
+            geoCoder.geocodeAddressString(address) { (placemarks, error) in
+                guard
+                    let placemarks = placemarks,
+                    let location = placemarks.first?.location
+                else {
+                    // handle no location found
+                    return
+                }
 
-            // Use your location
-            let loc = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-            map.camera = MKMapCamera(lookingAtCenter: loc, fromDistance: zoom*252555, pitch: 0, heading: 0)
+                // Use your location
+                let loc = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+                map.camera = MKMapCamera(lookingAtCenter: loc, fromDistance: zoom*252555, pitch: 0, heading: 0)
+            }
         }
     }
     

@@ -73,7 +73,7 @@ struct Existing: View {
                 .showTraffic(false)
                 .showBuildings(true)
                 .mapType(.standard)
-                .camera(MKMapCamera(lookingAtCenter: loc, fromDistance: zoom*252555, pitch: 0, heading: 0))
+                .camera(MKMapCamera(lookingAtCenter: loc, fromDistance: zoom*999999, pitch: 0, heading: 0))
                 .cameraBoundary(MKMapView.CameraBoundary(coordinateRegion: MKCoordinateRegion(center: loc, span: MKCoordinateSpan(latitudeDelta: 4, longitudeDelta: 4))))
                 .cameraZoomRange(MKMapView.CameraZoomRange(minCenterCoordinateDistance: CLLocationDistance(600)))
                 .isPitchEnabled(true)
