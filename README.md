@@ -55,9 +55,7 @@ ExistingMapView (
     }, deselected: { // Action When Marker is Deselceted
         print("deselected annotation")
     }, advancedModifiers: { // Full access to MKMapView modifiers
-        let modifiers = MKMapView(frame: .zero)
-        modifiers.isPitchEnabled = true
-        return modifiers
+        map.alpha = 0.4
     }
 )
 ```

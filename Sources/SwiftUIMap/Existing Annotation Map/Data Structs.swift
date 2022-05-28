@@ -36,7 +36,7 @@ import MapKit
  ```
  
  */
-public struct Annotations: Identifiable, Equatable {
+public struct Annotations: Identifiable, Equatable, Hashable {
     public let id = UUID()
     public let title: String
     public let subtitle: String
