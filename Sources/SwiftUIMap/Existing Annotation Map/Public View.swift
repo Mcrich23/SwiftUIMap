@@ -18,7 +18,6 @@ import SwiftUI
  - parameter selected: Action when marker is selected
  - parameter deselected: Action when marker is deselected
  - parameter isFirstResponder: An `@Binding` variable that tells you if the map is the first reponder
- - parameter isUserLocationVisible: An `@Binding` variable that tells you if the user location is visible on the map
  - parameter advancedModifiers: Advanced modifiers for the map, gives you full access to `MKMapView`
  - warning: Requires MapKit to be imported
  

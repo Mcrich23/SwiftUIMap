@@ -49,7 +49,6 @@ ExistingMapView (
         )
     ],
     isUserLocationVisible: $isUserLocationVisible, // Binding for if isUserLocationVisible
-    isFirstResponder: $isFirstResponder, // Binding for if isFirstResponder
     selected: { Title, Subtitle, Address, isCluster in // Action When Marker is Selected (Returns title, subtitle, and address in annotation along with if it's in a cluster)
         print("tapped \(Address)")
     }, deselected: { // Action When Marker is Deselceted
