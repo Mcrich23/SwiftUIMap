@@ -74,11 +74,7 @@ public struct AnnotationMapView: View {
         }
     }
     @Binding public var points: [Annotations]
-    @State public var modifierMap: MKMapView {
-        didSet {
-            
-        }
-    }
+    @State public var modifierMap: MKMapView
     @State public var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
     @State public var deselected: () -> Void
     public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
@@ -91,14 +87,19 @@ public struct AnnotationMapView: View {
         self.modifierMap = MKMapView(frame: .zero)
         setDefaultCamera()
     }
-    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: () -> MKMapView) {
+    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
         self._zoom = zoom
         self._address = address
         self._points = points
         self.selected = selected
         self.deselected = deselected
         self._isUserLocationVisible = .constant(false)
-        self.modifierMap = advancedModifiers()
+        let finalMap: () -> MKMapView = {
+            let map = MKMapView()
+            advancedModifiers(map)
+            return map
+        }
+        self.modifierMap = finalMap()
         setDefaultCamera()
     }
     public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
@@ -111,14 +112,19 @@ public struct AnnotationMapView: View {
         self.modifierMap = MKMapView(frame: .zero)
         self.setDefaultCamera()
     }
-    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, isFirstResponder: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: () -> MKMapView) {
+    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, isFirstResponder: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
         self._zoom = zoom
         self._address = address
         self._points = points
         self.selected = selected
         self.deselected = deselected
         self._isUserLocationVisible = isUserLocationVisible
-        self.modifierMap = advancedModifiers()
+        let finalMap: () -> MKMapView = {
+            let map = MKMapView()
+            advancedModifiers(map)
+            return map
+        }
+        self.modifierMap = finalMap()
         self.setDefaultCamera()
     }
     
@@ -142,7 +148,7 @@ public struct AnnotationMapView: View {
     public var body: some View {
         VStack {
             if !refresh {
-                rawExistingAnnotationMap(zoom: zoom, address: address, points: $points, modifierMap: modifierMap, selected: { Title, Subtitle, Address, Cluster in
+                RawExistingAnnotationMap(zoom: zoom, address: address, points: $points, modifierMap: modifierMap, selected: { Title, Subtitle, Address, Cluster in
                     address = Address
                     if zoom > 0.05 {
                         zoom = zoom/3

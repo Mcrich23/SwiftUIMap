@@ -64,10 +64,8 @@ struct Existing: View {
                     print("tapped \(Title), with subtitle: \(Subtitle), address: \(Address), and cluster: \(Cluster)")
                 } deselected: {
                     print("deselected annotation")
-                } advancedModifiers: {
-                    let modifiers = MKMapView(frame: .zero)
-                    modifiers.isPitchEnabled = true
-                    return modifiers
+                } advancedModifiers: { map in
+                    map.alpha = 1
                 }
                 .pointOfInterestCategories(include: [.airport])
                 .showCompass(false)
