@@ -166,6 +166,7 @@ public struct AnnotationMapView: View {
         }
         .onChange(of: points, perform: { _ in
             print("points changed. points = \(points)")
+            NotificationCenter.default.post(name: NSNotification.Name("SwiftUIMap.updateAnnotations"), object: Bool(true))
 //            refresh = true
         })
         .onAppear {

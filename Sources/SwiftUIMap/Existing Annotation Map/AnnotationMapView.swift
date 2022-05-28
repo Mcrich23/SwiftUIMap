@@ -129,6 +129,11 @@ struct RawExistingAnnotationMap: UIViewRepresentable {
                 }
             }
         }
+        func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
+            NotificationCenter.default.addObserver(forName: NSNotification.Name("SwiftUIMap.updateAnnotations"), object: Bool(true), queue: .main) { _ in
+                self.updateAnnotations(mapView: mapView)
+            }
+        }
         @objc func updateAnnotations(mapView: MKMapView) {
             print("points changed!")
             print("check, points.count = \(self.entireMapViewController.points.count)")
@@ -158,6 +163,7 @@ struct RawExistingAnnotationMap: UIViewRepresentable {
                         mapView.addAnnotation(annotation)
                     }
                 }
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "SwiftUIMap.updateAnnotations"), object: Bool(false))
             }
             for annotation in mapView.annotations {
                 if self.entireMapViewController.points.contains(where: { point in
@@ -166,8 +172,6 @@ struct RawExistingAnnotationMap: UIViewRepresentable {
                     mapView.removeAnnotation(annotation)
                 }
             }
-        }
-        func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
         }
         func mapViewWillStartLocatingUser(_ mapView: MKMapView) {
             entireMapViewController.userLocationBecomesVisible()
