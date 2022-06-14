@@ -88,4 +88,10 @@ public enum glyphImage {
     case assetImage(String)
     case defaultIcon
 }
+
+public class SwiftUIMap {
+    public static func defaultCameraAngle(location: CLLocationCoordinate2D, zoom: Double) -> MKMapCamera {
+        MKMapCamera(lookingAtCenter: location, fromDistance: zoom*252555, pitch: 0, heading: 0)
+    }
+}
 #endif
