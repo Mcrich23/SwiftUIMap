@@ -95,10 +95,21 @@ MutableMapView (
 ### **MapSearchView**
 
 ```
-MapSearchView { address in //Address passed back
+MapSearchView { address in // Address passed back
     zoom = 0.2 // Zooms out
     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(650), execute: { // Wait to go to the new place
         self.address = address // Change central address
     })
 }
+```
+### **defaultCameraAngle**
+
+```
+SwiftUIMap.defaultCameraAngle( // Get Default Camera Angle
+    location: CLLocationCoordinate2D( // Center coordinates
+        latitude: lat, // Latitude for center coordinate
+        longitude: long // Longitude for center coordinate
+    ), 
+    zoom: zoom // How far zoomed in the camera is
+)
 ```

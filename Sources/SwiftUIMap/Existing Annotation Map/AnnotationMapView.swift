@@ -7,7 +7,7 @@ import CoreLocation
 struct RawExistingAnnotationMap: UIViewRepresentable {
     var zoom: Double
     var address: String
-    @Binding var points: [Annotations]
+    var points: [Annotations]
     var modifierMap: MKMapView
     var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
     var deselected: () -> Void
@@ -130,7 +130,7 @@ struct RawExistingAnnotationMap: UIViewRepresentable {
             }
         }
         func mapViewDidFinishLoadingMap(_ mapView: MKMapView) {
-            NotificationCenter.default.addObserver(forName: NSNotification.Name("SwiftUIMap.updateAnnotations"), object: Bool(true), queue: .main) { _ in
+            NotificationCenter.default.addObserver(forName: NSNotification.Name("SwiftUIMap.updateAnnotations"), object: true, queue: .main) { _ in
                 self.updateAnnotations(mapView: mapView)
             }
         }

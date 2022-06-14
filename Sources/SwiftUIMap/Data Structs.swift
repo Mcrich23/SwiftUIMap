@@ -90,6 +90,11 @@ public enum glyphImage {
 }
 
 public class SwiftUIMap {
+    
+    /// Get the default camera angle
+    /// - Parameters:
+    ///   - location: Center coordinates.
+    ///   - zoom: How far zoomed the camera is.
     public static func defaultCameraAngle(location: CLLocationCoordinate2D, zoom: Double) -> MKMapCamera {
         MKMapCamera(lookingAtCenter: location, fromDistance: zoom*252555, pitch: 0, heading: 0)
     }

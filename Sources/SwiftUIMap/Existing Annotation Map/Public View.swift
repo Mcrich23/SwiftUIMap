@@ -23,7 +23,7 @@ import SwiftUI
  
  # Example #
  ```
- ExistingMapView (
+ AnnotationMapView (
      zoom: 0.4,
      address: "Seattle, Wa",
      points: [
@@ -87,7 +87,7 @@ public struct AnnotationMapView: View {
         modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
         setDefaultCamera(self.modifierMap)
     }
-    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
+    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
         self._zoom = zoom
         self._address = address
         self._points = points
@@ -103,7 +103,7 @@ public struct AnnotationMapView: View {
         self.modifierMap = finalMap()
         self.setDefaultCamera(self.modifierMap)
     }
-    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
+    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void) {
         self._zoom = zoom
         self._address = address
         self._points = points
@@ -114,7 +114,7 @@ public struct AnnotationMapView: View {
         modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
         self.setDefaultCamera(self.modifierMap)
     }
-    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, isFirstResponder: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
+    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, isFirstResponder: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
         self._zoom = zoom
         self._address = address
         self._points = points
@@ -153,7 +153,7 @@ public struct AnnotationMapView: View {
     public var body: some View {
         VStack {
             if !refresh {
-                RawExistingAnnotationMap(zoom: zoom, address: address, points: $points, modifierMap: modifierMap, selected: { Title, Subtitle, Address, Cluster in
+                RawExistingAnnotationMap(zoom: zoom, address: address, points: points, modifierMap: modifierMap, selected: { Title, Subtitle, Address, Cluster in
                     address = Address
                     if zoom > 0.05 {
                         zoom = zoom/3
@@ -171,7 +171,7 @@ public struct AnnotationMapView: View {
         }
         .onChange(of: points, perform: { _ in
             print("points changed. points = \(points)")
-            NotificationCenter.default.post(name: NSNotification.Name("SwiftUIMap.updateAnnotations"), object: Bool(true))
+            NotificationCenter.default.post(name: NSNotification.Name("SwiftUIMap.updateAnnotations"), object: true)
 //            refresh = true
         })
         .onAppear {
