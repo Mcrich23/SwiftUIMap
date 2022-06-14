@@ -222,47 +222,4 @@ struct RawExistingAnnotationMap: UIViewRepresentable {
         }
     }
 }
-
-struct ExistingAnnotationMapProxy: View {
-    @Binding var zoom: Double {
-        didSet {
-            print("update zoom")
-        }
-    }
-    @Binding public var address: String {
-        didSet {
-            print("update address")
-        }
-    }
-    @State var refresh = false {
-        didSet {
-            if refresh {
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(50)) {
-                    refresh = false
-                }
-            }
-        }
-    }
-    @State var points: [Annotations]
-    @Binding var isUserLocationVisible: Bool
-    @Binding var modifierMap: MKMapView
-    @State var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
-    @State var deselected: () -> Void
-    var body: some View {
-        RawExistingAnnotationMap(zoom: zoom, address: address, points: $points, modifierMap: modifierMap, selected: { Title, Subtitle, Address, Cluster in
-            address = Address
-            if zoom > 0.05 {
-                zoom = zoom/3
-                if zoom < 0.05 {
-                    zoom = 0.05
-                }
-            }
-            selected(Title, Subtitle, Address, Cluster)
-        }, deselected: deselected) {
-            self.isUserLocationVisible = true
-        } userLocationBecomesInvisible: {
-            self.isUserLocationVisible = false
-        }
-    }
-}
 #endif
