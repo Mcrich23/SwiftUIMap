@@ -87,6 +87,17 @@ public struct AnnotationMapView: View {
         modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
         setDefaultCamera(self.modifierMap)
     }
+    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>) {
+        self._zoom = zoom
+        self._address = address
+        self._points = points
+        self.selected = {}
+        self.deselected = {}
+        self._isUserLocationVisible = .constant(false)
+        self.modifierMap = MKMapView(frame: .zero)
+        modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
+        setDefaultCamera(self.modifierMap)
+    }
     public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
         self._zoom = zoom
         self._address = address
