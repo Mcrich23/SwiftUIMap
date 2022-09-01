@@ -91,7 +91,7 @@ public struct AnnotationMapView: View {
         self._zoom = zoom
         self._address = address
         self._points = points
-        self.selected = {}
+        self.selected = {_, _, _, _ in}
         self.deselected = {}
         self._isUserLocationVisible = .constant(false)
         self.modifierMap = MKMapView(frame: .zero)
