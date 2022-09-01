@@ -54,7 +54,7 @@ public struct Annotations: Identifiable, Equatable, Hashable {
         case .systemImage(let string):
             self.glyphImage = UIImage(systemName: string) ?? UIImage()
         case .assetImage(let string):
-            self.glyphImage = UIImage(systemName: string) ?? UIImage()
+            self.glyphImage = UIImage(named: string) ?? UIImage()
         case .defaultIcon:
             self.glyphImage = UIImage()
         }
@@ -71,7 +71,7 @@ public struct Annotations: Identifiable, Equatable, Hashable {
         case .systemImage(let string):
             self.glyphImage = UIImage(systemName: string) ?? UIImage()
         case .assetImage(let string):
-            self.glyphImage = UIImage(systemName: string) ?? UIImage()
+            self.glyphImage = UIImage(named: string) ?? UIImage()
         case .defaultIcon:
             self.glyphImage = UIImage()
         }
