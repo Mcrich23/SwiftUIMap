@@ -15,7 +15,7 @@ import MapKit
  
  - parameter title: Top line on map
  - parameter subtitle: Underneath top line when clicked
- - parameter addess: Address for point
+ - parameter location: Location for point
  - parameter glyphImage: Glyph icon on map point
  - parameter markerTintColor: Marker background
  - parameter glyphTintColor: Glyph icon color
@@ -27,7 +27,7 @@ import MapKit
  Annotations(
     title: "Townhall",
     subtitle: "Newly Remodeled",
-    address: "1119 8th Ave, Seattle, WA, 98101, United States",
+    location: .address("1119 8th Ave, Seattle, WA, 98101, United States"),
     glyphImage: .defaultIcon,
     markerTintColor: .red,
     glyphTintColor: .white,

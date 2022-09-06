@@ -13,7 +13,7 @@ import SwiftUI
  A map that has annotations and is usable by the user, but cannot add annotations.
  
  - parameter zoom: Starting zoom of map (range: 0-1, lower is closer in)
- - parameter address: Starting address in the center of the map
+ - parameter location: Starting location in the center of the map
  - parameter points: How markers are shown
  - parameter selected: Action when marker is selected
  - parameter deselected: Action when marker is deselected
@@ -25,12 +25,12 @@ import SwiftUI
  ```
  AnnotationMapView (
      zoom: 0.4,
-     address: "Seattle, Wa",
+     location: .address("Seattle, Wa"),
      points: [
          Annotations(
             title: "Townhall",
             subtitle: "Newly Remodeled",
-            address: "1119 8th Ave, Seattle, WA, 98101, United States",
+            location: .address("1119 8th Ave, Seattle, WA, 98101, United States"),
             glyphImage: .defaultIcon,
             markerTintColor: .red,
             glyphTintColor: .white,

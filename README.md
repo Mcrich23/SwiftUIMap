@@ -36,12 +36,12 @@ Note: To use a map from SwiftUIMap, you need to import MapKit
 ```
 ExistingMapView (
     zoom: 0.4, // Starting Zoom of Map (Range: 0-1, Lower is closer in)
-    address: "Seattle, Wa", // Starting Address in the Center of the Map
+    Location: .address("Seattle, Wa"), // Starting Location in the Center of the Map
     points: [
         Annotations(
             title: "Townhall", // Top line on map
             subtitle: "Newly Remodeled", // Underneath top line when clicked
-            address: "1119 8th Ave, Seattle, WA, 98101, United States", // Address for point
+            location: .address("1119 8th Ave, Seattle, WA, 98101, United States"), // Location for point
             glyphImage: .defaultIcon, // Glyph icon on map point
             markerTintColor: .red, // Marker background
             glyphTintColor: .white, // Glyph icon color
@@ -63,7 +63,7 @@ ExistingMapView (
 ```
 MutableMapView (
     zoom: 0.4, // Starting Zoom of Map (Range: 0-1, Lower is closer in)
-    address: "Seattle, Wa", // Starting Address in the Center of the Map
+    locatio: .address("Seattle, Wa"), // Starting Location in the Center of the Map
     isFirstResponder: $isFirstResponder // Binding for if isFirstResponder
 )
 ```
