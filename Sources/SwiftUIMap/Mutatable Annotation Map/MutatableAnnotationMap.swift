@@ -6,15 +6,17 @@ import CoreLocation
 
 struct rawMutableAnnotationMap: UIViewRepresentable {
     var zoom: Double
-    var address: String
+    var location: Location
     var modifierMap: MKMapView
     
 //    var annotationSelected: MKAnnotationView
     func updateUIView(_ mapView: MKMapView, context: Context) {
-            let span = MKCoordinateSpan(latitudeDelta: zoom, longitudeDelta: zoom)
-            var chicagoCoordinate = CLLocationCoordinate2D()
+        let span = MKCoordinateSpan(latitudeDelta: zoom, longitudeDelta: zoom)
+        switch location {
+        case .address(let string):
+            var coordinates = CLLocationCoordinate2D()
             let geoCoder = CLGeocoder()
-            geoCoder.geocodeAddressString(address) { (placemarks, error) in
+            geoCoder.geocodeAddressString(string) { (placemarks, error) in
                 guard
                     let placemarks = placemarks,
                     let location = placemarks.first?.location
@@ -22,14 +24,19 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
                     // handle no location found
                     return
                 }
-
+                
                 // Use your location
-                chicagoCoordinate.latitude = location.coordinate.latitude
-                chicagoCoordinate.longitude = location.coordinate.longitude
-                let region = MKCoordinateRegion(center: chicagoCoordinate, span: span)
+                coordinates.latitude = location.coordinate.latitude
+                coordinates.longitude = location.coordinate.longitude
+                let region = MKCoordinateRegion(center: coordinates, span: span)
                 mapView.setRegion(region, animated: true)
             }
+        case .coordinates(let locationCoordinates):
+            let coordinates = CLLocationCoordinate2D(latitude: locationCoordinates.latitude, longitude: locationCoordinates.longitude)
+            let region = MKCoordinateRegion(center: coordinates, span: span)
+            mapView.setRegion(region, animated: true)
         }
+    }
     
         func makeUIView(context: Context) -> MKMapView {
 
@@ -122,32 +129,32 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
  */
 public struct MutableMapView: View {
     @Binding public var zoom: Double
-    @Binding public var address: String
+    @Binding public var location: Location
     @Binding var isFirstResponder: Bool
     @State public var modifierMap: MKMapView
     
-    public init(zoom: Binding<Double>, address: Binding<String>) {
+    public init(zoom: Binding<Double>, location: Binding<Location>) {
         self._zoom = zoom
-        self._address = address
+        self._location = location
         self.modifierMap = MKMapView()
         self._isFirstResponder = .constant(false)
     }
-    public init(zoom: Binding<Double>, address: Binding<String>, advancedModifiers: () -> MKMapView) {
+    public init(zoom: Binding<Double>, location: Binding<Location>, advancedModifiers: () -> MKMapView) {
         self._zoom = zoom
-        self._address = address
+        self._location = location
         self._isFirstResponder = .constant(false)
         self.modifierMap = advancedModifiers()
     }
-    public init(zoom: Binding<Double>, address: Binding<String>, isFirstResponder: Binding<Bool>) {
+    public init(zoom: Binding<Double>, location: Binding<Location>, isFirstResponder: Binding<Bool>) {
         self._zoom = zoom
-        self._address = address
+        self._location = location
         self.modifierMap = MKMapView()
         self._isFirstResponder = isFirstResponder
         self.checkInfo()
     }
-    public init(zoom: Binding<Double>, address: Binding<String>, isFirstResponder: Binding<Bool>, advancedModifiers: () -> MKMapView) {
+    public init(zoom: Binding<Double>, location: Binding<Location>, isFirstResponder: Binding<Bool>, advancedModifiers: () -> MKMapView) {
         self._zoom = zoom
-        self._address = address
+        self._location = location
         self._isFirstResponder = isFirstResponder
         self.modifierMap = advancedModifiers()
         self.checkInfo()
@@ -161,7 +168,7 @@ public struct MutableMapView: View {
     }
     
     public var body: some View {
-        rawMutableAnnotationMap(zoom: zoom, address: address, modifierMap: modifierMap)
+        rawMutableAnnotationMap(zoom: zoom, location: location, modifierMap: modifierMap)
     }
     // MARK: Modifiers
     /**

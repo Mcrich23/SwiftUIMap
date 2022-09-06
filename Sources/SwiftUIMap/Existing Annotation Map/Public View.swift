@@ -57,7 +57,7 @@ public struct AnnotationMapView: View {
             print("update zoom")
         }
     }
-    @Binding public var address: String {
+    @Binding public var location: Location {
         didSet {
             print("update address")
         }
@@ -74,11 +74,11 @@ public struct AnnotationMapView: View {
     }
     @Binding public var points: [Annotations]
     @State public var modifierMap: MKMapView
-    @State public var selected: (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void
+    @State public var selected: (_ Title: String, _ Subtitle: String, _ Location: Location, _ Cluster: Bool) -> Void
     @State public var deselected: () -> Void
-    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
+    public init(zoom: Binding<Double>, location: Binding<Location>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
         self._zoom = zoom
-        self._address = address
+        self._location = location
         self._points = points
         self.selected = selected
         self.deselected = deselected
@@ -87,9 +87,9 @@ public struct AnnotationMapView: View {
         modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
         setDefaultCamera(self.modifierMap)
     }
-    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>) {
+    public init(zoom: Binding<Double>, location: Binding<Location>, points: Binding<[Annotations]>) {
         self._zoom = zoom
-        self._address = address
+        self._location = location
         self._points = points
         self.selected = {_, _, _, _ in}
         self.deselected = {}
@@ -98,9 +98,9 @@ public struct AnnotationMapView: View {
         modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
         setDefaultCamera(self.modifierMap)
     }
-    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
+    public init(zoom: Binding<Double>, location: Binding<Location>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
         self._zoom = zoom
-        self._address = address
+        self._location = location
         self._points = points
         self.selected = selected
         self.deselected = deselected
@@ -114,9 +114,9 @@ public struct AnnotationMapView: View {
         self.modifierMap = finalMap()
         self.setDefaultCamera(self.modifierMap)
     }
-    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void) {
+    public init(zoom: Binding<Double>, location: Binding<Location>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void) {
         self._zoom = zoom
-        self._address = address
+        self._location = location
         self._points = points
         self.selected = selected
         self.deselected = deselected
@@ -125,9 +125,9 @@ public struct AnnotationMapView: View {
         modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
         self.setDefaultCamera(self.modifierMap)
     }
-    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, isFirstResponder: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Address: String, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
+    public init(zoom: Binding<Double>, location: Binding<Location>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, isFirstResponder: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
         self._zoom = zoom
-        self._address = address
+        self._location = location
         self._points = points
         self.selected = selected
         self.deselected = deselected
@@ -145,18 +145,24 @@ public struct AnnotationMapView: View {
     func setDefaultCamera(_ map: MKMapView) {
         if map == MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0) {
             let geoCoder = CLGeocoder()
-            geoCoder.geocodeAddressString(address) { (placemarks, error) in
-                guard
-                    let placemarks = placemarks,
-                    let location = placemarks.first?.location
-                else {
-                    // handle no location found
-                    return
-                }
+            switch location {
+            case .address(let string):
+                geoCoder.geocodeAddressString(string) { (placemarks, error) in
+                    guard
+                        let placemarks = placemarks,
+                        let location = placemarks.first?.location
+                    else {
+                        // handle no location found
+                        return
+                    }
 
-                // Use your location
-                let loc = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-                map.camera = MKMapCamera(lookingAtCenter: loc, fromDistance: zoom*252555, pitch: 0, heading: 0)
+                    // Use your location
+                    let loc = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+                    map.camera = MKMapCamera(lookingAtCenter: loc, fromDistance: zoom*252555, pitch: 0, heading: 0)
+                }
+            case .coordinates(let locationCoordinates):
+                let coordinates = CLLocationCoordinate2D(latitude: locationCoordinates.latitude, longitude: locationCoordinates.longitude)
+                map.camera = MKMapCamera(lookingAtCenter: coordinates, fromDistance: zoom*252555, pitch: 0, heading: 0)
             }
         }
     }
@@ -164,15 +170,15 @@ public struct AnnotationMapView: View {
     public var body: some View {
         VStack {
             if !refresh {
-                RawExistingAnnotationMap(zoom: zoom, address: address, points: points, modifierMap: modifierMap, selected: { Title, Subtitle, Address, Cluster in
-                    address = Address
+                RawExistingAnnotationMap(zoom: zoom, location: location, points: points, modifierMap: modifierMap, selected: { Title, Subtitle, Location, Cluster in
+                    location = Location
                     if zoom > 0.05 {
                         zoom = zoom/3
                         if zoom < 0.05 {
                             zoom = 0.05
                         }
                     }
-                    selected(Title, Subtitle, Address, Cluster)
+                    selected(Title, Subtitle, Location, Cluster)
                 }, deselected: deselected) {
                     self.isUserLocationVisible = true
                 } userLocationBecomesInvisible: {

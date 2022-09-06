@@ -40,16 +40,16 @@ public struct Annotations: Identifiable, Equatable, Hashable {
     public let id = UUID()
     public let title: String
     public let subtitle: String
-    public let address: String
+    public let location: Location
     public let glyphImage: UIImage
     public let markerTintColor: UIColor
     public let glyphTintColor: UIColor
     public let displayPriority: MKFeatureDisplayPriority
     
-    public init(title: String, subtitle: String, address: String, glyphImage: glyphImage, markerTintColor: UIColor, glyphTintColor: UIColor, displayPriority: MKFeatureDisplayPriority) {
+    public init(title: String, subtitle: String, location: Location, glyphImage: glyphImage, markerTintColor: UIColor, glyphTintColor: UIColor, displayPriority: MKFeatureDisplayPriority) {
         self.title = title
         self.subtitle = subtitle
-        self.address = address
+        self.location = location
         switch glyphImage {
         case .systemImage(let string):
             self.glyphImage = UIImage(systemName: string) ?? UIImage()
@@ -63,10 +63,10 @@ public struct Annotations: Identifiable, Equatable, Hashable {
         self.displayPriority = displayPriority
     }
     
-    public init(title: String, subtitle: String, address: String, glyphImage: glyphImage) {
+    public init(title: String, subtitle: String, location: Location, glyphImage: glyphImage) {
         self.title = title
         self.subtitle = subtitle
-        self.address = address
+        self.location = location
         switch glyphImage {
         case .systemImage(let string):
             self.glyphImage = UIImage(systemName: string) ?? UIImage()
@@ -89,6 +89,40 @@ public enum glyphImage {
     case defaultIcon
 }
 
+/**
+ Different types of locations, whether it be addresses, or coordinates. one variable for all the types.
+ */
+public enum Location: Equatable, Hashable {
+    public static func == (lhs: Location, rhs: Location) -> Bool {
+        return true
+    }
+    
+    case address(String)
+    case coordinates(LocationCoordinate)
+}
+/*
+ *  LocationCoordinate
+ *
+ *  Discussion:
+ *    A structure that contains a geographical coordinate.
+ *
+ *  Fields:
+ *    latitude:
+ *      The latitude in degrees.
+ *    longitude:
+ *      The longitude in degrees.
+ */
+public struct LocationCoordinate: Hashable {
+
+    public init(latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
+        self.latitude = latitude
+        self.longitude = longitude
+    }
+
+    public var latitude: CLLocationDegrees
+
+    public var longitude: CLLocationDegrees
+}
 public class SwiftUIMap {
     
     /// Get the default camera angle
