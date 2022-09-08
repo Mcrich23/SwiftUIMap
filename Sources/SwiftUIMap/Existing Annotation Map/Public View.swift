@@ -77,7 +77,7 @@ public struct AnnotationMapView: View {
     public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
         self._zoom = zoom
         self._address = address
-        self._coordinate = Binding(get: {
+        self._coordinates = Binding(get: {
             LocationCoordinate(latitude: 0, longitude: 0)
         }, set: { _ in
         })
@@ -92,7 +92,7 @@ public struct AnnotationMapView: View {
     public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>) {
         self._zoom = zoom
         self._address = address
-        self._coordinate = Binding(get: {
+        self._coordinates = Binding(get: {
             LocationCoordinate(latitude: 0, longitude: 0)
         }, set: { _ in
         })
@@ -107,7 +107,7 @@ public struct AnnotationMapView: View {
     public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
         self._zoom = zoom
         self._address = address
-        self._coordinate = Binding(get: {
+        self._coordinates = Binding(get: {
             LocationCoordinate(latitude: 0, longitude: 0)
         }, set: { _ in
         })
@@ -127,7 +127,7 @@ public struct AnnotationMapView: View {
     public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void) {
         self._zoom = zoom
         self._address = address
-        self._coordinate = Binding(get: {
+        self._coordinates = Binding(get: {
             LocationCoordinate(latitude: 0, longitude: 0)
         }, set: { _ in
         })
@@ -142,7 +142,7 @@ public struct AnnotationMapView: View {
     public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, isFirstResponder: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
         self._zoom = zoom
         self._address = address
-        self._coordinate = Binding(get: {
+        self._coordinates = Binding(get: {
             LocationCoordinate(latitude: 0, longitude: 0)
         }, set: { _ in
         })
@@ -161,7 +161,7 @@ public struct AnnotationMapView: View {
     }
     public init(zoom: Binding<Double>, coordinates: Binding<LocationCoordinate>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
         self._zoom = zoom
-        self._coordinate = coordinates
+        self._coordinates = coordinates
         self._address = Binding(get: {
             ""
         }, set: { _ in
@@ -176,7 +176,7 @@ public struct AnnotationMapView: View {
     }
     public init(zoom: Binding<Double>, coordinates: Binding<LocationCoordinate>, points: Binding<[Annotations]>) {
         self._zoom = zoom
-        self._coordinate = coordinates
+        self._coordinates = coordinates
         self._address = Binding(get: {
             ""
         }, set: { _ in
@@ -191,7 +191,7 @@ public struct AnnotationMapView: View {
     }
     public init(zoom: Binding<Double>, coordinates: Binding<LocationCoordinate>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
         self._zoom = zoom
-        self._coordinate = coordinates
+        self._coordinates = coordinates
         self._address = Binding(get: {
             ""
         }, set: { _ in
@@ -211,7 +211,7 @@ public struct AnnotationMapView: View {
     }
     public init(zoom: Binding<Double>, coordinates: Binding<LocationCoordinate>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void) {
         self._zoom = zoom
-        self._coordinate = coordinates
+        self._coordinates = coordinates
         self._address = Binding(get: {
             ""
         }, set: { _ in
@@ -226,7 +226,7 @@ public struct AnnotationMapView: View {
     }
     public init(zoom: Binding<Double>, coordinates: Binding<LocationCoordinate>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, isFirstResponder: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
         self._zoom = zoom
-        self._coordinate = coordinates
+        self._coordinates = coordinates
         self._address = Binding(get: {
             ""
         }, set: { _ in
@@ -259,7 +259,7 @@ public struct AnnotationMapView: View {
                     }
 
                     // Use your location
-                    let loc = CLLocationCoordinate2D(latitude: location.coordinates.latitude, longitude: location.coordinates.longitude)
+                    let loc = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
                     map.camera = MKMapCamera(lookingAtCenter: loc, fromDistance: zoom*252555, pitch: 0, heading: 0)
                 }
             } else {

@@ -6,17 +6,17 @@ import CoreLocation
 
 struct rawMutableAnnotationMap: UIViewRepresentable {
     var zoom: Double
-    var location: Location
+    var address: String
+    var coordinates: LocationCoordinate
     var modifierMap: MKMapView
     
 //    var annotationSelected: MKAnnotationView
     func updateUIView(_ mapView: MKMapView, context: Context) {
         let span = MKCoordinateSpan(latitudeDelta: zoom, longitudeDelta: zoom)
-        switch location {
-        case .address(let string):
+        if address != "" {
             var coordinates = CLLocationCoordinate2D()
             let geoCoder = CLGeocoder()
-            geoCoder.geocodeAddressString(string) { (placemarks, error) in
+            geoCoder.geocodeAddressString(address) { (placemarks, error) in
                 guard
                     let placemarks = placemarks,
                     let location = placemarks.first?.location
@@ -31,8 +31,8 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
                 let region = MKCoordinateRegion(center: coordinates, span: span)
                 mapView.setRegion(region, animated: true)
             }
-        case .coordinates(let locationCoordinates):
-            let coordinates = CLLocationCoordinate2D(latitude: locationCoordinates.latitude, longitude: locationCoordinates.longitude)
+        } else {
+            let coordinates = CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
             let region = MKCoordinateRegion(center: coordinates, span: span)
             mapView.setRegion(region, animated: true)
         }
@@ -116,45 +116,104 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
  A map that users can add annotations to.
  
  - parameter zoom: Starting zoom of map (range: 0-1, lower is closer in)
- - parameter address: Starting location in the center of the map
+ - parameter address: Starting address in the center of the map
  - warning: Requires MapKit to be imported 
 
  # Example #
  ```
  MutableMapView(
      zoom: 0.4,
-     location: .address("Seattle, Wa")
+     address: .address("Seattle, Wa")
  )
  ```
  */
 public struct MutableMapView: View {
     @Binding public var zoom: Double
     @Binding public var address: String
+    @Binding public var coordinates: LocationCoordinate
     @Binding public private(set) var isFirstResponder: Bool
     @State public var modifierMap: MKMapView
     
-    public init(zoom: Binding<Double>, location: Binding<Location>) {
+    public init(zoom: Binding<Double>, address: Binding<String>) {
         self._zoom = zoom
-        self._location = location
+        self._address = address
+        self._coordinates = Binding(get: {
+            LocationCoordinate(latitude: 0, longitude: 0)
+        }, set: { _ in
+        })
         self.modifierMap = MKMapView()
         self._isFirstResponder = .constant(false)
     }
-    public init(zoom: Binding<Double>, location: Binding<Location>, advancedModifiers: () -> MKMapView) {
+    public init(zoom: Binding<Double>, address: Binding<String>, advancedModifiers: () -> MKMapView) {
         self._zoom = zoom
-        self._location = location
+        self._address = address
+        self._coordinates = Binding(get: {
+            LocationCoordinate(latitude: 0, longitude: 0)
+        }, set: { _ in
+        })
         self._isFirstResponder = .constant(false)
         self.modifierMap = advancedModifiers()
     }
-    public init(zoom: Binding<Double>, location: Binding<Location>, isFirstResponder: Binding<Bool>) {
+    public init(zoom: Binding<Double>, address: Binding<String>, isFirstResponder: Binding<Bool>) {
         self._zoom = zoom
-        self._location = location
+        self._address = address
+        self._coordinates = Binding(get: {
+            LocationCoordinate(latitude: 0, longitude: 0)
+        }, set: { _ in
+        })
         self.modifierMap = MKMapView()
         self._isFirstResponder = isFirstResponder
         self.checkInfo()
     }
-    public init(zoom: Binding<Double>, location: Binding<Location>, isFirstResponder: Binding<Bool>, advancedModifiers: () -> MKMapView) {
+    public init(zoom: Binding<Double>, address: Binding<String>, isFirstResponder: Binding<Bool>, advancedModifiers: () -> MKMapView) {
         self._zoom = zoom
-        self._location = location
+        self._address = address
+        self._coordinates = Binding(get: {
+            LocationCoordinate(latitude: 0, longitude: 0)
+        }, set: { _ in
+        })
+        self._isFirstResponder = isFirstResponder
+        self.modifierMap = advancedModifiers()
+        self.checkInfo()
+    }
+    public init(zoom: Binding<Double>, coordinates: Binding<LocationCoordinate>) {
+        self._zoom = zoom
+        self._coordinates = coordinates
+        self._address = Binding(get: {
+            ""
+        }, set: { _ in
+        })
+        self.modifierMap = MKMapView()
+        self._isFirstResponder = .constant(false)
+    }
+    public init(zoom: Binding<Double>, coordinates: Binding<LocationCoordinate>, advancedModifiers: () -> MKMapView) {
+        self._zoom = zoom
+        self._coordinates = coordinates
+        self._address = Binding(get: {
+            ""
+        }, set: { _ in
+        })
+        self._isFirstResponder = .constant(false)
+        self.modifierMap = advancedModifiers()
+    }
+    public init(zoom: Binding<Double>, coordinates: Binding<LocationCoordinate>, isFirstResponder: Binding<Bool>) {
+        self._zoom = zoom
+        self._coordinates = coordinates
+        self._address = Binding(get: {
+            ""
+        }, set: { _ in
+        })
+        self.modifierMap = MKMapView()
+        self._isFirstResponder = isFirstResponder
+        self.checkInfo()
+    }
+    public init(zoom: Binding<Double>, coordinates: Binding<LocationCoordinate>, isFirstResponder: Binding<Bool>, advancedModifiers: () -> MKMapView) {
+        self._zoom = zoom
+        self._coordinates = coordinates
+        self._address = Binding(get: {
+            ""
+        }, set: { _ in
+        })
         self._isFirstResponder = isFirstResponder
         self.modifierMap = advancedModifiers()
         self.checkInfo()
@@ -168,7 +227,7 @@ public struct MutableMapView: View {
     }
     
     public var body: some View {
-        rawMutableAnnotationMap(zoom: zoom, location: location, modifierMap: modifierMap)
+        rawMutableAnnotationMap(zoom: zoom, address: address, coordinates: coordinates, modifierMap: modifierMap)
     }
     // MARK: Modifiers
     /**
