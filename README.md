@@ -36,7 +36,7 @@ Note: To use a map from SwiftUIMap, you need to import MapKit
 ```
 ExistingMapView (
     zoom: 0.4, // Starting Zoom of Map (Range: 0-1, Lower is closer in)
-    Location: .address("Seattle, Wa"), // Starting Location in the Center of the Map
+    address: "Seattle, Wa", // Starting address in the Center of the Map (use this or coordinates)
     points: [
         Annotations(
             title: "Townhall", // Top line on map

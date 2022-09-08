@@ -13,7 +13,8 @@ import SwiftUI
  A map that has annotations and is usable by the user, but cannot add annotations.
  
  - parameter zoom: Starting zoom of map (range: 0-1, lower is closer in)
- - parameter location: Starting location in the center of the map
+ - parameter address: Starting address in the center of the map (use this or coordinates)
+ - parameter coordinates: Starting coordinates in the center of the map (use this or address)
  - parameter points: How markers are shown
  - parameter selected: Action when marker is selected
  - parameter deselected: Action when marker is deselected
@@ -25,7 +26,7 @@ import SwiftUI
  ```
  AnnotationMapView (
      zoom: 0.4,
-     location: .address("Seattle, Wa"),
+     address: "Seattle, Wa",
      points: [
          Annotations(
             title: "Townhall",
@@ -58,7 +59,7 @@ public struct AnnotationMapView: View {
         }
     }
     @Binding public var address: String
-    @Binding public var coordinate: LocationCoordinate
+    @Binding public var coordinates: LocationCoordinate
     @Binding var isUserLocationVisible: Bool
     @State var refresh = false {
         didSet {
@@ -158,9 +159,9 @@ public struct AnnotationMapView: View {
         self.modifierMap = finalMap()
         self.setDefaultCamera(self.modifierMap)
     }
-    public init(zoom: Binding<Double>, coordinate: Binding<LocationCoordinate>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
+    public init(zoom: Binding<Double>, coordinates: Binding<LocationCoordinate>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
         self._zoom = zoom
-        self._coordinate = coordinate
+        self._coordinate = coordinates
         self._address = Binding(get: {
             ""
         }, set: { _ in
@@ -173,9 +174,9 @@ public struct AnnotationMapView: View {
         modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
         setDefaultCamera(self.modifierMap)
     }
-    public init(zoom: Binding<Double>, coordinate: Binding<LocationCoordinate>, points: Binding<[Annotations]>) {
+    public init(zoom: Binding<Double>, coordinates: Binding<LocationCoordinate>, points: Binding<[Annotations]>) {
         self._zoom = zoom
-        self._coordinate = coordinate
+        self._coordinate = coordinates
         self._address = Binding(get: {
             ""
         }, set: { _ in
@@ -188,9 +189,9 @@ public struct AnnotationMapView: View {
         modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
         setDefaultCamera(self.modifierMap)
     }
-    public init(zoom: Binding<Double>, coordinate: Binding<LocationCoordinate>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
+    public init(zoom: Binding<Double>, coordinates: Binding<LocationCoordinate>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
         self._zoom = zoom
-        self._coordinate = coordinate
+        self._coordinate = coordinates
         self._address = Binding(get: {
             ""
         }, set: { _ in
@@ -208,9 +209,9 @@ public struct AnnotationMapView: View {
         self.modifierMap = finalMap()
         self.setDefaultCamera(self.modifierMap)
     }
-    public init(zoom: Binding<Double>, coordinate: Binding<LocationCoordinate>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void) {
+    public init(zoom: Binding<Double>, coordinates: Binding<LocationCoordinate>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void) {
         self._zoom = zoom
-        self._coordinate = coordinate
+        self._coordinate = coordinates
         self._address = Binding(get: {
             ""
         }, set: { _ in
@@ -223,9 +224,9 @@ public struct AnnotationMapView: View {
         modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
         self.setDefaultCamera(self.modifierMap)
     }
-    public init(zoom: Binding<Double>, coordinate: Binding<LocationCoordinate>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, isFirstResponder: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
+    public init(zoom: Binding<Double>, coordinates: Binding<LocationCoordinate>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, isFirstResponder: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
         self._zoom = zoom
-        self._coordinate = coordinate
+        self._coordinate = coordinates
         self._address = Binding(get: {
             ""
         }, set: { _ in
@@ -258,11 +259,11 @@ public struct AnnotationMapView: View {
                     }
 
                     // Use your location
-                    let loc = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+                    let loc = CLLocationCoordinate2D(latitude: location.coordinates.latitude, longitude: location.coordinates.longitude)
                     map.camera = MKMapCamera(lookingAtCenter: loc, fromDistance: zoom*252555, pitch: 0, heading: 0)
                 }
             } else {
-                let coordinates = CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
+                let coordinates = CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
                 map.camera = MKMapCamera(lookingAtCenter: coordinates, fromDistance: zoom*252555, pitch: 0, heading: 0)
             }
         }
@@ -271,7 +272,7 @@ public struct AnnotationMapView: View {
     public var body: some View {
         VStack {
             if !refresh {
-                RawExistingAnnotationMap(zoom: zoom, address: address, coordinates: coordinate, points: $points, modifierMap: modifierMap, selected: { Title, Subtitle, Location, Cluster in
+                RawExistingAnnotationMap(zoom: zoom, address: address, coordinates: coordinates, points: $points, modifierMap: modifierMap, selected: { Title, Subtitle, Location, Cluster in
 //                    location = Location
                     if zoom > 0.05 {
                         zoom = zoom/3
