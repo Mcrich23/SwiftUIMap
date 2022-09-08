@@ -129,8 +129,8 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
  */
 public struct MutableMapView: View {
     @Binding public var zoom: Double
-    @Binding public var location: Location
-    @Binding var isFirstResponder: Bool
+    @Binding public var address: String
+    @Binding public private(set) var isFirstResponder: Bool
     @State public var modifierMap: MKMapView
     
     public init(zoom: Binding<Double>, location: Binding<Location>) {
