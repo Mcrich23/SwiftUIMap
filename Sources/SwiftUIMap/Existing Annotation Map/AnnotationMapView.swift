@@ -21,7 +21,6 @@ struct RawExistingAnnotationMap: UIViewRepresentable {
 //    var annotationSelected: MKAnnotationView
     func updateUIView(_ mapView: MKMapView, context: Context) {
         let span = MKCoordinateSpan(latitudeDelta: zoom, longitudeDelta: zoom)
-        self.updatePoints(mapView: mapView)
         if address != "" {
             var coordinates = CLLocationCoordinate2D()
             let geoCoder = CLGeocoder()
@@ -45,6 +44,7 @@ struct RawExistingAnnotationMap: UIViewRepresentable {
             let region = MKCoordinateRegion(center: coordinates, span: span)
             mapView.setRegion(region, animated: true)
         }
+//        self.updatePoints(mapView: mapView)
     }
     
     func makeUIView(context: Context) -> MKMapView {
@@ -142,18 +142,11 @@ struct RawExistingAnnotationMap: UIViewRepresentable {
 //                mapView.removeAnnotation(annotation)
 //            }
 //        }
-        for dictPoint in pointDict {
-            if !self.points.contains(where: { point in
-                dictPoint.key == point
+        for annotation in mapView.annotations {
+            if self.points.contains(where: { point in
+                self.pointDict[point]?.longitude != annotation.coordinate.longitude && self.pointDict[point]?.latitude != annotation.coordinate.latitude
             }) {
-                if mapView.annotations.contains(where: { annotation in
-                    dictPoint.value.longitude == annotation.coordinate.longitude && dictPoint.value.latitude == annotation.coordinate.latitude
-                }) {
-                    let annotation = mapView.annotations.first(where: { annotation in
-                        dictPoint.value.longitude == annotation.coordinate.longitude && dictPoint.value.latitude == annotation.coordinate.latitude
-                    })!
-                    mapView.removeAnnotation(annotation)
-                }
+                mapView.removeAnnotation(annotation)
             }
         }
     }
@@ -220,6 +213,7 @@ struct RawExistingAnnotationMap: UIViewRepresentable {
         @objc func updateAnnotations(mapView: MKMapView) {
             print("points changed!")
             print("check, points.count = \(self.entireMapViewController.points.count)")
+            entireMapViewController.updatePoints(mapView: mapView)
         }
         func mapViewWillStartLocatingUser(_ mapView: MKMapView) {
             entireMapViewController.userLocationBecomesVisible()
