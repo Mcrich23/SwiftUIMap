@@ -63,7 +63,7 @@ ExistingMapView (
 ```
 MutableMapView (
     zoom: 0.4, // Starting Zoom of Map (Range: 0-1, Lower is closer in)
-    locatio: .address("Seattle, Wa"), // Starting Location in the Center of the Map
+    address: "Seattle, Wa", // Starting address in the Center of the Map (use this or coordinates)
     isFirstResponder: $isFirstResponder // Binding for if isFirstResponder
 )
 ```

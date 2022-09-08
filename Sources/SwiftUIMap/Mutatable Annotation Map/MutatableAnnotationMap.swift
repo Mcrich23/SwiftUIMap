@@ -116,14 +116,15 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
  A map that users can add annotations to.
  
  - parameter zoom: Starting zoom of map (range: 0-1, lower is closer in)
- - parameter address: Starting address in the center of the map
+ - parameter address: Starting address in the Center of the Map (use this or coordinates)
+ - parameter coordinates: Starting coordinates in the Center of the Map (use this or address) 
  - warning: Requires MapKit to be imported 
 
  # Example #
  ```
  MutableMapView(
      zoom: 0.4,
-     address: .address("Seattle, Wa")
+     address: "Seattle, Wa"
  )
  ```
  */
