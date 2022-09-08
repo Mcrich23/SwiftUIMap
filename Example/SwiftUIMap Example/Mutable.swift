@@ -12,10 +12,10 @@ import MapKit
 struct Mutable: View {
     @State var search = false
     @State var zoom = 0.2
-    @State var address = "Seattle, Wa"
+    @State var location: Location = .address("Seattle, Wa")
     @State var loc = CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321)
     var body: some View {
-        MutableMapView(zoom: $zoom, address: $address)
+        MutableMapView(zoom: $zoom, location: $location)
             .pointOfInterestCategories(exclude: [.airport])
             .showCompass(false)
             .showScale(false)
@@ -47,7 +47,7 @@ struct Mutable: View {
                 MapSearchView { address in
                     zoom = 0.2
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(650), execute: {
-                        self.address = address
+                        self.location = .address(address)
                     })
                 }
             }

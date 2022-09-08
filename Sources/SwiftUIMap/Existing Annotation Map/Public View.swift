@@ -170,7 +170,7 @@ public struct AnnotationMapView: View {
     public var body: some View {
         VStack {
             if !refresh {
-                RawExistingAnnotationMap(zoom: zoom, location: location, points: points, modifierMap: modifierMap, selected: { Title, Subtitle, Location, Cluster in
+                RawExistingAnnotationMap(zoom: zoom, location: location, points: $points, modifierMap: modifierMap, selected: { Title, Subtitle, Location, Cluster in
                     location = Location
                     if zoom > 0.05 {
                         zoom = zoom/3

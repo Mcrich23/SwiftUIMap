@@ -12,7 +12,7 @@ import MapKit
 struct Existing: View {
     @State var search = false
     @State var zoom = 0.2
-    @State var address = "Seattle, Wa"
+    @State var location: Location = .address("Seattle, Wa")
     @State var loc = CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321)
     @State var refresh = false {
         didSet {
@@ -25,7 +25,7 @@ struct Existing: View {
     }
     let theNorthwestSchool = Annotations(title: "The Northwest School",
                                          subtitle: "An Arts School",
-                                         address: "1415 Summit Ave Seattle, WA, 98122, United States",
+                                         location: .address("1415 Summit Ave Seattle, WA, 98122, United States"),
                                          glyphImage: .systemImage("studentdesk"),
                                          markerTintColor: .brown,
                                          glyphTintColor: .white,
@@ -33,21 +33,21 @@ struct Existing: View {
     @State var points = [
         Annotations(title: "Seattle Town Hall",
                     subtitle: "Newly Remodeled",
-                    address: "1119 8th Ave, Seattle, WA, 98101, United States",
+                    location: .address("1119 8th Ave, Seattle, WA, 98101, United States"),
                     glyphImage: .systemImage("building.columns"),
                     markerTintColor: .systemGray,
                     glyphTintColor: .white,
                     displayPriority: .required),
         Annotations(title: "Space Needle",
                     subtitle: "",
-                    address: "400 Broad St Seattle, WA 98109, United States",
+                    location: .address("400 Broad St Seattle, WA 98109, United States"),
                     glyphImage: .systemImage("star.fill"),
                     markerTintColor: .systemPurple,
                     glyphTintColor: .white,
                     displayPriority: .required),
         Annotations(title: "Pike Place Market",
                     subtitle: "",
-                    address: "85 Pike St Seattle, WA  98101, United States",
+                    location: .address("85 Pike St Seattle, WA  98101, United States"),
                     glyphImage: .systemImage("cart"),
                     markerTintColor: .systemOrange,
                     glyphTintColor: .white,
@@ -60,7 +60,7 @@ struct Existing: View {
     var body: some View {
         VStack {
             if !refresh {
-                AnnotationMapView(zoom: $zoom, address: $address, points: $points) { Title, Subtitle, Address, Cluster  in
+                AnnotationMapView(zoom: $zoom, location: $location, points: $points) { Title, Subtitle, Address, Cluster  in
                     print("tapped \(Title), with subtitle: \(Subtitle), address: \(Address), and cluster: \(Cluster)")
                 } deselected: {
                     print("deselected annotation")
@@ -122,7 +122,7 @@ struct Existing: View {
                     MapSearchView { address in
                         zoom = 0.2
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(650), execute: {
-                            self.address = address
+                            self.location = .address(address)
                         })
                     }
                 }
