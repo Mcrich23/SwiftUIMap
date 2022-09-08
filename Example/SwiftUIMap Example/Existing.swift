@@ -12,7 +12,7 @@ import MapKit
 struct Existing: View {
     @State var search = false
     @State var zoom = 0.2
-    @State var location: Location = .address("Seattle, Wa")
+    @State var location: String = "Seattle, Wa"
     @State var loc = CLLocationCoordinate2D(latitude: 47.6062, longitude: -122.3321)
     @State var refresh = false {
         didSet {
@@ -60,7 +60,7 @@ struct Existing: View {
     var body: some View {
         VStack {
             if !refresh {
-                AnnotationMapView(zoom: $zoom, location: $location, points: $points) { Title, Subtitle, Address, Cluster  in
+                AnnotationMapView(zoom: $zoom, address: $location, points: $points) { Title, Subtitle, Address, Cluster  in
                     print("tapped \(Title), with subtitle: \(Subtitle), address: \(Address), and cluster: \(Cluster)")
                 } deselected: {
                     print("deselected annotation")
@@ -122,7 +122,7 @@ struct Existing: View {
                     MapSearchView { address in
                         zoom = 0.2
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(650), execute: {
-                            self.location = .address(address)
+                            self.location = address
                         })
                     }
                 }

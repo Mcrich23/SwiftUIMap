@@ -57,11 +57,8 @@ public struct AnnotationMapView: View {
             print("update zoom")
         }
     }
-    @Binding public var location: Location {
-        didSet {
-            print("update address")
-        }
-    }
+    @Binding public var address: String
+    @Binding public var coordinate: LocationCoordinate
     @Binding var isUserLocationVisible: Bool
     @State var refresh = false {
         didSet {
@@ -76,9 +73,13 @@ public struct AnnotationMapView: View {
     @State public var modifierMap: MKMapView
     @State public var selected: (_ Title: String, _ Subtitle: String, _ Location: Location, _ Cluster: Bool) -> Void
     @State public var deselected: () -> Void
-    public init(zoom: Binding<Double>, location: Binding<Location>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
+    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
         self._zoom = zoom
-        self._location = location
+        self._address = address
+        self._coordinate = Binding(get: {
+            LocationCoordinate(latitude: 0, longitude: 0)
+        }, set: { _ in
+        })
         self._points = points
         self.selected = selected
         self.deselected = deselected
@@ -87,9 +88,13 @@ public struct AnnotationMapView: View {
         modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
         setDefaultCamera(self.modifierMap)
     }
-    public init(zoom: Binding<Double>, location: Binding<Location>, points: Binding<[Annotations]>) {
+    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>) {
         self._zoom = zoom
-        self._location = location
+        self._address = address
+        self._coordinate = Binding(get: {
+            LocationCoordinate(latitude: 0, longitude: 0)
+        }, set: { _ in
+        })
         self._points = points
         self.selected = {_, _, _, _ in}
         self.deselected = {}
@@ -98,9 +103,13 @@ public struct AnnotationMapView: View {
         modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
         setDefaultCamera(self.modifierMap)
     }
-    public init(zoom: Binding<Double>, location: Binding<Location>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
+    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
         self._zoom = zoom
-        self._location = location
+        self._address = address
+        self._coordinate = Binding(get: {
+            LocationCoordinate(latitude: 0, longitude: 0)
+        }, set: { _ in
+        })
         self._points = points
         self.selected = selected
         self.deselected = deselected
@@ -114,9 +123,13 @@ public struct AnnotationMapView: View {
         self.modifierMap = finalMap()
         self.setDefaultCamera(self.modifierMap)
     }
-    public init(zoom: Binding<Double>, location: Binding<Location>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void) {
+    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void) {
         self._zoom = zoom
-        self._location = location
+        self._address = address
+        self._coordinate = Binding(get: {
+            LocationCoordinate(latitude: 0, longitude: 0)
+        }, set: { _ in
+        })
         self._points = points
         self.selected = selected
         self.deselected = deselected
@@ -125,9 +138,98 @@ public struct AnnotationMapView: View {
         modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
         self.setDefaultCamera(self.modifierMap)
     }
-    public init(zoom: Binding<Double>, location: Binding<Location>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, isFirstResponder: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
+    public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, isFirstResponder: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
         self._zoom = zoom
-        self._location = location
+        self._address = address
+        self._coordinate = Binding(get: {
+            LocationCoordinate(latitude: 0, longitude: 0)
+        }, set: { _ in
+        })
+        self._points = points
+        self.selected = selected
+        self.deselected = deselected
+        self._isUserLocationVisible = isUserLocationVisible
+        let finalMap: () -> MKMapView = {
+            let map = MKMapView()
+            map.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
+            advancedModifiers(map)
+            return map
+        }
+        self.modifierMap = finalMap()
+        self.setDefaultCamera(self.modifierMap)
+    }
+    public init(zoom: Binding<Double>, coordinate: Binding<LocationCoordinate>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
+        self._zoom = zoom
+        self._coordinate = coordinate
+        self._address = Binding(get: {
+            ""
+        }, set: { _ in
+        })
+        self._points = points
+        self.selected = selected
+        self.deselected = deselected
+        self._isUserLocationVisible = .constant(false)
+        self.modifierMap = MKMapView(frame: .zero)
+        modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
+        setDefaultCamera(self.modifierMap)
+    }
+    public init(zoom: Binding<Double>, coordinate: Binding<LocationCoordinate>, points: Binding<[Annotations]>) {
+        self._zoom = zoom
+        self._coordinate = coordinate
+        self._address = Binding(get: {
+            ""
+        }, set: { _ in
+        })
+        self._points = points
+        self.selected = {_, _, _, _ in}
+        self.deselected = {}
+        self._isUserLocationVisible = .constant(false)
+        self.modifierMap = MKMapView(frame: .zero)
+        modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
+        setDefaultCamera(self.modifierMap)
+    }
+    public init(zoom: Binding<Double>, coordinate: Binding<LocationCoordinate>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
+        self._zoom = zoom
+        self._coordinate = coordinate
+        self._address = Binding(get: {
+            ""
+        }, set: { _ in
+        })
+        self._points = points
+        self.selected = selected
+        self.deselected = deselected
+        self._isUserLocationVisible = .constant(false)
+        let finalMap: () -> MKMapView = {
+            let map = MKMapView()
+            map.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
+            advancedModifiers(map)
+            return map
+        }
+        self.modifierMap = finalMap()
+        self.setDefaultCamera(self.modifierMap)
+    }
+    public init(zoom: Binding<Double>, coordinate: Binding<LocationCoordinate>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void) {
+        self._zoom = zoom
+        self._coordinate = coordinate
+        self._address = Binding(get: {
+            ""
+        }, set: { _ in
+        })
+        self._points = points
+        self.selected = selected
+        self.deselected = deselected
+        self._isUserLocationVisible = isUserLocationVisible
+        self.modifierMap = MKMapView(frame: .zero)
+        modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
+        self.setDefaultCamera(self.modifierMap)
+    }
+    public init(zoom: Binding<Double>, coordinate: Binding<LocationCoordinate>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, isFirstResponder: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
+        self._zoom = zoom
+        self._coordinate = coordinate
+        self._address = Binding(get: {
+            ""
+        }, set: { _ in
+        })
         self._points = points
         self.selected = selected
         self.deselected = deselected
@@ -145,9 +247,8 @@ public struct AnnotationMapView: View {
     func setDefaultCamera(_ map: MKMapView) {
         if map == MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0) {
             let geoCoder = CLGeocoder()
-            switch location {
-            case .address(let string):
-                geoCoder.geocodeAddressString(string) { (placemarks, error) in
+            if address != "" {
+                geoCoder.geocodeAddressString(address) { (placemarks, error) in
                     guard
                         let placemarks = placemarks,
                         let location = placemarks.first?.location
@@ -160,8 +261,8 @@ public struct AnnotationMapView: View {
                     let loc = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
                     map.camera = MKMapCamera(lookingAtCenter: loc, fromDistance: zoom*252555, pitch: 0, heading: 0)
                 }
-            case .coordinates(let locationCoordinates):
-                let coordinates = CLLocationCoordinate2D(latitude: locationCoordinates.latitude, longitude: locationCoordinates.longitude)
+            } else {
+                let coordinates = CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
                 map.camera = MKMapCamera(lookingAtCenter: coordinates, fromDistance: zoom*252555, pitch: 0, heading: 0)
             }
         }
@@ -170,8 +271,8 @@ public struct AnnotationMapView: View {
     public var body: some View {
         VStack {
             if !refresh {
-                RawExistingAnnotationMap(zoom: zoom, location: location, points: $points, modifierMap: modifierMap, selected: { Title, Subtitle, Location, Cluster in
-                    location = Location
+                RawExistingAnnotationMap(zoom: zoom, address: address, coordinates: coordinate, points: $points, modifierMap: modifierMap, selected: { Title, Subtitle, Location, Cluster in
+//                    location = Location
                     if zoom > 0.05 {
                         zoom = zoom/3
                         if zoom < 0.05 {
@@ -190,6 +291,9 @@ public struct AnnotationMapView: View {
             print("points changed. points = \(points)")
             NotificationCenter.default.post(name: NSNotification.Name("SwiftUIMap.updateAnnotations"), object: true)
 //            refresh = true
+        })
+        .onChange(of: address, perform: { newValue in
+            print("address = \(address)")
         })
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) {

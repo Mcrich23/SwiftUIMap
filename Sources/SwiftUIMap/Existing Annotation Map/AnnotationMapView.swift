@@ -5,8 +5,9 @@ import CoreLocation
 #if os(iOS) || os(tvOS) || os(watchOS)// || os(macOS)
 
 struct RawExistingAnnotationMap: UIViewRepresentable {
-    @State var zoom: Double
-    @State var location: Location
+    var zoom: Double
+    var address: String
+    var coordinates: LocationCoordinate
     @Binding var points: [Annotations]
     @State var modifierMap: MKMapView
     @State var selected: (_ Title: String, _ Subtitle: String, _ Location: Location, _ Cluster: Bool) -> Void
@@ -19,14 +20,12 @@ struct RawExistingAnnotationMap: UIViewRepresentable {
     
 //    var annotationSelected: MKAnnotationView
     func updateUIView(_ mapView: MKMapView, context: Context) {
-        print("location = \(location)")
         let span = MKCoordinateSpan(latitudeDelta: zoom, longitudeDelta: zoom)
         self.updatePoints(mapView: mapView)
-        switch location {
-        case .address(let string):
+        if address != "" {
             var coordinates = CLLocationCoordinate2D()
             let geoCoder = CLGeocoder()
-            geoCoder.geocodeAddressString(string) { (placemarks, error) in
+            geoCoder.geocodeAddressString(address) { (placemarks, error) in
                 guard
                     let placemarks = placemarks,
                     let location = placemarks.first?.location
@@ -41,8 +40,8 @@ struct RawExistingAnnotationMap: UIViewRepresentable {
                 let region = MKCoordinateRegion(center: coordinates, span: span)
                 mapView.setRegion(region, animated: true)
             }
-        case .coordinates(let locationCoordinates):
-            let coordinates = CLLocationCoordinate2D(latitude: locationCoordinates.latitude, longitude: locationCoordinates.longitude)
+        } else {
+            let coordinates = CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
             let region = MKCoordinateRegion(center: coordinates, span: span)
             mapView.setRegion(region, animated: true)
         }
