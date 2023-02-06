@@ -9,49 +9,6 @@ import SwiftUI
 import Combine
 import MapKit
 
-struct SearchBar: UIViewRepresentable {
-
-    @Binding var text: String
-    var onCommit: (_ value: String) -> Void
-
-    class Coordinator: NSObject, UISearchBarDelegate {
-
-        @Binding var text: String
-        var onCommit: (_ value: String) -> Void
-
-        init(text: Binding<String>, onCommit: @escaping (_ value: String) -> Void) {
-            _text = text
-            self.onCommit = onCommit
-        }
-        
-        func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-            text = searchText
-        }
-        
-        func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-            print("resign keyboard")
-            searchBar.resignFirstResponder()
-            onCommit(searchBar.text ?? "")
-        }
-        
-    }
-
-    func makeCoordinator() -> SearchBar.Coordinator {
-        return Coordinator(text: $text, onCommit: onCommit)
-    }
-
-    func makeUIView(context: UIViewRepresentableContext<SearchBar>) -> UISearchBar {
-        let searchBar = UISearchBar(frame: .zero)
-        searchBar.delegate = context.coordinator
-        searchBar.searchBarStyle = .minimal
-        searchBar.becomeFirstResponder()
-        searchBar.returnKeyType = .search
-        return searchBar
-    }
-    func updateUIView(_ uiView: UISearchBar, context: UIViewRepresentableContext<SearchBar>) {
-        uiView.text = text
-    }
-}
 /**
  "Search for a location and then pass that back with a dismissal of the search view"
  
@@ -70,7 +27,7 @@ struct SearchBar: UIViewRepresentable {
  
  */
 public struct MapSearchView: View {
-    @StateObject private var mapSearch = MapSearch()
+    @StateObject private var mapSearch: MapSearch
     @Environment(\.presentationMode) var presentationMode
     var onSelect: (_ address: String) -> Void// = {address in }
     
@@ -86,8 +43,9 @@ public struct MapSearchView: View {
     }
     @State var completion = MKLocalSearchCompletion()
     
-    public init(onSelect: @escaping (_ address: String) -> Void) {
+    public init(resultTypes: MKLocalSearchCompleter.ResultType, onSelect: @escaping (_ address: String) -> Void) {
         self.onSelect = onSelect
+        self._mapSearch = StateObject(wrappedValue: MapSearch(resultTypes: resultTypes))
     }
 //    public init(address: Binding<String>) {
 //        self._address = address
@@ -139,9 +97,6 @@ public struct MapSearchView: View {
 //            .onDisappear(perform: {
 //                onSelect(address)
 //            })
-//            .onAppear {
-////                print("onSelect = \(String(describing: onSelect))")
-//            }
     }
 }
 class MapSearch : NSObject, ObservableObject {
@@ -153,10 +108,10 @@ class MapSearch : NSObject, ObservableObject {
     private var searchCompleter = MKLocalSearchCompleter()
     private var currentPromise : ((Result<[MKLocalSearchCompletion], Error>) -> Void)?
 
-    override init() {
+    init(resultTypes: MKLocalSearchCompleter.ResultType) {
         super.init()
         searchCompleter.delegate = self
-        searchCompleter.resultTypes = MKLocalSearchCompleter.ResultType([.address])
+        searchCompleter.resultTypes = resultTypes
         
         $searchTerm
             .debounce(for: .seconds(0.2), scheduler: RunLoop.main)
@@ -188,34 +143,5 @@ extension MapSearch : MKLocalSearchCompleterDelegate {
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
         //could deal with the error here, but beware that it will finish the Combine publisher stream
         //currentPromise?(.failure(error))
-    }
-}
-
-struct ReversedGeoLocation {
-    let streetNumber: String    // eg. 1
-    let streetName: String      // eg. Infinite Loop
-    let city: String            // eg. Cupertino
-    let state: String           // eg. CA
-    let zipCode: String         // eg. 95014
-    let country: String         // eg. United States
-    let isoCountryCode: String  // eg. US
-
-    var formattedAddress: String {
-        return """
-        \(streetNumber) \(streetName),
-        \(city), \(state) \(zipCode)
-        \(country)
-        """
-    }
-
-    // Handle optionals as needed
-    init(with placemark: CLPlacemark) {
-        self.streetName     = placemark.thoroughfare ?? ""
-        self.streetNumber   = placemark.subThoroughfare ?? ""
-        self.city           = placemark.locality ?? ""
-        self.state          = placemark.administrativeArea ?? ""
-        self.zipCode        = placemark.postalCode ?? ""
-        self.country        = placemark.country ?? ""
-        self.isoCountryCode = placemark.isoCountryCode ?? ""
     }
 }
