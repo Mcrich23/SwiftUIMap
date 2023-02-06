@@ -43,7 +43,7 @@ public struct MapSearchView: View {
     }
     @State var completion = MKLocalSearchCompletion()
     
-    public init(resultTypes: MKLocalSearchCompleter.ResultType, onSelect: @escaping (_ address: String) -> Void) {
+    public init(resultTypes: MKLocalSearchCompleter.ResultType, onSelect: @escaping (_ result: String) -> Void) {
         self.onSelect = onSelect
         self._mapSearch = StateObject(wrappedValue: MapSearch(resultTypes: resultTypes))
     }
