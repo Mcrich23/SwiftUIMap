@@ -29,21 +29,21 @@ import MapKit
 public struct MapSearchView: View {
     @StateObject private var mapSearch: MapSearch
     @Environment(\.presentationMode) var presentationMode
-    var onSelect: (_ address: String, _ placemark: CLPlacemark) -> Void
+    var onSelect: (_ title: String, _ address: String, _ placemark: CLPlacemark) -> Void
     
     @State private var btnHover = false
     @State private var isBtnActive = false
     @State var completion = MKLocalSearchCompletion()
     
-    public init(resultTypes: MKLocalSearchCompleter.ResultType, onSelect: @escaping (_ result: String) -> Void) {
-        self.onSelect = { address, _ in
-            onSelect(address)
+    public init(resultTypes: MKLocalSearchCompleter.ResultType, onSelect: @escaping (_ title: String, _ result: String) -> Void) {
+        self.onSelect = { title, address, _ in
+            onSelect(title, address)
         }
         self._mapSearch = StateObject(wrappedValue: MapSearch(resultTypes: resultTypes))
     }
-    public init(resultTypes: MKLocalSearchCompleter.ResultType, onSelect: @escaping (_ result: CLPlacemark) -> Void) {
-        self.onSelect = { _, placemark in
-            onSelect(placemark)
+    public init(resultTypes: MKLocalSearchCompleter.ResultType, onSelect: @escaping (_ title: String, _ result: CLPlacemark) -> Void) {
+        self.onSelect = { title, _, placemark in
+            onSelect(title, placemark)
         }
         self._mapSearch = StateObject(wrappedValue: MapSearch(resultTypes: resultTypes))
     }
