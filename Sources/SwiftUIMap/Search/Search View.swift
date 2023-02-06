@@ -29,22 +29,22 @@ import MapKit
 public struct MapSearchView: View {
     @StateObject private var mapSearch: MapSearch
     @Environment(\.presentationMode) var presentationMode
-    var onSelect: (_ address: String) -> Void// = {address in }
+    var onSelect: (_ address: String, _ placemark: CLPlacemark) -> Void
     
     @State private var btnHover = false
     @State private var isBtnActive = false
-
-    @State var address: String = "" {
-        didSet {
-//            print("didSet address = \(address)")
-            onSelect(address)
-            presentationMode.wrappedValue.dismiss()
-        }
-    }
     @State var completion = MKLocalSearchCompletion()
     
     public init(resultTypes: MKLocalSearchCompleter.ResultType, onSelect: @escaping (_ result: String) -> Void) {
-        self.onSelect = onSelect
+        self.onSelect = { address, _ in
+            onSelect(address)
+        }
+        self._mapSearch = StateObject(wrappedValue: MapSearch(resultTypes: resultTypes))
+    }
+    public init(resultTypes: MKLocalSearchCompleter.ResultType, onSelect: @escaping (_ result: CLPlacemark) -> Void) {
+        self.onSelect = { _, placemark in
+            onSelect(placemark)
+        }
         self._mapSearch = StateObject(wrappedValue: MapSearch(resultTypes: resultTypes))
     }
 //    public init(address: Binding<String>) {
@@ -77,9 +77,8 @@ public struct MapSearchView: View {
                                         return
                                     }
                                     
-                                    let reversedGeoLocation = ReversedGeoLocation(with: placemark)
-                                    address = "\(reversedGeoLocation.streetNumber) \(reversedGeoLocation.streetName) \(reversedGeoLocation.city) \(reversedGeoLocation.state) \(reversedGeoLocation.zipCode) \(reversedGeoLocation.country)"
-//                                    print("in button address = \(address)")
+                                    let reversedGeoLocation = ReversedGeoLocation(with: placemark).formattedAddress
+                                    self.onSelect(reversedGeoLocation, placemark)
                                 }
                             }
                         }
