@@ -78,7 +78,7 @@ public struct MapSearchView: View {
                                     }
                                     
                                     let reversedGeoLocation = ReversedGeoLocation(with: placemark).formattedAddress
-                                    self.onSelect(reversedGeoLocation, placemark)
+                                    self.onSelect(completion.title, reversedGeoLocation, placemark)
                                 }
                             }
                         }
