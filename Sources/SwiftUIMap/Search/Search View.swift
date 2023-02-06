@@ -35,15 +35,15 @@ public struct MapSearchView: View {
     @State private var isBtnActive = false
     @State var completion = MKLocalSearchCompletion()
     
-    public init(resultTypes: MKLocalSearchCompleter.ResultType, onSelect: @escaping (_ title: String, _ result: String) -> Void) {
+    public init(resultTypes: MKLocalSearchCompleter.ResultType, onSelect: @escaping (_ title: String, _ address: String) -> Void) {
         self.onSelect = { title, address, _ in
             onSelect(title, address)
         }
         self._mapSearch = StateObject(wrappedValue: MapSearch(resultTypes: resultTypes))
     }
-    public init(resultTypes: MKLocalSearchCompleter.ResultType, onSelect: @escaping (_ title: String, _ result: CLPlacemark) -> Void) {
+    public init(resultTypes: MKLocalSearchCompleter.ResultType, onSelectAdvanced: @escaping (_ title: String, _ placemark: CLPlacemark) -> Void) {
         self.onSelect = { title, _, placemark in
-            onSelect(title, placemark)
+            onSelectAdvanced(title, placemark)
         }
         self._mapSearch = StateObject(wrappedValue: MapSearch(resultTypes: resultTypes))
     }
