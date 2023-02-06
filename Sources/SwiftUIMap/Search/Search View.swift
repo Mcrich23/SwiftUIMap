@@ -84,12 +84,19 @@ public struct MapSearchView: View {
                         }
                     } label: {
                         VStack {
-                            Text(completion.title)
-                                .foregroundColor(.primary)
-                            Text(completion.subtitle)
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
+                            HStack {
+                                Text(completion.title)
+                                    .foregroundColor(.primary)
+                                Spacer()
+                            }
+                            HStack {
+                                Text(completion.subtitle)
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                Spacer()
+                            }
                         }
+                        .multilineTextAlignment(.leading)
                     }
                 }
             }
