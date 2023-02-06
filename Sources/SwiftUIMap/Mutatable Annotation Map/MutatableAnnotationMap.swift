@@ -5,37 +5,12 @@ import CoreLocation
 #if os(iOS) || os(tvOS) || os(watchOS)// || os(macOS)
 
 struct rawMutableAnnotationMap: UIViewRepresentable {
-    var zoom: Double
-    var address: String
-    var coordinates: LocationCoordinate
+    @Binding var region: MKCoordinateRegion
     var modifierMap: MKMapView
     
 //    var annotationSelected: MKAnnotationView
     func updateUIView(_ mapView: MKMapView, context: Context) {
-        let span = MKCoordinateSpan(latitudeDelta: zoom, longitudeDelta: zoom)
-        if address != "" {
-            var coordinates = CLLocationCoordinate2D()
-            let geoCoder = CLGeocoder()
-            geoCoder.geocodeAddressString(address) { (placemarks, error) in
-                guard
-                    let placemarks = placemarks,
-                    let location = placemarks.first?.location
-                else {
-                    // handle no location found
-                    return
-                }
-                
-                // Use your location
-                coordinates.latitude = location.coordinate.latitude
-                coordinates.longitude = location.coordinate.longitude
-                let region = MKCoordinateRegion(center: coordinates, span: span)
-                mapView.setRegion(region, animated: true)
-            }
-        } else {
-            let coordinates = CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
-            let region = MKCoordinateRegion(center: coordinates, span: span)
-            mapView.setRegion(region, animated: true)
-        }
+        mapView.setRegion(self.region, animated: true)
     }
     
         func makeUIView(context: Context) -> MKMapView {
@@ -83,6 +58,9 @@ struct rawMutableAnnotationMap: UIViewRepresentable {
         var currentAnnotations = [MKPointAnnotation]()
         init(_ control: rawMutableAnnotationMap) {
             self.entireMapViewController = control
+        }
+        func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
+            self.entireMapViewController.region = mapView.region
         }
         func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
             mapView.removeAnnotation(view.annotation!)
@@ -132,6 +110,7 @@ public struct MutableMapView: View {
     @Binding public var zoom: Double
     @Binding public var address: String
     @Binding public var coordinates: LocationCoordinate
+    @State private var region: LocationRegion
     @Binding public private(set) var isFirstResponder: Bool
     @State public var modifierMap: MKMapView
     
@@ -142,8 +121,10 @@ public struct MutableMapView: View {
             LocationCoordinate(latitude: 0, longitude: 0)
         }, set: { _ in
         })
+        self.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
         self.modifierMap = MKMapView()
         self._isFirstResponder = .constant(false)
+        self.setCoordinatesFromAddress()
     }
     public init(zoom: Binding<Double>, address: Binding<String>, advancedModifiers: () -> MKMapView) {
         self._zoom = zoom
@@ -152,8 +133,10 @@ public struct MutableMapView: View {
             LocationCoordinate(latitude: 0, longitude: 0)
         }, set: { _ in
         })
+        self.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
         self._isFirstResponder = .constant(false)
         self.modifierMap = advancedModifiers()
+        self.setCoordinatesFromAddress()
     }
     public init(zoom: Binding<Double>, address: Binding<String>, isFirstResponder: Binding<Bool>) {
         self._zoom = zoom
@@ -162,9 +145,11 @@ public struct MutableMapView: View {
             LocationCoordinate(latitude: 0, longitude: 0)
         }, set: { _ in
         })
+        self.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
         self.modifierMap = MKMapView()
         self._isFirstResponder = isFirstResponder
         self.checkInfo()
+        self.setCoordinatesFromAddress()
     }
     public init(zoom: Binding<Double>, address: Binding<String>, isFirstResponder: Binding<Bool>, advancedModifiers: () -> MKMapView) {
         self._zoom = zoom
@@ -173,9 +158,11 @@ public struct MutableMapView: View {
             LocationCoordinate(latitude: 0, longitude: 0)
         }, set: { _ in
         })
+        self.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
         self._isFirstResponder = isFirstResponder
         self.modifierMap = advancedModifiers()
         self.checkInfo()
+        self.setCoordinatesFromAddress()
     }
     public init(zoom: Binding<Double>, coordinates: Binding<LocationCoordinate>) {
         self._zoom = zoom
@@ -184,6 +171,7 @@ public struct MutableMapView: View {
             ""
         }, set: { _ in
         })
+        self.region = MKCoordinateRegion(center: coordinates.wrappedValue, span: MKCoordinateSpan(latitudeDelta: zoom.wrappedValue, longitudeDelta: zoom.wrappedValue))
         self.modifierMap = MKMapView()
         self._isFirstResponder = .constant(false)
     }
@@ -194,6 +182,7 @@ public struct MutableMapView: View {
             ""
         }, set: { _ in
         })
+        self.region = MKCoordinateRegion(center: coordinates.wrappedValue, span: MKCoordinateSpan(latitudeDelta: zoom.wrappedValue, longitudeDelta: zoom.wrappedValue))
         self._isFirstResponder = .constant(false)
         self.modifierMap = advancedModifiers()
     }
@@ -204,6 +193,7 @@ public struct MutableMapView: View {
             ""
         }, set: { _ in
         })
+        self.region = MKCoordinateRegion(center: coordinates.wrappedValue, span: MKCoordinateSpan(latitudeDelta: zoom.wrappedValue, longitudeDelta: zoom.wrappedValue))
         self.modifierMap = MKMapView()
         self._isFirstResponder = isFirstResponder
         self.checkInfo()
@@ -215,6 +205,7 @@ public struct MutableMapView: View {
             ""
         }, set: { _ in
         })
+        self.region = MKCoordinateRegion(center: coordinates.wrappedValue, span: MKCoordinateSpan(latitudeDelta: zoom.wrappedValue, longitudeDelta: zoom.wrappedValue))
         self._isFirstResponder = isFirstResponder
         self.modifierMap = advancedModifiers()
         self.checkInfo()
@@ -227,8 +218,41 @@ public struct MutableMapView: View {
         }
     }
     
+    func setCoordinatesFromAddress() {
+        if self.address != "" {
+            CLGeocoder().geocodeAddressString(self.address) { (placemarks, error) in
+                guard
+                    let placemarks = placemarks,
+                    let location = placemarks.first?.location
+                else {
+                    // handle no location found
+                    return
+                }
+                
+                // Use your location
+                let coordinates = LocationCoordinate(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+                self.coordinates = coordinates
+                self.region = MKCoordinateRegion(center: coordinates, span: MKCoordinateSpan(latitudeDelta: self.zoom, longitudeDelta: self.zoom))
+            }
+        }
+    }
+    
     public var body: some View {
-        rawMutableAnnotationMap(zoom: zoom, address: address, coordinates: coordinates, modifierMap: modifierMap)
+        rawMutableAnnotationMap(region: $region, modifierMap: modifierMap)
+            .onChange(of: address, perform: { newValue in
+                print("address = \(address)")
+                self.setCoordinatesFromAddress()
+            })
+            .onChange(of: coordinates, perform: { newValue in
+                self.region = MKCoordinateRegion(center: newValue, span: MKCoordinateSpan(latitudeDelta: self.zoom, longitudeDelta: self.zoom))
+            })
+            .onChange(of: zoom, perform: { newValue in
+                if address != "" {
+                    self.setCoordinatesFromAddress()
+                } else {
+                    self.region = MKCoordinateRegion(center: self.coordinates, span: MKCoordinateSpan(latitudeDelta: newValue, longitudeDelta: newValue))
+                }
+            })
     }
     // MARK: Modifiers
     /**

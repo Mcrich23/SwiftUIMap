@@ -71,6 +71,7 @@ public struct AnnotationMapView: View {
         }
     }
     @Binding public var points: [Annotations]
+    @State private var region: LocationRegion
     @State public var modifierMap: MKMapView
     @State public var selected: (_ Title: String, _ Subtitle: String, _ Location: Location, _ Cluster: Bool) -> Void
     @State public var deselected: () -> Void
@@ -78,9 +79,10 @@ public struct AnnotationMapView: View {
         self._zoom = zoom
         self._address = address
         self._coordinates = Binding(get: {
-            LocationCoordinate(latitude: 0, longitude: 0)
+            return LocationCoordinate(latitude: 0, longitude: 0)
         }, set: { _ in
         })
+        self.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
         self._points = points
         self.selected = selected
         self.deselected = deselected
@@ -88,14 +90,16 @@ public struct AnnotationMapView: View {
         self.modifierMap = MKMapView(frame: .zero)
         modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
         setDefaultCamera(self.modifierMap)
+        setCoordinatesFromAddress()
     }
     public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>) {
         self._zoom = zoom
         self._address = address
         self._coordinates = Binding(get: {
-            LocationCoordinate(latitude: 0, longitude: 0)
+            return LocationCoordinate(latitude: 0, longitude: 0)
         }, set: { _ in
         })
+        self.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
         self._points = points
         self.selected = {_, _, _, _ in}
         self.deselected = {}
@@ -103,14 +107,16 @@ public struct AnnotationMapView: View {
         self.modifierMap = MKMapView(frame: .zero)
         modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
         setDefaultCamera(self.modifierMap)
+        setCoordinatesFromAddress()
     }
     public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
         self._zoom = zoom
         self._address = address
         self._coordinates = Binding(get: {
-            LocationCoordinate(latitude: 0, longitude: 0)
+            return LocationCoordinate(latitude: 0, longitude: 0)
         }, set: { _ in
         })
+        self.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
         self._points = points
         self.selected = selected
         self.deselected = deselected
@@ -123,14 +129,16 @@ public struct AnnotationMapView: View {
         }
         self.modifierMap = finalMap()
         self.setDefaultCamera(self.modifierMap)
+        self.setCoordinatesFromAddress()
     }
     public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void) {
         self._zoom = zoom
         self._address = address
         self._coordinates = Binding(get: {
-            LocationCoordinate(latitude: 0, longitude: 0)
+            return LocationCoordinate(latitude: 0, longitude: 0)
         }, set: { _ in
         })
+        self.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
         self._points = points
         self.selected = selected
         self.deselected = deselected
@@ -138,14 +146,16 @@ public struct AnnotationMapView: View {
         self.modifierMap = MKMapView(frame: .zero)
         modifierMap.camera = MKMapCamera(lookingAtCenter: CLLocationCoordinate2D(), fromDistance: CLLocationDistance(), pitch: 0, heading: 0)
         self.setDefaultCamera(self.modifierMap)
+        self.setCoordinatesFromAddress()
     }
     public init(zoom: Binding<Double>, address: Binding<String>, points: Binding<[Annotations]>, isUserLocationVisible: Binding<Bool>, isFirstResponder: Binding<Bool>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ isCluster: Bool) -> Void, deselected: @escaping () -> Void, advancedModifiers: @escaping (_ map: MKMapView) -> Void) {
         self._zoom = zoom
         self._address = address
         self._coordinates = Binding(get: {
-            LocationCoordinate(latitude: 0, longitude: 0)
+            return LocationCoordinate(latitude: 0, longitude: 0)
         }, set: { _ in
         })
+        self.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
         self._points = points
         self.selected = selected
         self.deselected = deselected
@@ -158,6 +168,7 @@ public struct AnnotationMapView: View {
         }
         self.modifierMap = finalMap()
         self.setDefaultCamera(self.modifierMap)
+        self.setCoordinatesFromAddress()
     }
     public init(zoom: Binding<Double>, coordinates: Binding<LocationCoordinate>, points: Binding<[Annotations]>, selected: @escaping (_ Title: String, _ Subtitle: String, _ Location: Location, _ Cluster: Bool) -> Void, deselected: @escaping () -> Void) {
         self._zoom = zoom
@@ -166,6 +177,7 @@ public struct AnnotationMapView: View {
             ""
         }, set: { _ in
         })
+        self.region = MKCoordinateRegion(center: coordinates.wrappedValue, span: MKCoordinateSpan(latitudeDelta: zoom.wrappedValue, longitudeDelta: zoom.wrappedValue))
         self._points = points
         self.selected = selected
         self.deselected = deselected
@@ -181,6 +193,7 @@ public struct AnnotationMapView: View {
             ""
         }, set: { _ in
         })
+        self.region = MKCoordinateRegion(center: coordinates.wrappedValue, span: MKCoordinateSpan(latitudeDelta: zoom.wrappedValue, longitudeDelta: zoom.wrappedValue))
         self._points = points
         self.selected = {_, _, _, _ in}
         self.deselected = {}
@@ -196,6 +209,7 @@ public struct AnnotationMapView: View {
             ""
         }, set: { _ in
         })
+        self.region = MKCoordinateRegion(center: coordinates.wrappedValue, span: MKCoordinateSpan(latitudeDelta: zoom.wrappedValue, longitudeDelta: zoom.wrappedValue))
         self._points = points
         self.selected = selected
         self.deselected = deselected
@@ -216,6 +230,7 @@ public struct AnnotationMapView: View {
             ""
         }, set: { _ in
         })
+        self.region = MKCoordinateRegion(center: coordinates.wrappedValue, span: MKCoordinateSpan(latitudeDelta: zoom.wrappedValue, longitudeDelta: zoom.wrappedValue))
         self._points = points
         self.selected = selected
         self.deselected = deselected
@@ -231,6 +246,7 @@ public struct AnnotationMapView: View {
             ""
         }, set: { _ in
         })
+        self.region = MKCoordinateRegion(center: coordinates.wrappedValue, span: MKCoordinateSpan(latitudeDelta: zoom.wrappedValue, longitudeDelta: zoom.wrappedValue))
         self._points = points
         self.selected = selected
         self.deselected = deselected
@@ -269,10 +285,29 @@ public struct AnnotationMapView: View {
         }
     }
     
+    func setCoordinatesFromAddress() {
+        if self.address != "" {
+            CLGeocoder().geocodeAddressString(self.address) { (placemarks, error) in
+                guard
+                    let placemarks = placemarks,
+                    let location = placemarks.first?.location
+                else {
+                    // handle no location found
+                    return
+                }
+                
+                // Use your location
+                let coordinates = LocationCoordinate(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+                self.coordinates = coordinates
+                self.region = MKCoordinateRegion(center: coordinates, span: MKCoordinateSpan(latitudeDelta: self.zoom, longitudeDelta: self.zoom))
+            }
+        }
+    }
+    
     public var body: some View {
         VStack {
             if !refresh {
-                RawExistingAnnotationMap(zoom: zoom, address: address, coordinates: coordinates, points: $points, modifierMap: modifierMap, selected: { Title, Subtitle, Location, Cluster in
+                RawExistingAnnotationMap(region: $region, points: $points, modifierMap: modifierMap, selected: { Title, Subtitle, Location, Cluster in
 //                    location = Location
                     if zoom > 0.05 {
                         zoom = zoom/3
@@ -295,12 +330,23 @@ public struct AnnotationMapView: View {
         })
         .onChange(of: address, perform: { newValue in
             print("address = \(address)")
+            self.setCoordinatesFromAddress()
         })
-        .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) {
-//                refresh = true
+        .onChange(of: coordinates, perform: { newValue in
+            self.region = MKCoordinateRegion(center: newValue, span: MKCoordinateSpan(latitudeDelta: self.zoom, longitudeDelta: self.zoom))
+        })
+        .onChange(of: zoom, perform: { newValue in
+            if address != "" {
+                self.setCoordinatesFromAddress()
+            } else {
+                self.region = MKCoordinateRegion(center: self.coordinates, span: MKCoordinateSpan(latitudeDelta: newValue, longitudeDelta: newValue))
             }
-        }
+        })
+//        .onAppear {
+//            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) {
+////                refresh = true
+//            }
+//        }
     }
     // MARK: Modifiers
     /**

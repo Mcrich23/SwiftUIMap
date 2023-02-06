@@ -112,16 +112,16 @@ public enum Location: Equatable, Hashable {
  *    longitude:
  *      The longitude in degrees.
  */
-public struct LocationCoordinate: Hashable {
-
-    public init(latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
-        self.latitude = latitude
-        self.longitude = longitude
+public typealias LocationCoordinate = CLLocationCoordinate2D
+public typealias LocationRegion = MKCoordinateRegion
+extension CLLocationCoordinate2D: Hashable {
+    public static func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
+        lhs.hashValue > rhs.hashValue
     }
-
-    public var latitude: CLLocationDegrees
-
-    public var longitude: CLLocationDegrees
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(hashValue)
+    }
 }
 public class SwiftUIMap {
     

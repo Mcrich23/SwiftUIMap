@@ -5,9 +5,7 @@ import CoreLocation
 #if os(iOS) || os(tvOS) || os(watchOS)// || os(macOS)
 
 struct RawExistingAnnotationMap: UIViewRepresentable {
-    var zoom: Double
-    var address: String
-    var coordinates: LocationCoordinate
+    @Binding var region: MKCoordinateRegion
     @Binding var points: [Annotations]
     @State var modifierMap: MKMapView
     @State var selected: (_ Title: String, _ Subtitle: String, _ Location: Location, _ Cluster: Bool) -> Void
@@ -20,30 +18,7 @@ struct RawExistingAnnotationMap: UIViewRepresentable {
     
 //    var annotationSelected: MKAnnotationView
     func updateUIView(_ mapView: MKMapView, context: Context) {
-        let span = MKCoordinateSpan(latitudeDelta: zoom, longitudeDelta: zoom)
-        if address != "" {
-            var coordinates = CLLocationCoordinate2D()
-            let geoCoder = CLGeocoder()
-            geoCoder.geocodeAddressString(address) { (placemarks, error) in
-                guard
-                    let placemarks = placemarks,
-                    let location = placemarks.first?.location
-                else {
-                    // handle no location found
-                    return
-                }
-                
-                // Use your location
-                coordinates.latitude = location.coordinate.latitude
-                coordinates.longitude = location.coordinate.longitude
-                let region = MKCoordinateRegion(center: coordinates, span: span)
-                mapView.setRegion(region, animated: true)
-            }
-        } else {
-            let coordinates = CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
-            let region = MKCoordinateRegion(center: coordinates, span: span)
-            mapView.setRegion(region, animated: true)
-        }
+        mapView.setRegion(self.region, animated: true)
 //        self.updatePoints(mapView: mapView)
     }
     
@@ -168,6 +143,11 @@ struct RawExistingAnnotationMap: UIViewRepresentable {
             self.selected = selected
             self.deselected = deselected
         }
+        
+        func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
+            self.entireMapViewController.region = mapView.region
+        }
+        
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
             let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: String(describing: annotation.title))
             if self.entireMapViewController.points != [] && self.entireMapViewController.points.contains(where: {
