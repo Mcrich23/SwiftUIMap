@@ -54,52 +54,59 @@ public struct MapSearchView: View {
 // Main UI
 
     public var body: some View {
+        ZStack {
+            Color(UIColor.systemGroupedBackground)
             VStack {
                 SearchBar(text: $mapSearch.searchTerm, onCommit: {text in })
-                List(mapSearch.locationResults, id: \.self) { completion in
-                    // Show auto-complete results
-                    Button {
-                        let searchRequest = MKLocalSearch.Request(completion: completion)
-                        let search = MKLocalSearch(request: searchRequest)
-                        var coordinateK : CLLocationCoordinate2D?
-                        search.start { (response, error) in
-                            if error == nil, let coordinate = response?.mapItems.first?.placemark.coordinate {
-                                coordinateK = coordinate
-                            }
-                            
-                            if let c = coordinateK {
-                                let location = CLLocation(latitude: c.latitude, longitude: c.longitude)
-                                CLGeocoder().reverseGeocodeLocation(location) { placemarks, error in
-                                    
-                                    guard let placemark = placemarks?.first else {
-                                        let errorString = error?.localizedDescription ?? "Unexpected Error"
-                                        print("Unable to reverse geocode the given location. Error: \(errorString)")
-                                        return
+                if self.mapSearch.locationResults.isEmpty {
+                    Spacer()
+                } else {
+                    List(mapSearch.locationResults, id: \.self) { completion in
+                        // Show auto-complete results
+                        Button {
+                            let searchRequest = MKLocalSearch.Request(completion: completion)
+                            let search = MKLocalSearch(request: searchRequest)
+                            var coordinateK : CLLocationCoordinate2D?
+                            search.start { (response, error) in
+                                if error == nil, let coordinate = response?.mapItems.first?.placemark.coordinate {
+                                    coordinateK = coordinate
+                                }
+                                
+                                if let c = coordinateK {
+                                    let location = CLLocation(latitude: c.latitude, longitude: c.longitude)
+                                    CLGeocoder().reverseGeocodeLocation(location) { placemarks, error in
+                                        
+                                        guard let placemark = placemarks?.first else {
+                                            let errorString = error?.localizedDescription ?? "Unexpected Error"
+                                            print("Unable to reverse geocode the given location. Error: \(errorString)")
+                                            return
+                                        }
+                                        
+                                        let reversedGeoLocation = ReversedGeoLocation(with: placemark).formattedAddress
+                                        self.onSelect(completion.title, reversedGeoLocation, placemark)
                                     }
-                                    
-                                    let reversedGeoLocation = ReversedGeoLocation(with: placemark).formattedAddress
-                                    self.onSelect(completion.title, reversedGeoLocation, placemark)
                                 }
                             }
-                        }
-                    } label: {
-                        VStack {
-                            HStack {
-                                Text(completion.title)
-                                    .foregroundColor(.primary)
-                                Spacer()
+                        } label: {
+                            VStack {
+                                HStack {
+                                    Text(completion.title)
+                                        .foregroundColor(.primary)
+                                    Spacer()
+                                }
+                                HStack {
+                                    Text(completion.subtitle)
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
+                                    Spacer()
+                                }
                             }
-                            HStack {
-                                Text(completion.subtitle)
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
-                                Spacer()
-                            }
+                            .multilineTextAlignment(.leading)
                         }
-                        .multilineTextAlignment(.leading)
                     }
                 }
             }
+        }
 //            .onDisappear(perform: {
 //                onSelect(address)
 //            })
