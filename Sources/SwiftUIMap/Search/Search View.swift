@@ -12,17 +12,19 @@ import MapKit
 /**
  "Search for a location and then pass that back with a dismissal of the search view"
  
+ - parameter resultTypes: Result type for search
+ - parameter pointOfInterestFilter: Types of point of interests you want to search
  - parameter onSelect: On address selected.
- - returns: An address
+ - returns: An title and address/`CLPlacemark`
  
  # Example #
  ```
- MapSearchView { address in //Address passed back
+ MapSearchView(resultTypes: .address, onSelect: { address in //Address passed back
      zoom = 0.2 // Zooms out
      DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(650), execute: { // Wait to go to the new place
          self.address = address // Change central address
      })
- }
+ })
  ```
  
  */
@@ -39,13 +41,25 @@ public struct MapSearchView: View {
         self.onSelect = { title, address, _ in
             onSelect(title, address)
         }
-        self._mapSearch = StateObject(wrappedValue: MapSearch(resultTypes: resultTypes))
+        self._mapSearch = StateObject(wrappedValue: MapSearch(resultTypes: resultTypes, pointOfInterestFilter: nil))
+    }
+    public init(resultTypes: MKLocalSearchCompleter.ResultType, pointOfInterestFilter: MKPointOfInterestFilter?, onSelect: @escaping (_ title: String, _ address: String) -> Void) {
+        self.onSelect = { title, address, _ in
+            onSelect(title, address)
+        }
+        self._mapSearch = StateObject(wrappedValue: MapSearch(resultTypes: resultTypes, pointOfInterestFilter: pointOfInterestFilter))
     }
     public init(resultTypes: MKLocalSearchCompleter.ResultType, onSelectAdvanced: @escaping (_ title: String, _ placemark: CLPlacemark) -> Void) {
         self.onSelect = { title, _, placemark in
             onSelectAdvanced(title, placemark)
         }
-        self._mapSearch = StateObject(wrappedValue: MapSearch(resultTypes: resultTypes))
+        self._mapSearch = StateObject(wrappedValue: MapSearch(resultTypes: resultTypes, pointOfInterestFilter: nil))
+    }
+    public init(resultTypes: MKLocalSearchCompleter.ResultType, pointOfInterestFilter: MKPointOfInterestFilter?, onSelectAdvanced: @escaping (_ title: String, _ placemark: CLPlacemark) -> Void) {
+        self.onSelect = { title, _, placemark in
+            onSelectAdvanced(title, placemark)
+        }
+        self._mapSearch = StateObject(wrappedValue: MapSearch(resultTypes: resultTypes, pointOfInterestFilter: pointOfInterestFilter))
     }
 //    public init(address: Binding<String>) {
 //        self._address = address
@@ -121,10 +135,11 @@ class MapSearch : NSObject, ObservableObject {
     private var searchCompleter = MKLocalSearchCompleter()
     private var currentPromise : ((Result<[MKLocalSearchCompletion], Error>) -> Void)?
 
-    init(resultTypes: MKLocalSearchCompleter.ResultType) {
+    init(resultTypes: MKLocalSearchCompleter.ResultType, pointOfInterestFilter: MKPointOfInterestFilter?) {
         super.init()
         searchCompleter.delegate = self
         searchCompleter.resultTypes = resultTypes
+        searchCompleter.pointOfInterestFilter = pointOfInterestFilter
         
         $searchTerm
             .debounce(for: .seconds(0.2), scheduler: RunLoop.main)

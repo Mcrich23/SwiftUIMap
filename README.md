@@ -95,12 +95,12 @@ MutableMapView (
 ### **MapSearchView**
 
 ```
-MapSearchView { address in // Address passed back
+MapSearchView(resultTypes: .address, pointOfInterestFilter: .init(including: [.restaurant]), onSelect: { address in //Address passed back
     zoom = 0.2 // Zooms out
     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(650), execute: { // Wait to go to the new place
         self.address = address // Change central address
     })
-}
+})
 ```
 ### **defaultCameraAngle**
 
