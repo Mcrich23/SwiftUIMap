@@ -116,11 +116,12 @@ public typealias LocationCoordinate = CLLocationCoordinate2D
 public typealias LocationRegion = MKCoordinateRegion
 extension CLLocationCoordinate2D: Hashable {
     public static func == (lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
-        lhs.hashValue > rhs.hashValue
+        (lhs.latitude, lhs.longitude) > (rhs.latitude, rhs.longitude)
     }
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(hashValue)
+        hasher.combine(longitude)
+        hasher.combine(latitude)
     }
 }
 public class SwiftUIMap {
