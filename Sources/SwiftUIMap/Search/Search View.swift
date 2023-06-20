@@ -126,12 +126,20 @@ public struct MapSearchView: View {
 //                onSelect(address)
 //            })
     }
-    public func searchIsActiveOnAppear(_ isActive: Bool) -> Self {
+    public func searchIsActiveOnLoad(_ isActive: Bool) -> Self {
         if isActive {
             self.searchBarDetails.becomeFirstResponder()
         } else {
             self.searchBarDetails.resignFirstResponder()
         }
+        return self
+    }
+    
+    public func toolbarButtons(_ buttons: [UIBarButtonItem]) -> Self {
+        let bar = UIToolbar()
+        bar.items = buttons
+        bar.sizeToFit()
+        self.searchBarDetails.inputAccessoryView = bar
         return self
     }
 }
