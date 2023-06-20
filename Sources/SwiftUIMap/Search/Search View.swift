@@ -36,6 +36,7 @@ public struct MapSearchView: View {
     @State private var btnHover = false
     @State private var isBtnActive = false
     @State var completion = MKLocalSearchCompletion()
+    @State var searchBarDetails: UISearchBar = UISearchBar()
     
     public init(resultTypes: MKLocalSearchCompleter.ResultType, onSelect: @escaping (_ title: String, _ address: String) -> Void) {
         self.onSelect = { title, address, _ in
@@ -71,7 +72,7 @@ public struct MapSearchView: View {
         ZStack {
             Color(UIColor.systemGroupedBackground)
             VStack {
-                SearchBar(text: $mapSearch.searchTerm, onCommit: {text in })
+                SearchBar(searchBarDetails: $searchBarDetails, text: $mapSearch.searchTerm, onCommit: {text in })
                 if self.mapSearch.locationResults.isEmpty {
                     Spacer()
                 } else {
@@ -124,6 +125,14 @@ public struct MapSearchView: View {
 //            .onDisappear(perform: {
 //                onSelect(address)
 //            })
+    }
+    public func searchIsActiveOnAppear(_ isActive: Bool) -> Self {
+        if isActive {
+            self.searchBarDetails.becomeFirstResponder()
+        } else {
+            self.searchBarDetails.resignFirstResponder()
+        }
+        return self
     }
 }
 class MapSearch : NSObject, ObservableObject {

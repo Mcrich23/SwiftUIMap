@@ -11,7 +11,7 @@ import Combine
 import MapKit
 
 struct SearchBar: UIViewRepresentable {
-
+    @Binding var searchBarDetails: UISearchBar
     @Binding var text: String
     var onCommit: (_ value: String) -> Void
 
@@ -42,11 +42,19 @@ struct SearchBar: UIViewRepresentable {
     }
 
     func makeUIView(context: UIViewRepresentableContext<SearchBar>) -> UISearchBar {
-        let searchBar = UISearchBar(frame: .zero)
+        let searchBar = searchBarDetails
         searchBar.delegate = context.coordinator
-        searchBar.searchBarStyle = .minimal
-        searchBar.becomeFirstResponder()
-        searchBar.returnKeyType = .search
+        if self.searchBarDetails.searchBarStyle != .minimal {
+            searchBar.searchBarStyle = self.searchBarDetails.searchBarStyle
+        } else {
+            searchBar.searchBarStyle = .minimal
+        }
+        if self.searchBarDetails.returnKeyType != .search {
+            searchBar.returnKeyType = self.searchBarDetails.returnKeyType
+        } else {
+            searchBar.returnKeyType = .search
+        }
+        self.searchBarDetails = searchBar
         return searchBar
     }
     func updateUIView(_ uiView: UISearchBar, context: UIViewRepresentableContext<SearchBar>) {
