@@ -113,3 +113,7 @@ SwiftUIMap.defaultCameraAngle( // Get Default Camera Angle
     zoom: zoom // How far zoomed in the camera is
 )
 ```
+
+## License
+
+ScrollKit is available under the MIT license. See the [LICENSE][License] file for more info.
