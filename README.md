@@ -17,7 +17,7 @@ Currently, we only support set annotations, but are working on a user addable ma
 
 # Installation
 
-The preferred way of installing SwiftUIX is via the [Swift Package Manager](https://swift.org/package-manager/).
+The preferred way of installing SwiftUIMap is via the [Swift Package Manager](https://swift.org/package-manager/).
 
 
 1. In Xcode, open your project and navigate to **File** → **Add Packages...**
