@@ -116,4 +116,4 @@ SwiftUIMap.defaultCameraAngle( // Get Default Camera Angle
 
 ## License
 
-ScrollKit is available under the MIT license. See the [LICENSE][License] file for more info.
+ScrollKit is available under the MIT license. See the [LICENSE][LICENSE] file for more info.
