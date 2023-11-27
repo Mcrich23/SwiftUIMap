@@ -246,4 +246,30 @@ struct RawExistingAnnotationMap: UIViewRepresentable {
         }
     }
 }
+
+extension MKCoordinateSpan: Equatable {
+    public static func == (lhs: MKCoordinateSpan, rhs: MKCoordinateSpan) -> Bool {
+        guard lhs.latitudeDelta.rounded(toPlaces: 1) > 0.1,
+              rhs.latitudeDelta.rounded(toPlaces: 1) > 0.1,
+              lhs.longitudeDelta.rounded(toPlaces: 1) > 0.1,
+              rhs.longitudeDelta.rounded(toPlaces: 1) > 0.1
+        else {
+            return true
+        }
+        
+        return lhs.latitudeDelta.rounded(toPlaces: 1) == rhs.latitudeDelta.rounded(toPlaces: 1) && lhs.longitudeDelta.rounded(toPlaces: 1) == rhs.latitudeDelta.rounded(toPlaces: 1)
+    }
+}
+extension MKCoordinateRegion: Equatable {
+    public static func == (lhs: MKCoordinateRegion, rhs: MKCoordinateRegion) -> Bool {
+        return lhs.center.latitude.rounded(toPlaces: 4) == rhs.center.latitude.rounded(toPlaces: 4) && lhs.center.longitude.rounded(toPlaces: 4) == rhs.center.longitude.rounded(toPlaces: 4) && lhs.span == rhs.span
+    }
+}
+extension Double {
+    /// Rounds the double to decimal places value
+    func rounded(toPlaces places:Int) -> Double {
+        let divisor = pow(10.0, Double(places))
+        return (self * divisor).rounded() / divisor
+    }
+}
 #endif
