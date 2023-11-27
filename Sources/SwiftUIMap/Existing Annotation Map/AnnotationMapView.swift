@@ -145,7 +145,9 @@ struct RawExistingAnnotationMap: UIViewRepresentable {
         }
         
         func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
-            self.entireMapViewController.region = mapView.region
+            if self.entireMapViewController.region != mapView.region {
+                self.entireMapViewController.region = mapView.region
+            }
         }
         
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
